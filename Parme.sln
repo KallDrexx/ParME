@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.StandAloneRenderer", "Parme.StandAloneRenderer\Parme.StandAloneRenderer.csproj", "{0A2643A3-0788-45A1-9DD7-95B9A01D27BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme", "Parme\Parme.csproj", "{77550262-25DC-424E-94E4-F07791CE8296}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A2643A3-0788-45A1-9DD7-95B9A01D27BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A2643A3-0788-45A1-9DD7-95B9A01D27BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A2643A3-0788-45A1-9DD7-95B9A01D27BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A2643A3-0788-45A1-9DD7-95B9A01D27BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77550262-25DC-424E-94E4-F07791CE8296}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77550262-25DC-424E-94E4-F07791CE8296}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77550262-25DC-424E-94E4-F07791CE8296}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77550262-25DC-424E-94E4-F07791CE8296}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
