@@ -8,6 +8,6 @@ namespace Parme
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
         public float TimeAlive { get; set; }
-        public float RotationRadians { get; set; }
+        public float RotationInRadians { get; set; }
     }
 }

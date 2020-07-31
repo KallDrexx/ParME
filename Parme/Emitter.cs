@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Parme.Modifiers;
 
 namespace Parme
 {
     public class Emitter
     {
         private readonly List<Particle> _particles = new List<Particle>();
+        private readonly List<IParticleModifier> _modifiers;
         private readonly Random _random = new Random();
         private readonly SpriteBatch _spriteBatch;
         private float _timeSinceLastParticleSpawned;
@@ -15,31 +18,29 @@ namespace Parme
         public Texture2D ParticleTexture { get; set; }
         public float SecondsBetweenNewParticles { get; set; }
         public float MaxParticleLifetime { get; set; }
-        public Vector2 Acceleration { get; set; }
         public Vector2 MinInitialParticleVelocity { get; set; }
         public Vector2 MaxInitialParticleVelocity { get; set; }
         public Vector2 MinInitialPosition { get; set; }
         public Vector2 MaxInitialPosition { get; set; }
-        public Vector2 SizeAcceleration { get; set; }
-        public float RotationDegreesPerSecond { get; set; }
 
-        public Emitter(GraphicsDevice graphicsDevice)
+        public Emitter(GraphicsDevice graphicsDevice, IEnumerable<IParticleModifier> modifiers)
         {
             _spriteBatch = new SpriteBatch(graphicsDevice);
+            _modifiers = modifiers?.ToList() ?? new List<IParticleModifier>();
         }
 
         public void Update(float timeSinceLastFrame)
         {
-            var rotationChangeInRadians = (RotationDegreesPerSecond * Math.PI / 180) * timeSinceLastFrame;
-            
             // Update existing particles
             for (var x = _particles.Count - 1; x >= 0; x--)
             {
-                _particles[x].Velocity += Acceleration * timeSinceLastFrame;
-                _particles[x].Size += SizeAcceleration * timeSinceLastFrame;
+                foreach (var modifier in _modifiers)
+                {
+                    modifier.Update(timeSinceLastFrame, _particles[x]);
+                }
+                
                 _particles[x].Position += _particles[x].Velocity;
                 _particles[x].TimeAlive += timeSinceLastFrame;
-                _particles[x].RotationRadians += (float) rotationChangeInRadians;
 
                 if (_particles[x].TimeAlive > MaxParticleLifetime)
                 {
@@ -62,7 +63,7 @@ namespace Parme
                     Velocity = new Vector2(velocityX, velocityY),
                     TimeAlive = 0,
                     Size = new Vector2(ParticleTexture.Width, ParticleTexture.Height),
-                    RotationRadians = 0f,
+                    RotationInRadians = 0f,
                 });
 
                 _timeSinceLastParticleSpawned = 0;
@@ -83,7 +84,7 @@ namespace Parme
                     rectangle,
                     null,
                     Color.White,
-                    particle.RotationRadians,
+                    particle.RotationInRadians,
                     Vector2.Zero,
                     SpriteEffects.None,
                     0f);

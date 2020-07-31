@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Parme.Modifiers;
 
 namespace Parme.StandAloneRenderer
 {
@@ -29,18 +30,22 @@ namespace Parme.StandAloneRenderer
             var texture = new Texture2D(GraphicsDevice, 10, 10);
             texture.SetData(pixels);
 
-            _emitter = new Emitter(GraphicsDevice)
+            var modifiers = new IParticleModifier[]
+            {
+                new ConstantRotationModifier(180f),
+                new ConstantAccelerationModifier(new Vector2(0, -25)),
+                new ConstantSizeModifier(new Vector2(100, 100)),
+            };
+                
+            _emitter = new Emitter(GraphicsDevice, modifiers)
             {
                 ParticleTexture = texture,
                 MaxParticleLifetime = 1f,
-                Acceleration = new Vector2(0, -25f),
                 SecondsBetweenNewParticles = 0.1f,
                 MinInitialParticleVelocity = new Vector2(-5, 10),
                 MaxInitialParticleVelocity = new Vector2(5, 15),
                 MinInitialPosition = new Vector2(-100, 0),
                 MaxInitialPosition = new Vector2(100, 0),
-                SizeAcceleration = new Vector2(100, 100),
-                RotationDegreesPerSecond = 180.0f,
             };
             
             base.Initialize();
