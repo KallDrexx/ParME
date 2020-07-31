@@ -9,5 +9,6 @@ namespace Parme
         public Vector2 Velocity { get; set; }
         public float TimeAlive { get; set; }
         public float RotationInRadians { get; set; }
+        public Color Color { get; set; }
     }
 }

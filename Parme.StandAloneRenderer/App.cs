@@ -24,7 +24,7 @@ namespace Parme.StandAloneRenderer
             var pixels = new Color[10*10];
             for (var x = 0; x < pixels.Length; x++)
             {
-                pixels[x] = Color.Red;
+                pixels[x] = Color.White;
             }
             
             var texture = new Texture2D(GraphicsDevice, 10, 10);
@@ -33,19 +33,21 @@ namespace Parme.StandAloneRenderer
             var modifiers = new IParticleModifier[]
             {
                 new ConstantRotationModifier(180f),
-                new ConstantAccelerationModifier(new Vector2(0, -25)),
-                new ConstantSizeModifier(new Vector2(100, 100)),
+                new ConstantAccelerationModifier(new Vector2(-5, 5)),
+                new ConstantSizeModifier(new Vector2(-10, -10)),
+                new ConstnatColorChangeModifier(-300, -300, -300), 
             };
                 
             _emitter = new Emitter(GraphicsDevice, modifiers)
             {
                 ParticleTexture = texture,
                 MaxParticleLifetime = 1f,
-                SecondsBetweenNewParticles = 0.1f,
-                MinInitialParticleVelocity = new Vector2(-5, 10),
-                MaxInitialParticleVelocity = new Vector2(5, 15),
-                MinInitialPosition = new Vector2(-100, 0),
-                MaxInitialPosition = new Vector2(100, 0),
+                SecondsBetweenNewParticles = 0.001f,
+                MinInitialParticleVelocity = new Vector2(0, 2),
+                MaxInitialParticleVelocity = new Vector2(0, 5),
+                MinInitialPosition = new Vector2(-25, -50),
+                MaxInitialPosition = new Vector2(25, -50),
+                InitialColorMultiplier = Color.Orange,
             };
             
             base.Initialize();
@@ -60,7 +62,7 @@ namespace Parme.StandAloneRenderer
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.LightSkyBlue);
             
             _emitter.Draw();
             

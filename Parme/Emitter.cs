@@ -22,6 +22,7 @@ namespace Parme
         public Vector2 MaxInitialParticleVelocity { get; set; }
         public Vector2 MinInitialPosition { get; set; }
         public Vector2 MaxInitialPosition { get; set; }
+        public Color InitialColorMultiplier { get; set; } = Color.White;
 
         public Emitter(GraphicsDevice graphicsDevice, IEnumerable<IParticleModifier> modifiers)
         {
@@ -64,6 +65,7 @@ namespace Parme
                     TimeAlive = 0,
                     Size = new Vector2(ParticleTexture.Width, ParticleTexture.Height),
                     RotationInRadians = 0f,
+                    Color = InitialColorMultiplier,
                 });
 
                 _timeSinceLastParticleSpawned = 0;
@@ -83,7 +85,7 @@ namespace Parme
                 _spriteBatch.Draw(ParticleTexture,
                     rectangle,
                     null,
-                    Color.White,
+                    particle.Color,
                     particle.RotationInRadians,
                     Vector2.Zero,
                     SpriteEffects.None,
