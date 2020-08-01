@@ -5,6 +5,6 @@
     /// </summary>
     public interface IParticleModifier
     {
-        void Update(float timeSinceLastFrame, Particle particle);
+        void Update(float timeSinceLastFrame, ref Particle particle);
     }
 }

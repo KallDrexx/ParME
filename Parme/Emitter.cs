@@ -9,7 +9,7 @@ namespace Parme
 {
     public class Emitter
     {
-        private readonly List<Particle> _particles = new List<Particle>();
+        private readonly ParticleBuffer _particles = new ParticleBuffer(100);
         private readonly List<IParticleModifier> _modifiers;
         private readonly Random _random = new Random();
         private readonly SpriteBatch _spriteBatch;
@@ -35,17 +35,23 @@ namespace Parme
             // Update existing particles
             for (var x = _particles.Count - 1; x >= 0; x--)
             {
-                foreach (var modifier in _modifiers)
+                ref var particle = ref _particles[x];
+                if (!particle.IsAlive)
                 {
-                    modifier.Update(timeSinceLastFrame, _particles[x]);
+                    continue;
                 }
                 
-                _particles[x].Position += _particles[x].Velocity;
-                _particles[x].TimeAlive += timeSinceLastFrame;
-
-                if (_particles[x].TimeAlive > MaxParticleLifetime)
+                foreach (var modifier in _modifiers)
                 {
-                    _particles.RemoveAt(x);
+                    modifier.Update(timeSinceLastFrame, ref particle);
+                }
+                
+                particle.Position += _particles[x].Velocity;
+                particle.TimeAlive += timeSinceLastFrame;
+
+                if (particle.TimeAlive > MaxParticleLifetime)
+                {
+                    particle.IsAlive = false;
                 }
             }
             
@@ -60,12 +66,13 @@ namespace Parme
                 
                 _particles.Add(new Particle
                 {
+                    IsAlive = true,
                     Position = new Vector2(posX, posY),
                     Velocity = new Vector2(velocityX, velocityY),
                     TimeAlive = 0,
                     Size = new Vector2(ParticleTexture.Width, ParticleTexture.Height),
                     RotationInRadians = 0f,
-                    Color = InitialColorMultiplier,
+                    ColorModifier = InitialColorMultiplier,
                 });
 
                 _timeSinceLastParticleSpawned = 0;
@@ -77,19 +84,23 @@ namespace Parme
             var middleOfScreen = new Vector2(1024 / 2, 768 / 2);
             
             _spriteBatch.Begin();
-            foreach (var particle in _particles)
+            for (var x = 0; x < _particles.Count; x++)
             {
-                var (posX, posY) = middleOfScreen + new Vector2(particle.Position.X, -particle.Position.Y);
-                var rectangle = new Rectangle((int) posX, (int) posY, (int) particle.Size.X, (int) particle.Size.Y);
+                ref var particle = ref _particles[x];
+                if (particle.IsAlive)
+                {
+                    var (posX, posY) = middleOfScreen + new Vector2(particle.Position.X, -particle.Position.Y);
+                    var rectangle = new Rectangle((int) posX, (int) posY, (int) particle.Size.X, (int) particle.Size.Y);
 
-                _spriteBatch.Draw(ParticleTexture,
-                    rectangle,
-                    null,
-                    particle.Color,
-                    particle.RotationInRadians,
-                    Vector2.Zero,
-                    SpriteEffects.None,
-                    0f);
+                    _spriteBatch.Draw(ParticleTexture,
+                        rectangle,
+                        null,
+                        particle.ColorModifier,
+                        particle.RotationInRadians,
+                        Vector2.Zero,
+                        SpriteEffects.None,
+                        0f);
+                }
             }
             _spriteBatch.End();
         }

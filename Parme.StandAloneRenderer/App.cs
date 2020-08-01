@@ -35,7 +35,7 @@ namespace Parme.StandAloneRenderer
                 new ConstantRotationModifier(180f),
                 new ConstantAccelerationModifier(new Vector2(-5, 5)),
                 new ConstantSizeModifier(new Vector2(-10, -10)),
-                new ConstnatColorChangeModifier(-300, -300, -300), 
+                new ConstantColorChangeModifier(-300, -300, -300), 
             };
                 
             _emitter = new Emitter(GraphicsDevice, modifiers)

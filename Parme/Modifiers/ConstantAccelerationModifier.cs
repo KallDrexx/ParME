@@ -11,7 +11,7 @@ namespace Parme.Modifiers
             _acceleration = acceleration;
         }
 
-        public void Update(float timeSinceLastFrame, Particle particle)
+        public void Update(float timeSinceLastFrame, ref Particle particle)
         {
             particle.Velocity += timeSinceLastFrame * _acceleration;
         }

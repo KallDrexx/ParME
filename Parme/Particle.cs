@@ -2,13 +2,14 @@
 
 namespace Parme
 {
-    public class Particle
+    public struct Particle
     {
-        public Vector2 Size { get; set; }
-        public Vector2 Position { get; set; }
-        public Vector2 Velocity { get; set; }
-        public float TimeAlive { get; set; }
-        public float RotationInRadians { get; set; }
-        public Color Color { get; set; }
+        public bool IsAlive;
+        public Vector2 Size;
+        public Vector2 Position;
+        public Vector2 Velocity;
+        public float TimeAlive;
+        public float RotationInRadians;
+        public Color ColorModifier;
     }
 }
