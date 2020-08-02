@@ -1,33 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Parme.Modifiers;
 
 namespace Parme
 {
     public class Emitter
     {
         private readonly ParticleBuffer _particles = new ParticleBuffer(100);
-        private readonly List<IParticleModifier> _modifiers;
-        private readonly Random _random = new Random();
         private readonly SpriteBatch _spriteBatch;
-        private float _timeSinceLastParticleSpawned;
+        private readonly EmitterSettings _settings;
 
-        public Texture2D ParticleTexture { get; set; }
-        public float SecondsBetweenNewParticles { get; set; }
-        public float MaxParticleLifetime { get; set; }
-        public Vector2 MinInitialParticleVelocity { get; set; }
-        public Vector2 MaxInitialParticleVelocity { get; set; }
-        public Vector2 MinInitialPosition { get; set; }
-        public Vector2 MaxInitialPosition { get; set; }
-        public Color InitialColorMultiplier { get; set; } = Color.White;
-
-        public Emitter(GraphicsDevice graphicsDevice, IEnumerable<IParticleModifier> modifiers)
+        public Emitter(GraphicsDevice graphicsDevice, EmitterSettings settings)
         {
             _spriteBatch = new SpriteBatch(graphicsDevice);
-            _modifiers = modifiers?.ToList() ?? new List<IParticleModifier>();
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
         public void Update(float timeSinceLastFrame)
@@ -41,7 +27,7 @@ namespace Parme
                     continue;
                 }
                 
-                foreach (var modifier in _modifiers)
+                foreach (var modifier in _settings.Modifiers)
                 {
                     modifier.Update(timeSinceLastFrame, ref particle);
                 }
@@ -49,33 +35,33 @@ namespace Parme
                 particle.Position += _particles[x].Velocity;
                 particle.TimeAlive += timeSinceLastFrame;
 
-                if (particle.TimeAlive > MaxParticleLifetime)
+                if (particle.TimeAlive > _settings.MaxParticleLifeTime)
                 {
                     particle.IsAlive = false;
                 }
             }
-            
-            // Spawn new particles if enough time has gone by
-            _timeSinceLastParticleSpawned += timeSinceLastFrame;
-            if (_timeSinceLastParticleSpawned > SecondsBetweenNewParticles)
-            {
-                var velocityX = _random.Next((int) MinInitialParticleVelocity.X, (int) MaxInitialParticleVelocity.X);
-                var velocityY = _random.Next((int) MinInitialParticleVelocity.Y, (int) MaxInitialParticleVelocity.Y);
-                var posX = _random.Next((int) MinInitialPosition.X, (int) MaxInitialPosition.X);
-                var posY = _random.Next((int) MinInitialPosition.Y, (int) MaxInitialPosition.Y);
-                
-                _particles.Add(new Particle
-                {
-                    IsAlive = true,
-                    Position = new Vector2(posX, posY),
-                    Velocity = new Vector2(velocityX, velocityY),
-                    TimeAlive = 0,
-                    Size = new Vector2(ParticleTexture.Width, ParticleTexture.Height),
-                    RotationInRadians = 0f,
-                    ColorModifier = InitialColorMultiplier,
-                });
 
-                _timeSinceLastParticleSpawned = 0;
+            if (_settings.Trigger.ShouldCreateNewParticles(timeSinceLastFrame))
+            {
+                var count = _settings.ParticleCountInitializer.GetNewParticleCount();
+                for (var x = 0; x < count; x++)
+                {
+                    var position = _settings.PositionalInitializer.GetNewParticlePosition();
+                    var velocity = _settings.VelocityInitializer.GetNewParticleVelocity();
+                    var size = _settings.SizeInitializer.GetNextParticleSize();
+                    var colorModifier = _settings.ColorInitializer.GetColorOperationForNextParticle();
+                    
+                    _particles.Add(new Particle
+                    {
+                        IsAlive = true,
+                        TimeAlive = 0,
+                        Position = position,
+                        Velocity = velocity,
+                        Size = size,
+                        ColorModifier = colorModifier,
+                        RotationInRadians = 0, // TODO: add initializer
+                    });
+                }
             }
         }
 
@@ -92,7 +78,7 @@ namespace Parme
                     var (posX, posY) = middleOfScreen + new Vector2(particle.Position.X, -particle.Position.Y);
                     var rectangle = new Rectangle((int) posX, (int) posY, (int) particle.Size.X, (int) particle.Size.Y);
 
-                    _spriteBatch.Draw(ParticleTexture,
+                    _spriteBatch.Draw(_settings.ParticleTexture,
                         rectangle,
                         null,
                         particle.ColorModifier,

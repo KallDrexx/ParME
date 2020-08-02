@@ -1,6 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Parme.Initializers.ColorInitializer;
+using Parme.Initializers.ParticleCountInitializer;
+using Parme.Initializers.PositionalInitializers;
+using Parme.Initializers.SizeInitializers;
+using Parme.Initializers.VelocityInitializers;
 using Parme.Modifiers;
+using Parme.Triggers;
 
 namespace Parme.StandAloneRenderer
 {
@@ -30,25 +36,32 @@ namespace Parme.StandAloneRenderer
             var texture = new Texture2D(GraphicsDevice, 10, 10);
             texture.SetData(pixels);
 
-            var modifiers = new IParticleModifier[]
-            {
-                new ConstantRotationModifier(180f),
-                new ConstantAccelerationModifier(new Vector2(-5, 5)),
-                new ConstantSizeModifier(new Vector2(-10, -10)),
-                new ConstantColorChangeModifier(-300, -300, -300), 
-            };
-                
-            _emitter = new Emitter(GraphicsDevice, modifiers)
+            var settings = new EmitterSettings
             {
                 ParticleTexture = texture,
-                MaxParticleLifetime = 1f,
-                SecondsBetweenNewParticles = 0.001f,
-                MinInitialParticleVelocity = new Vector2(0, 2),
-                MaxInitialParticleVelocity = new Vector2(0, 5),
-                MinInitialPosition = new Vector2(-25, -50),
-                MaxInitialPosition = new Vector2(25, -50),
-                InitialColorMultiplier = Color.Orange,
+                Trigger = new TimeElapsedTrigger(0.01f),
+                ParticleCountInitializer = new RandomParticleCountInitializer(0, 5),
+                MaxParticleLifeTime = 1f,
+                ColorInitializer = new StaticColorInitializer(Color.Orange),
+                VelocityInitializer = new RandomRangeVelocityInitializer(
+                    new Vector2(0, 2),
+                    new Vector2(0, 5)),
+                
+                PositionalInitializer =  new RandomRegionPositionInitializer(
+                    new Vector2(-25, -50), 
+                    new Vector2(25, -50)),
+                
+                SizeInitializer = new StaticSizeInitializer(new Vector2(10, 10)),
+                Modifiers =
+                {
+                    new ConstantRotationModifier(180f),
+                    new ConstantAccelerationModifier(new Vector2(-5, 5)),
+                    new ConstantSizeModifier(new Vector2(-10, -10)),
+                    new ConstantColorChangeModifier(-300, -300, -300),
+                }
             };
+
+            _emitter = new Emitter(GraphicsDevice, settings);
             
             base.Initialize();
         }
