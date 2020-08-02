@@ -15,5 +15,12 @@ namespace Parme.Initializers.VelocityInitializers
         {
             return _velocity;
         }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $@"
+            particle.Velocity = new Vector2((float) {_velocity.X}, (float) {_velocity.Y});
+";
+        }
     }
 }

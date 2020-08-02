@@ -15,5 +15,12 @@ namespace Parme.Modifiers
         {
             particle.RotationInRadians += timeSinceLastFrame * _rotationChangeInRadians;
         }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $@"
+                particle.RotationInRadians += timeSinceLastFrame * (float) {_rotationChangeInRadians};                
+";
+        }
     }
 }

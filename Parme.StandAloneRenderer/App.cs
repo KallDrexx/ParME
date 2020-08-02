@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Parme.Initializers.ColorInitializer;
 using Parme.Initializers.ParticleCountInitializer;
@@ -6,6 +8,7 @@ using Parme.Initializers.PositionalInitializers;
 using Parme.Initializers.SizeInitializers;
 using Parme.Initializers.VelocityInitializers;
 using Parme.Modifiers;
+using Parme.Scripting;
 using Parme.Triggers;
 
 namespace Parme.StandAloneRenderer
@@ -61,7 +64,14 @@ namespace Parme.StandAloneRenderer
                 }
             };
 
-            _emitter = new Emitter(GraphicsDevice, settings);
+            var test = CSharpEmitterLogicGenerator.Generate(settings, "Parme.Game", "TestLogic");
+
+            var scriptOptions = ScriptOptions.Default
+                .WithReferences(typeof(IEmitterLogic).Assembly);
+                
+            var logicClass = CSharpScript.EvaluateAsync<IEmitterLogic>(test, scriptOptions).GetAwaiter().GetResult();
+
+            _emitter = new Emitter(GraphicsDevice, logicClass, settings);
             
             base.Initialize();
         }

@@ -6,5 +6,6 @@
     public interface IParticleModifier
     {
         void Update(float timeSinceLastFrame, ref Particle particle);
+        string GetCSharpExecutionCode();
     }
 }

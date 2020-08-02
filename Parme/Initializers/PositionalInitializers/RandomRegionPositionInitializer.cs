@@ -27,5 +27,14 @@ namespace Parme.Initializers.PositionalInitializers
             var y = _maxBounds.Y - _random.NextDouble() * (_maxBounds.Y - _minBounds.Y);
             return new Vector2((float) x, (float) y);
         }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $@"
+            var x = {_maxBounds.X} - _random.NextDouble() * ({_maxBounds.X} - {_minBounds.X});
+            var y = {_maxBounds.Y} - _random.NextDouble() * ({_maxBounds.Y} - {_minBounds.Y});
+            particle.Position = new Vector2((float) x, (float) y);
+";
+        }
     }
 }

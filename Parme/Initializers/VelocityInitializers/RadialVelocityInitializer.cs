@@ -33,5 +33,17 @@ namespace Parme.Initializers.VelocityInitializers
             
             return new Vector2((float) x, (float) y);
         }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $@"
+            var radians = {_maxRadians} - _random.NextDouble() * ({_maxRadians} - {_minRadians});
+                
+            // convert from polar coordinates to cartesian coordinates
+            var x = {_magnitude} * Math.Cos(radians);
+            var y = {_magnitude} * Math.Sin(radians);
+            particle.Velocity = new Particle((float) x, (float) y);
+";
+        }
     }
 }

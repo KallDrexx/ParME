@@ -15,5 +15,12 @@ namespace Parme.Initializers.ColorInitializer
         {
             return _color;
         }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $@"
+            particle.ColorModifier = new Color({_color.R}, {_color.G}, {_color.B}, {_color.A});
+";
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace Parme.Initializers.VelocityInitializers
     public interface IVelocityInitializer
     {
         Vector2 GetNewParticleVelocity();
+        string GetCSharpExecutionCode();
     }
 }

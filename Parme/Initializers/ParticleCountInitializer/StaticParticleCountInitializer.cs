@@ -13,5 +13,10 @@
         {
             return _count;
         }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $"newParticleCount = {_count};";
+        }
     }
 }

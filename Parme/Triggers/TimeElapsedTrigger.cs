@@ -26,5 +26,25 @@
         {
             _timeSinceLastTrigger = 0;
         }
+
+        public string GetCSharpFieldDefinitions()
+        {
+            return $@"
+        private float _timeSinceLastTrigger;
+";
+        }
+
+        public string GetCSharpCheckCode()
+        {
+            return $@"
+            shouldCreateNewParticle = false;
+            _timeSinceLastTrigger += timeSinceLastFrame;
+            if (_timeSinceLastTrigger >= {_frequency})
+            {{
+                shouldCreateNewParticle = true;
+                _timeSinceLastTrigger = 0;  
+            }}          
+";
+        }
     }
 }

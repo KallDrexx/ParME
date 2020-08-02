@@ -8,5 +8,6 @@ namespace Parme.Initializers.PositionalInitializers
     public interface IPositionalInitializer
     {
         Vector2 GetNewParticlePosition();
+        string GetCSharpExecutionCode();
     }
 }

@@ -28,5 +28,14 @@ namespace Parme.Initializers.SizeInitializers
             
             return new Vector2((float) x, (float) y);
         }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $@"
+            var x = {_maxSize.X} - _random.NextDouble() * ({_maxSize.X} - {_minSize.X});
+            var y = {_maxSize.Y} - _random.NextDouble() * ({_maxSize.Y} - {_minSize.Y});
+            particle.Size = new Vector2((float) x, (float) y);
+";
+        }
     }
 }

@@ -15,5 +15,12 @@ namespace Parme.Initializers.SizeInitializers
         {
             return _size;
         }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $@"
+            particle.Size = new Vector2((float) {_size.X}, (float) {_size.Y});
+";
+        }
     }
 }

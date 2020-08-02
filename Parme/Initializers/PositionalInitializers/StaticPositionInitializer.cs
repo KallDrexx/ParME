@@ -15,5 +15,12 @@ namespace Parme.Initializers.PositionalInitializers
         {
             return _position;
         }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $@"
+            particle.Position = new Vector2((float) {_position.X}, (float) {_position.Y});
+";
+        }
     }
 }

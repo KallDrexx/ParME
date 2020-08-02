@@ -19,5 +19,15 @@ namespace Parme.Modifiers
                 particle.ColorModifier.G + (int)(_greenChangePerSecond * timeSinceLastFrame),
                 particle.ColorModifier.B + (int)(_blueChangePerSecond * timeSinceLastFrame));
         }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $@"
+                particle.ColorModifier = new Color(
+                    particle.ColorModifier.R + (int)({_redChangePerSecond} * timeSinceLastFrame),
+                    particle.ColorModifier.G + (int)({_greenChangePerSecond} * timeSinceLastFrame),
+                    particle.ColorModifier.B + (int)({_blueChangePerSecond} * timeSinceLastFrame));
+";
+        }
     }
 }

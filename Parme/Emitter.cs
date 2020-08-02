@@ -8,61 +8,19 @@ namespace Parme
     {
         private readonly ParticleBuffer _particles = new ParticleBuffer(100);
         private readonly SpriteBatch _spriteBatch;
+        private readonly IEmitterLogic _emitterLogic;
         private readonly EmitterSettings _settings;
 
-        public Emitter(GraphicsDevice graphicsDevice, EmitterSettings settings)
+        public Emitter(GraphicsDevice graphicsDevice, IEmitterLogic emitterLogic, EmitterSettings settings)
         {
             _spriteBatch = new SpriteBatch(graphicsDevice);
-            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _emitterLogic = emitterLogic ?? throw new ArgumentNullException(nameof(emitterLogic));
+            _settings = settings;
         }
 
         public void Update(float timeSinceLastFrame)
         {
-            // Update existing particles
-            for (var x = _particles.Count - 1; x >= 0; x--)
-            {
-                ref var particle = ref _particles[x];
-                if (!particle.IsAlive)
-                {
-                    continue;
-                }
-                
-                foreach (var modifier in _settings.Modifiers)
-                {
-                    modifier.Update(timeSinceLastFrame, ref particle);
-                }
-                
-                particle.Position += _particles[x].Velocity;
-                particle.TimeAlive += timeSinceLastFrame;
-
-                if (particle.TimeAlive > _settings.MaxParticleLifeTime)
-                {
-                    particle.IsAlive = false;
-                }
-            }
-
-            if (_settings.Trigger.ShouldCreateNewParticles(timeSinceLastFrame))
-            {
-                var count = _settings.ParticleCountInitializer.GetNewParticleCount();
-                for (var x = 0; x < count; x++)
-                {
-                    var position = _settings.PositionalInitializer.GetNewParticlePosition();
-                    var velocity = _settings.VelocityInitializer.GetNewParticleVelocity();
-                    var size = _settings.SizeInitializer.GetNextParticleSize();
-                    var colorModifier = _settings.ColorInitializer.GetColorOperationForNextParticle();
-                    
-                    _particles.Add(new Particle
-                    {
-                        IsAlive = true,
-                        TimeAlive = 0,
-                        Position = position,
-                        Velocity = velocity,
-                        Size = size,
-                        ColorModifier = colorModifier,
-                        RotationInRadians = 0, // TODO: add initializer
-                    });
-                }
-            }
+            _emitterLogic.Update(_particles, timeSinceLastFrame);
         }
 
         public void Draw()

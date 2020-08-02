@@ -19,5 +19,27 @@
         {
             _hasTriggered = false;
         }
+
+        public string GetCSharpFieldDefinitions()
+        {
+            return $@"
+        private bool _hasTriggered;
+";
+        }
+
+        public string GetCSharpCheckCode()
+        {
+            return $@"
+            if (_hasTriggered)
+            {{
+                shouldCreateNewParticle = false;
+            }}
+            else
+            {{
+                shouldCreateNewParticle = true;
+                _hasTriggered = true;
+            }}
+";
+        }
     }
 }

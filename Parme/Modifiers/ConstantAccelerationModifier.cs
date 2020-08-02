@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Parme.Scripting;
 
 namespace Parme.Modifiers
 {
@@ -14,6 +15,13 @@ namespace Parme.Modifiers
         public void Update(float timeSinceLastFrame, ref Particle particle)
         {
             particle.Velocity += timeSinceLastFrame * _acceleration;
+        }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $@"
+                particle.Velocity += timeSinceLastFrame * {_acceleration.ToCSharpScriptString()};
+";
         }
     }
 }

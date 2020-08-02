@@ -13,6 +13,8 @@ namespace Parme.Initializers.ParticleCountInitializer
             {
                 var message = $"Min/max of {min}/{max} is invalid.  Values must be greater than zero and " +
                               $"max must be greater than the min";
+                              
+                throw new ArgumentException(message);
             }
             
             _min = min;
@@ -22,6 +24,11 @@ namespace Parme.Initializers.ParticleCountInitializer
         public int GetNewParticleCount()
         {
             return _random.Next(_min, _max + 1);
+        }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $"newParticleCount = _random.Next({_min}, {_max});";
         }
     }
 }

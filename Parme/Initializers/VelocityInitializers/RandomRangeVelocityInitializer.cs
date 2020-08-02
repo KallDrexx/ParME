@@ -27,5 +27,14 @@ namespace Parme.Initializers.VelocityInitializers
             var y = _max.Y - _random.NextDouble() * (_max.Y - _min.Y);
             return new Vector2((float) x, (float) y);
         }
+
+        public string GetCSharpExecutionCode()
+        {
+            return $@"
+            var x = {_max.X} - _random.NextDouble() * ({_max.X} - {_min.X});
+            var y = {_max.Y} - _random.NextDouble() * ({_max.Y} - {_min.Y});
+            particle.Velocity = new Vector2((float) x, (float) y);
+";
+        }
     }
 }
