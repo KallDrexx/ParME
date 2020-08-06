@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme", "Parme\Parme.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.Core", "Parme.Core\Parme.Core.csproj", "{B04E60EE-46C5-42D0-B012-0C7AAA1F7635}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.CSharp", "Parme.CSharp\Parme.CSharp.csproj", "{13292589-3E6B-4367-A644-07282B2382AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{B04E60EE-46C5-42D0-B012-0C7AAA1F7635}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B04E60EE-46C5-42D0-B012-0C7AAA1F7635}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B04E60EE-46C5-42D0-B012-0C7AAA1F7635}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13292589-3E6B-4367-A644-07282B2382AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13292589-3E6B-4367-A644-07282B2382AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13292589-3E6B-4367-A644-07282B2382AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13292589-3E6B-4367-A644-07282B2382AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
