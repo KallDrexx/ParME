@@ -3,7 +3,7 @@ using Parme.Core.Triggers;
 
 namespace Parme.CSharp.CodeGen.Triggers
 {
-    public class OneShotTriggerCodeGen : IGenerateCode
+    internal class OneShotTriggerCodeGen : IGenerateCode
     {
         public Type ParmeObjectType => typeof(OneShotTrigger);
 

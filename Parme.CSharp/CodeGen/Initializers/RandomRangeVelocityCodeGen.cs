@@ -3,7 +3,7 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class RandomRangeVelocityCodeGen : IGenerateCode
+    internal class RandomRangeVelocityCodeGen : IGenerateCode
     {
         public Type ParmeObjectType => typeof(RandomRangeVelocityInitializer);
 

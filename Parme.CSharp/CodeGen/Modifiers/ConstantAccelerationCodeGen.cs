@@ -3,7 +3,7 @@ using Parme.Core.Modifiers;
 
 namespace Parme.CSharp.CodeGen.Modifiers
 {
-    public class ConstantAccelerationCodeGen : IGenerateCode
+    internal class ConstantAccelerationCodeGen : IGenerateCode
     {
         public Type ParmeObjectType => typeof(ConstantAccelerationModifier);
 

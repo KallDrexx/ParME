@@ -3,7 +3,7 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class RandomRegionPositionCodeGen : IGenerateCode
+    internal class RandomRegionPositionCodeGen : IGenerateCode
     {
         public Type ParmeObjectType => typeof(RandomRegionPositionInitializer);
 

@@ -3,7 +3,7 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class StaticParticleCountCodeGen : IGenerateCode
+    internal class StaticParticleCountCodeGen : IGenerateCode
     {
         public Type ParmeObjectType => typeof(StaticParticleCountInitializer);
 

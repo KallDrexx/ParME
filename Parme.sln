@@ -1,14 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.StandAloneRenderer", "Parme.StandAloneRenderer\Parme.StandAloneRenderer.csproj", "{0A2643A3-0788-45A1-9DD7-95B9A01D27BB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme", "Parme\Parme.csproj", "{77550262-25DC-424E-94E4-F07791CE8296}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.Core", "Parme.Core\Parme.Core.csproj", "{B04E60EE-46C5-42D0-B012-0C7AAA1F7635}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.CSharp", "Parme.CSharp\Parme.CSharp.csproj", "{13292589-3E6B-4367-A644-07282B2382AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.CSharp.Tests", "Parme.CSharp.Tests\Parme.CSharp.Tests.csproj", "{A6156FC9-88A5-4F80-966D-CF7941E8DA1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.MonoGame", "Parme.MonoGame\Parme.MonoGame.csproj", "{F53FCB69-D833-4C0E-A912-07329ACB9786}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.Editor", "Parme.Editor\Parme.Editor.csproj", "{837DFFA0-A11A-4952-AFFF-6A4F1D839E40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,14 +16,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0A2643A3-0788-45A1-9DD7-95B9A01D27BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0A2643A3-0788-45A1-9DD7-95B9A01D27BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A2643A3-0788-45A1-9DD7-95B9A01D27BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A2643A3-0788-45A1-9DD7-95B9A01D27BB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{77550262-25DC-424E-94E4-F07791CE8296}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{77550262-25DC-424E-94E4-F07791CE8296}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{77550262-25DC-424E-94E4-F07791CE8296}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{77550262-25DC-424E-94E4-F07791CE8296}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B04E60EE-46C5-42D0-B012-0C7AAA1F7635}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B04E60EE-46C5-42D0-B012-0C7AAA1F7635}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B04E60EE-46C5-42D0-B012-0C7AAA1F7635}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,5 +28,13 @@ Global
 		{A6156FC9-88A5-4F80-966D-CF7941E8DA1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6156FC9-88A5-4F80-966D-CF7941E8DA1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6156FC9-88A5-4F80-966D-CF7941E8DA1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F53FCB69-D833-4C0E-A912-07329ACB9786}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F53FCB69-D833-4C0E-A912-07329ACB9786}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F53FCB69-D833-4C0E-A912-07329ACB9786}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F53FCB69-D833-4C0E-A912-07329ACB9786}.Release|Any CPU.Build.0 = Release|Any CPU
+		{837DFFA0-A11A-4952-AFFF-6A4F1D839E40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{837DFFA0-A11A-4952-AFFF-6A4F1D839E40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{837DFFA0-A11A-4952-AFFF-6A4F1D839E40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{837DFFA0-A11A-4952-AFFF-6A4F1D839E40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

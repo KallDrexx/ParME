@@ -3,7 +3,7 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class StaticSizeCodeGen : IGenerateCode
+    internal class StaticSizeCodeGen : IGenerateCode
     {
         public Type ParmeObjectType => typeof(StaticSizeInitializer);
 

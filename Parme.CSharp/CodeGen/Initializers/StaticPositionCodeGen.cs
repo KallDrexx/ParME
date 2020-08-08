@@ -3,7 +3,7 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class StaticPositionCodeGen : IGenerateCode
+    internal class StaticPositionCodeGen : IGenerateCode
     {
         public Type ParmeObjectType => typeof(StaticPositionInitializer);
 

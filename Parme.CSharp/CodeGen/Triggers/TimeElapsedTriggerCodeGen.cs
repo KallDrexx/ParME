@@ -3,7 +3,7 @@ using Parme.Core.Triggers;
 
 namespace Parme.CSharp.CodeGen.Triggers
 {
-    public class TimeElapsedTriggerCodeGen : IGenerateCode
+    internal class TimeElapsedTriggerCodeGen : IGenerateCode
     {
         public Type ParmeObjectType => typeof(TimeElapsedTrigger);
 

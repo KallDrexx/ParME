@@ -3,7 +3,7 @@ using Parme.Core.Modifiers;
 
 namespace Parme.CSharp.CodeGen.Modifiers
 {
-    public class ConstantColorMultiplierCodeGen : IGenerateCode
+    internal class ConstantColorMultiplierCodeGen : IGenerateCode
     {
         public Type ParmeObjectType => typeof(ConstantColorMultiplierChangeModifier);
 
@@ -26,10 +26,10 @@ namespace Parme.CSharp.CodeGen.Modifiers
 
         public string GenerateExecutionCode(object obj)
         {
-            return @"particle.RedMultiplier += timeSinceLastFrame + ConstantColorRedMultiplierChangePerSecond;
-                        particle.GreenMultiplier += timeSinceLastFrame + ConstantColorGreenMultiplierChangePerSecond;
-                        particle.BlueMultiplier += timeSinceLastFrame + ConstantColorBlueMultiplierChangePerSecond;
-                        particle.AlphaMultiplier += timeSinceLastFrame + ConstantColorAlphaMultiplierChangePerSecond;
+            return @"particle.RedMultiplier += timeSinceLastFrame * ConstantColorRedMultiplierChangePerSecond;
+                        particle.GreenMultiplier += timeSinceLastFrame * ConstantColorGreenMultiplierChangePerSecond;
+                        particle.BlueMultiplier += timeSinceLastFrame * ConstantColorBlueMultiplierChangePerSecond;
+                        particle.AlphaMultiplier += timeSinceLastFrame * ConstantColorAlphaMultiplierChangePerSecond;
 ";
         }
     }

@@ -3,7 +3,7 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class RadialVelocityInitializerCodeGen : IGenerateCode
+    internal class RadialVelocityInitializerCodeGen : IGenerateCode
     {
         public Type ParmeObjectType => typeof(RadialVelocityInitializer);
 

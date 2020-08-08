@@ -3,7 +3,7 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class StaticColorCodeGen : IGenerateCode
+    internal class StaticColorCodeGen : IGenerateCode
     {
         public Type ParmeObjectType => typeof(StaticColorInitializer);
 
