@@ -35,9 +35,10 @@ using Parme.CSharp;
         public void Update(ParticleBuffer particleBuffer, float timeSinceLastFrame)
         {{
             // Update existing particles
-            for (var particleIndex = 0; particleIndex < particleBuffer.Count; particleIndex++)
+            var particles = particleBuffer.Particles;
+            for (var particleIndex = 0; particleIndex < particles.Length; particleIndex++)
             {{
-                ref var particle = ref particleBuffer[particleIndex];
+                ref var particle = ref particles[particleIndex];
                 if (!particle.IsAlive)
                 {{
                     continue;
