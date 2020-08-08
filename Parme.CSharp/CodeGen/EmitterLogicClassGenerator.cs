@@ -32,7 +32,7 @@ using Parme.CSharp;
         
         {4}
         
-        public void Update(ParticleBuffer particleBuffer, float timeSinceLastFrame)
+        public void Update(ParticleBuffer particleBuffer, float timeSinceLastFrame, Emitter parent)
         {{
             // Update existing particles
             var particles = particleBuffer.Particles;
@@ -62,7 +62,7 @@ using Parme.CSharp;
                 {6}
             }}
             
-            if (shouldCreateNewParticle)
+            if (shouldCreateNewParticle && parent.IsEmittingNewParticles)
             {{
                 var newParticleCount = 0;
                 {{

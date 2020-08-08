@@ -5,7 +5,7 @@ namespace Parme.CSharp
     public struct Particle
     {
         public bool IsAlive;
-        public byte TextureSlotId;
+        public byte TextureCoordinateIndex;
         public Vector2 Size;
         public Vector2 Position;
         public Vector2 Velocity;
