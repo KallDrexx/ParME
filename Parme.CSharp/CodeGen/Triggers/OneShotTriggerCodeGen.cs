@@ -1,21 +1,24 @@
-﻿using Parme.Core.Triggers;
+﻿using System;
+using Parme.Core.Triggers;
 
 namespace Parme.CSharp.CodeGen.Triggers
 {
-    public class OneShotTriggerCodeGen : IGenerateCode<OneShotTrigger>
+    public class OneShotTriggerCodeGen : IGenerateCode
     {
-        public string GenerateProperties(OneShotTrigger obj)
+        public Type ParmeObjectType => typeof(OneShotTrigger);
+
+        public string GenerateProperties(object obj)
         {
             return string.Empty;
         }
 
-        public string GenerateFields(OneShotTrigger obj)
+        public string GenerateFields(object obj)
         {
             return @"private bool _hasTriggered;
 ";
         }
 
-        public string GenerateExecutionCode(OneShotTrigger obj)
+        public string GenerateExecutionCode(object obj)
         {
             return @"if (_hasTriggered)
             {

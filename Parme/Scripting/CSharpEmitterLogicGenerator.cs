@@ -10,8 +10,8 @@ using System;
 using Microsoft.Xna.Framework;
 using Parme;
 
-//namespace {0}
-//{{
+namespace {0}
+{{
     public class {1} : IEmitterLogic
     {{
         private readonly Random _random = new Random();
@@ -83,7 +83,7 @@ using Parme;
             }}
         }}
     }}
-//}}
+}}
 
 return new {1}();
             ";

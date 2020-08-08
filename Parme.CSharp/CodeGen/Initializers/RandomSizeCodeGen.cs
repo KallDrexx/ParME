@@ -1,25 +1,30 @@
+using System;
 using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class RandomSizeCodeGen : IGenerateCode<RandomSizeInitializer>
+    public class RandomSizeCodeGen : IGenerateCode
     {
-        public string GenerateProperties(RandomSizeInitializer obj)
+        public Type ParmeObjectType => typeof(RandomSizeInitializer);
+
+        public string GenerateProperties(object obj)
         {
+            var initializer = (RandomSizeInitializer) obj;
+            
             return $@"
-        public int RandomSizeMinWidth {{ get; set; }} = {obj.MinWidth};
-        public int RandomSizeMaxWidth {{ get; set; }} = {obj.MaxWidth};
-        public int RandomSizeMinHeight {{ get; set; }} = {obj.MinHeight};
-        public int RandomSizeMaxHeight {{ get; set; }} = {obj.MaxHeight};
+        public int RandomSizeMinWidth {{ get; set; }} = {initializer.MinWidth};
+        public int RandomSizeMaxWidth {{ get; set; }} = {initializer.MaxWidth};
+        public int RandomSizeMinHeight {{ get; set; }} = {initializer.MinHeight};
+        public int RandomSizeMaxHeight {{ get; set; }} = {initializer.MaxHeight};
 ";
         }
 
-        public string GenerateFields(RandomSizeInitializer obj)
+        public string GenerateFields(object obj)
         {
             return string.Empty;
         }
 
-        public string GenerateExecutionCode(RandomSizeInitializer obj)
+        public string GenerateExecutionCode(object obj)
         {
             return $@"
             var x = RandomSizeMaxWidth - _random.NextDouble() * (RandomSizeMaxWidth - RandomSizeMinWidth);

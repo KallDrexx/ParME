@@ -1,9 +1,12 @@
-﻿namespace Parme.CSharp.CodeGen
+﻿using System;
+
+namespace Parme.CSharp.CodeGen
 {
-    public interface IGenerateCode<T>
+    public interface IGenerateCode
     {
-        public string GenerateProperties(T obj);
-        public string GenerateFields(T obj);
-        public string GenerateExecutionCode(T obj);
+        Type ParmeObjectType { get; }
+        string GenerateProperties(object obj);
+        string GenerateFields(object obj);
+        string GenerateExecutionCode(object obj);
     }
 }

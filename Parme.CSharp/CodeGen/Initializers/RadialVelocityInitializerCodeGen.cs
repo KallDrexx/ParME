@@ -3,23 +3,27 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class RadialVelocityInitializerCodeGen : IGenerateCode<RadialVelocityInitializer>
+    public class RadialVelocityInitializerCodeGen : IGenerateCode
     {
-        public string GenerateProperties(RadialVelocityInitializer obj)
+        public Type ParmeObjectType => typeof(RadialVelocityInitializer);
+
+        public string GenerateProperties(object obj)
         {
+            var initializer = (RadialVelocityInitializer) obj;
+            
             return $@"
-        public float RadialVelocityMagnitude {{ get; set; }} = {obj.Magnitude}f;
-        public float RadialVelocityMinRadians {{ get; set; }} = {obj.MinDegrees * (Math.PI / 180f)}f;
-        public float RadialVelocityMaxRadians {{ get; set; }} = {obj.MaxDegrees * (Math.PI / 180f)}f; 
+        public float RadialVelocityMagnitude {{ get; set; }} = {initializer.Magnitude}f;
+        public float RadialVelocityMinRadians {{ get; set; }} = {initializer.MinDegrees * (Math.PI / 180f)}f;
+        public float RadialVelocityMaxRadians {{ get; set; }} = {initializer.MaxDegrees * (Math.PI / 180f)}f; 
 ";
         }
 
-        public string GenerateFields(RadialVelocityInitializer obj)
+        public string GenerateFields(object obj)
         {
             return @"";
         }
 
-        public string GenerateExecutionCode(RadialVelocityInitializer obj)
+        public string GenerateExecutionCode(object obj)
         {
             return @"
             var radians = RadialVelocityMagnitude - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
@@ -27,7 +31,7 @@ namespace Parme.CSharp.CodeGen.Initializers
             // convert from polar coordinates to cartesian coordinates
             var x = RadialVelocityMagnitude * Math.Cos(radians);
             var y = RadialVelocityMagnitude * Math.Sin(radians);
-            particle.Velocity = new Particle((float) x, (float) y);
+            particle.Velocity = new Vector2((float) x, (float) y);
 ";
         }
     }

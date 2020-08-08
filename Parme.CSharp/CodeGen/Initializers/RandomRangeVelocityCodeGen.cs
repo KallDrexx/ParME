@@ -1,24 +1,29 @@
+using System;
 using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class RandomRangeVelocityCodeGen : IGenerateCode<RandomRangeVelocityInitializer>
+    public class RandomRangeVelocityCodeGen : IGenerateCode
     {
-        public string GenerateProperties(RandomRangeVelocityInitializer obj)
+        public Type ParmeObjectType => typeof(RandomRangeVelocityInitializer);
+
+        public string GenerateProperties(object obj)
         {
-            return $@"public float RandomRangeVelocityMinX {{ get; set; }} = {obj.MinXVelocity}f;
-        public float RandomRangeVelocityMaxX {{ get; set; }} = {obj.MaxXVelocity}f;
-        public float RandomRangeVelocityMinY {{ get; set; }} = {obj.MinYVelocity}f;
-        public float RandomRangeVelocityMaxY {{ get; set; }} = {obj.MaxYVelocity}f; 
+            var initializer = (RandomRangeVelocityInitializer) obj;
+            
+            return $@"public float RandomRangeVelocityMinX {{ get; set; }} = {initializer.MinXVelocity}f;
+        public float RandomRangeVelocityMaxX {{ get; set; }} = {initializer.MaxXVelocity}f;
+        public float RandomRangeVelocityMinY {{ get; set; }} = {initializer.MinYVelocity}f;
+        public float RandomRangeVelocityMaxY {{ get; set; }} = {initializer.MaxYVelocity}f; 
 ";
         }
 
-        public string GenerateFields(RandomRangeVelocityInitializer obj)
+        public string GenerateFields(object obj)
         {
             return string.Empty;
         }
 
-        public string GenerateExecutionCode(RandomRangeVelocityInitializer obj)
+        public string GenerateExecutionCode(object obj)
         {
             return @"
             var x = RandomRangeVelocityMaxX - _random.NextDouble() * (RandomRangeVelocityMaxX - RandomRangeVelocityMinX);

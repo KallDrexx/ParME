@@ -1,30 +1,35 @@
+using System;
 using Parme.Core.Modifiers;
 
 namespace Parme.CSharp.CodeGen.Modifiers
 {
-    public class ConstantColorMultiplierCodeGen : IGenerateCode<ConstantColorMultiplierChangeModifier>
+    public class ConstantColorMultiplierCodeGen : IGenerateCode
     {
-        public string GenerateProperties(ConstantColorMultiplierChangeModifier obj)
+        public Type ParmeObjectType => typeof(ConstantColorMultiplierChangeModifier);
+
+        public string GenerateProperties(object obj)
         {
+            var modifier = (ConstantColorMultiplierChangeModifier) obj;
+            
             return $@"
-        public float ConstantColorRedMultiplierChangePerSecond {{ get; set; }} = {obj.RedMultiplierChangePerSecond}f;
-        public float ConstantColorGreenMultiplierChangePerSecond {{ get; set; }} = {obj.GreenMultiplierChangePerSecond}f;
-        public float ConstantColorBlueMultiplierChangePerSecond {{ get; set; }} = {obj.BlueMultiplierChangePerSecond}f;
-        public float ConstantColorAlphaMultiplierChangePerSecond {{ get; set; }} = {obj.AlphaMultiplierChangePerSecond}f;
+        public float ConstantColorRedMultiplierChangePerSecond {{ get; set; }} = {modifier.RedMultiplierChangePerSecond}f;
+        public float ConstantColorGreenMultiplierChangePerSecond {{ get; set; }} = {modifier.GreenMultiplierChangePerSecond}f;
+        public float ConstantColorBlueMultiplierChangePerSecond {{ get; set; }} = {modifier.BlueMultiplierChangePerSecond}f;
+        public float ConstantColorAlphaMultiplierChangePerSecond {{ get; set; }} = {modifier.AlphaMultiplierChangePerSecond}f;
 ";
         }
 
-        public string GenerateFields(ConstantColorMultiplierChangeModifier obj)
+        public string GenerateFields(object obj)
         {
             return string.Empty;
         }
 
-        public string GenerateExecutionCode(ConstantColorMultiplierChangeModifier obj)
+        public string GenerateExecutionCode(object obj)
         {
-            return @"particle.RedMultiplier += timeSinceLastFrame + ConstantColorRedMultiplierChangePerSecond
-            particle.GreenMultiplier += timeSinceLastFrame + ConstantColorGreenMultiplierChangePerSecond
-            particle.BlueMultiplier += timeSinceLastFrame + ConstantColorBlueMultiplierChangePerSecond
-            particle.AlphaMultiplier += timeSinceLastFrame + ConstantColorAlphaMultiplierChangePerSecond
+            return @"particle.RedMultiplier += timeSinceLastFrame + ConstantColorRedMultiplierChangePerSecond;
+            particle.GreenMultiplier += timeSinceLastFrame + ConstantColorGreenMultiplierChangePerSecond;
+            particle.BlueMultiplier += timeSinceLastFrame + ConstantColorBlueMultiplierChangePerSecond;
+            particle.AlphaMultiplier += timeSinceLastFrame + ConstantColorAlphaMultiplierChangePerSecond;
 ";
         }
     }

@@ -3,23 +3,27 @@ using Parme.Core.Modifiers;
 
 namespace Parme.CSharp.CodeGen.Modifiers
 {
-    public class ConstantRotationCodeGen : IGenerateCode<ConstantRotationModifier>
+    public class ConstantRotationCodeGen : IGenerateCode
     {
-        public string GenerateProperties(ConstantRotationModifier obj)
+        public Type ParmeObjectType => typeof(ConstantRotationModifier);
+
+        public string GenerateProperties(object obj)
         {
+            var modifier = (ConstantRotationModifier) obj;
+            
             return $@"
-        public float ConstantRotationRadiansPerSecond {{ get; set; }} = {obj.DegreesPerSecond * (Math.PI / 180f)}f;
+        public float ConstantRotationRadiansPerSecond {{ get; set; }} = {modifier.DegreesPerSecond * (Math.PI / 180f)}f;
 ";
         }
 
-        public string GenerateFields(ConstantRotationModifier obj)
+        public string GenerateFields(object obj)
         {
             return string.Empty;
         }
 
-        public string GenerateExecutionCode(ConstantRotationModifier obj)
+        public string GenerateExecutionCode(object obj)
         {
-            return @"particle.RotationInRadians += timeSinceLastFrame * ConstantRotationRadiansPerSecond
+            return @"particle.RotationInRadians += timeSinceLastFrame * ConstantRotationRadiansPerSecond;
 ";
         }
     }

@@ -1,21 +1,26 @@
-﻿using Parme.Core.Triggers;
+﻿using System;
+using Parme.Core.Triggers;
 
 namespace Parme.CSharp.CodeGen.Triggers
 {
-    public class TimeElapsedTriggerCodeGen : IGenerateCode<TimeElapsedTrigger>
+    public class TimeElapsedTriggerCodeGen : IGenerateCode
     {
-        public string GenerateProperties(TimeElapsedTrigger obj)
+        public Type ParmeObjectType => typeof(TimeElapsedTrigger);
+
+        public string GenerateProperties(object obj)
         {
-            return $@"public float TimeElapsedTriggerFrequency {{ get; set; }} = {obj.Frequency}f; 
+            var trigger = (TimeElapsedTrigger) obj;
+            
+            return $@"public float TimeElapsedTriggerFrequency {{ get; set; }} = {trigger.Frequency}f; 
 ";
         }
 
-        public string GenerateFields(TimeElapsedTrigger obj)
+        public string GenerateFields(object obj)
         {
             return @"private float _timeSinceLastTrigger;";
         }
 
-        public string GenerateExecutionCode(TimeElapsedTrigger obj)
+        public string GenerateExecutionCode(object obj)
         {
             return $@"
             shouldCreateNewParticle = false;

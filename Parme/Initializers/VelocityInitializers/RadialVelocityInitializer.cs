@@ -42,7 +42,7 @@ namespace Parme.Initializers.VelocityInitializers
             // convert from polar coordinates to cartesian coordinates
             var x = {_magnitude} * Math.Cos(radians);
             var y = {_magnitude} * Math.Sin(radians);
-            particle.Velocity = new Particle((float) x, (float) y);
+            particle.Velocity = new Vector2((float) x, (float) y);
 ";
         }
     }

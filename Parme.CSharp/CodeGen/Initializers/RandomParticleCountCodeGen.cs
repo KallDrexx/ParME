@@ -1,23 +1,28 @@
-﻿using Parme.Core.Initializers;
+﻿using System;
+using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class RandomParticleCountCodeGen : IGenerateCode<RandomParticleCountInitializer>
+    public class RandomParticleCountCodeGen : IGenerateCode
     {
-        public string GenerateProperties(RandomParticleCountInitializer obj)
+        public Type ParmeObjectType => typeof(RandomParticleCountInitializer);
+
+        public string GenerateProperties(object obj)
         {
+            var initializer = (RandomParticleCountInitializer) obj;
+            
             return $@"
-        public int RandomParticleCountMinToSpawn {{ get; set; }} = {obj.MinimumToSpawn};
-        public int RandomParticleCountMaxToSpawn {{ get; set; }} = {obj.MaximumToSpawn};
+        public int RandomParticleCountMinToSpawn {{ get; set; }} = {initializer.MinimumToSpawn};
+        public int RandomParticleCountMaxToSpawn {{ get; set; }} = {initializer.MaximumToSpawn};
 ";
         }
 
-        public string GenerateFields(RandomParticleCountInitializer obj)
+        public string GenerateFields(object obj)
         {
             return string.Empty;
         }
 
-        public string GenerateExecutionCode(RandomParticleCountInitializer obj)
+        public string GenerateExecutionCode(object obj)
         {
             return @"newParticleCount = _random.Next(RandomParticleCountMinToSpawn, RandomParticleCountMaxToSpawn);
 ";

@@ -1,23 +1,28 @@
+using System;
 using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class StaticPositionCodeGen : IGenerateCode<StaticPositionInitializer>
+    public class StaticPositionCodeGen : IGenerateCode
     {
-        public string GenerateProperties(StaticPositionInitializer obj)
+        public Type ParmeObjectType => typeof(StaticPositionInitializer);
+
+        public string GenerateProperties(object obj)
         {
+            var initializer = (StaticPositionInitializer) obj;
+            
             return $@"
-        public float StaticPositionXOffset {{ get; set; }} = {obj.XOffset}f;
-        public float StaticPositionYOffset {{ get; set; }} = {obj.YOffset};
+        public float StaticPositionXOffset {{ get; set; }} = {initializer.XOffset}f;
+        public float StaticPositionYOffset {{ get; set; }} = {initializer.YOffset};
 ";
         }
 
-        public string GenerateFields(StaticPositionInitializer obj)
+        public string GenerateFields(object obj)
         {
             return string.Empty;
         }
 
-        public string GenerateExecutionCode(StaticPositionInitializer obj)
+        public string GenerateExecutionCode(object obj)
         {
             return @"
             particle.Position = new Vector2(StaticPositionXOffset, StaticPositionYOffset);
