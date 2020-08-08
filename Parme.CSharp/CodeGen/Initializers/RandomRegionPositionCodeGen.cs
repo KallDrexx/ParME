@@ -27,9 +27,9 @@ namespace Parme.CSharp.CodeGen.Initializers
         public string GenerateExecutionCode(object obj)
         {
             return $@"
-            var x = RandomRegionPositionMaxXOffset - _random.NextDouble() * (RandomRegionPositionMaxXOffset - RandomRegionPositionMinXOffset);
-            var y = RandomRegionPositionMaxYOffset - _random.NextDouble() * (RandomRegionPositionMaxYOffset - RandomRegionPositionMinYOffset);
-            particle.Position = new Vector2((float) x, (float) y);
+                        var x = RandomRegionPositionMaxXOffset - _random.NextDouble() * (RandomRegionPositionMaxXOffset - RandomRegionPositionMinXOffset);
+                        var y = RandomRegionPositionMaxYOffset - _random.NextDouble() * (RandomRegionPositionMaxYOffset - RandomRegionPositionMinYOffset);
+                        particle.Position = new Vector2((float) x, (float) y);
 ";
         }
     }

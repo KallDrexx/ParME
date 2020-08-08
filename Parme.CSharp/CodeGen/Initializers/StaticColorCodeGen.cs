@@ -27,10 +27,10 @@ namespace Parme.CSharp.CodeGen.Initializers
         public string GenerateExecutionCode(object obj)
         {
             return @"
-            particle.RedMultiplier = StaticColorRedMultiplier;
-            particle.GreenMultiplier = StaticColorGreenMultiplier;
-            particle.BlueMultiplier = StaticColorBlueMultiplier;
-            particle.AlphaMultiplier = StaticColorAlphaMultiplier;
+                        particle.RedMultiplier = StaticColorRedMultiplier;
+                        particle.GreenMultiplier = StaticColorGreenMultiplier;
+                        particle.BlueMultiplier = StaticColorBlueMultiplier;
+                        particle.AlphaMultiplier = StaticColorAlphaMultiplier;
             ";
         }
     }

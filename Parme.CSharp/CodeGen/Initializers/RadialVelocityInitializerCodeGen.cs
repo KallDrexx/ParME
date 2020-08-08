@@ -26,12 +26,12 @@ namespace Parme.CSharp.CodeGen.Initializers
         public string GenerateExecutionCode(object obj)
         {
             return @"
-            var radians = RadialVelocityMagnitude - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
+                        var radians = RadialVelocityMagnitude - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
                 
-            // convert from polar coordinates to cartesian coordinates
-            var x = RadialVelocityMagnitude * Math.Cos(radians);
-            var y = RadialVelocityMagnitude * Math.Sin(radians);
-            particle.Velocity = new Vector2((float) x, (float) y);
+                        // convert from polar coordinates to cartesian coordinates
+                        var x = RadialVelocityMagnitude * Math.Cos(radians);
+                        var y = RadialVelocityMagnitude * Math.Sin(radians);
+                        particle.Velocity = new Vector2((float) x, (float) y);
 ";
         }
     }

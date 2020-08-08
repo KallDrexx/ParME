@@ -11,7 +11,8 @@ namespace Parme.CSharp.CodeGen.Initializers
         {
             var initializer = (RandomRangeVelocityInitializer) obj;
             
-            return $@"public float RandomRangeVelocityMinX {{ get; set; }} = {initializer.MinXVelocity}f;
+            return $@"
+        public float RandomRangeVelocityMinX {{ get; set; }} = {initializer.MinXVelocity}f;
         public float RandomRangeVelocityMaxX {{ get; set; }} = {initializer.MaxXVelocity}f;
         public float RandomRangeVelocityMinY {{ get; set; }} = {initializer.MinYVelocity}f;
         public float RandomRangeVelocityMaxY {{ get; set; }} = {initializer.MaxYVelocity}f; 
@@ -26,9 +27,9 @@ namespace Parme.CSharp.CodeGen.Initializers
         public string GenerateExecutionCode(object obj)
         {
             return @"
-            var x = RandomRangeVelocityMaxX - _random.NextDouble() * (RandomRangeVelocityMaxX - RandomRangeVelocityMinX);
-            var y = RandomRangeVelocityMaxY - _random.NextDouble() * (RandomRangeVelocityMaxY - RandomRangeVelocityMinY);
-            particle.Velocity = new Vector2((float) x, (float) y);
+                        var x = RandomRangeVelocityMaxX - _random.NextDouble() * (RandomRangeVelocityMaxX - RandomRangeVelocityMinX);
+                        var y = RandomRangeVelocityMaxY - _random.NextDouble() * (RandomRangeVelocityMaxY - RandomRangeVelocityMinY);
+                        particle.Velocity = new Vector2((float) x, (float) y);
 ";
         }
     }

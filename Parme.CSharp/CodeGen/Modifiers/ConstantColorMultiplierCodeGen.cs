@@ -27,9 +27,9 @@ namespace Parme.CSharp.CodeGen.Modifiers
         public string GenerateExecutionCode(object obj)
         {
             return @"particle.RedMultiplier += timeSinceLastFrame + ConstantColorRedMultiplierChangePerSecond;
-            particle.GreenMultiplier += timeSinceLastFrame + ConstantColorGreenMultiplierChangePerSecond;
-            particle.BlueMultiplier += timeSinceLastFrame + ConstantColorBlueMultiplierChangePerSecond;
-            particle.AlphaMultiplier += timeSinceLastFrame + ConstantColorAlphaMultiplierChangePerSecond;
+                        particle.GreenMultiplier += timeSinceLastFrame + ConstantColorGreenMultiplierChangePerSecond;
+                        particle.BlueMultiplier += timeSinceLastFrame + ConstantColorBlueMultiplierChangePerSecond;
+                        particle.AlphaMultiplier += timeSinceLastFrame + ConstantColorAlphaMultiplierChangePerSecond;
 ";
         }
     }

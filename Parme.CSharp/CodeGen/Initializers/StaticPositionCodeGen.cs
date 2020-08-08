@@ -25,7 +25,7 @@ namespace Parme.CSharp.CodeGen.Initializers
         public string GenerateExecutionCode(object obj)
         {
             return @"
-            particle.Position = new Vector2(StaticPositionXOffset, StaticPositionYOffset);
+                        particle.Position = new Vector2(StaticPositionXOffset, StaticPositionYOffset);
 ";
         }
     }
