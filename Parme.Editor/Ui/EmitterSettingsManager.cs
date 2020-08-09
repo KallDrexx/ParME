@@ -9,6 +9,7 @@ using Parme.CSharp;
 using Parme.Editor.Ui.Elements;
 using Parme.Editor.Ui.Elements.Initializers.ColorMultiplier;
 using Parme.Editor.Ui.Elements.Initializers.ParticleCount;
+using Parme.Editor.Ui.Elements.Initializers.Position;
 using Parme.Editor.Ui.Elements.Triggers;
 
 namespace Parme.Editor.Ui
@@ -18,11 +19,17 @@ namespace Parme.Editor.Ui
         private readonly TypeSelector _triggerParentSection;
         private readonly OneShotTriggerEditor _oneShotTriggerEditor;
         private readonly TimeElapsedTriggerEditor _timeElapsedTriggerEditor;
+        
         private readonly TypeSelector _particleCountSelector;
         private readonly StaticParticleCountEditor _staticParticleCountEditor;
         private readonly RandomParticleCountEditor _randomParticleCountEditor;
+        
         private readonly TypeSelector _colorMultiplierSelector;
         private readonly StaticColorMultiplierEditor _staticColorMultiplierEditor;
+
+        private readonly TypeSelector _positionSelector;
+        private readonly StaticPositionEditor _staticPositionEditor;
+        private readonly RandomRegionPositionEditor _randomRegionPositionEditor;
         
         private readonly List<IParticleModifier> _modifiers = new List<IParticleModifier>();
         private float _particleMaxLife;
@@ -52,6 +59,12 @@ namespace Parme.Editor.Ui
                 {"Static", typeof(StaticColorInitializer)}
             };
             
+            var positionTypes = new Dictionary<string, Type>
+            {
+                {"Static", typeof(StaticPositionInitializer)},
+                {"Random Within Region", typeof(RandomRegionPositionInitializer)},
+            };
+            
             _triggerParentSection = new TypeSelector(triggerTypes){IsVisible = true};
             _oneShotTriggerEditor = new OneShotTriggerEditor{IsVisible = true};
             _timeElapsedTriggerEditor = new TimeElapsedTriggerEditor {IsVisible = true};
@@ -62,10 +75,15 @@ namespace Parme.Editor.Ui
             
             _colorMultiplierSelector = new TypeSelector(colorMultiplierTypes) {IsVisible = true};
             _staticColorMultiplierEditor = new StaticColorMultiplierEditor {IsVisible = true};
+            
+            _positionSelector = new TypeSelector(positionTypes) {IsVisible = true};
+            _staticPositionEditor = new StaticPositionEditor {IsVisible = true};
+            _randomRegionPositionEditor = new RandomRegionPositionEditor {IsVisible = true};
 
             mainSidePanel.TriggerParentSection = _triggerParentSection;
             mainSidePanel.ParticleCountSelector = _particleCountSelector;
             mainSidePanel.ColorMultiplierSelector = _colorMultiplierSelector;
+            mainSidePanel.PositionSelector = _positionSelector;
             
             _triggerParentSection.PropertyChanged += TriggerParentSectionOnPropertyChanged;
             _timeElapsedTriggerEditor.PropertyChanged += TimeElapsedTriggerEditorOnPropertyChanged;
@@ -76,6 +94,10 @@ namespace Parme.Editor.Ui
             
             _colorMultiplierSelector.PropertyChanged += ColorMultiplierSelectorOnPropertyChanged;
             _staticColorMultiplierEditor.PropertyChanged += StaticColorMultiplierEditorOnPropertyChanged;
+            
+            _positionSelector.PropertyChanged += PositionSelectorOnPropertyChanged;
+            _staticPositionEditor.PropertyChanged += StaticPositionEditorOnPropertyChanged;
+            _randomRegionPositionEditor.PropertyChanged += RandomRegionPositionEditorOnPropertyChanged;
         }
 
         public void NewEmitterSettingsLoaded(EmitterSettings settings)
@@ -106,59 +128,80 @@ namespace Parme.Editor.Ui
             _ignoreChangeNotifications = true;
 
             _triggerParentSection.SelectedType = _particleTrigger?.GetType();
-            if (_particleTrigger == null)
+            switch (_particleTrigger?.GetType().Name)
             {
-                _triggerParentSection.ChildDisplay = null;
-            }
-            else if (_particleTrigger.GetType() == typeof(OneShotTrigger))
-            {
-                _triggerParentSection.ChildDisplay = _oneShotTriggerEditor;
-            }
-            else if (_particleTrigger.GetType() == typeof(TimeElapsedTrigger))
-            {
-                _triggerParentSection.ChildDisplay = _timeElapsedTriggerEditor;
-                _timeElapsedTriggerEditor.Frequency = ((TimeElapsedTrigger) _particleTrigger).Frequency;
-            }
-            else
-            {
-                throw new NotSupportedException($"No known editor for trigger type {_particleTrigger.GetType()}");
+                case nameof(OneShotTrigger):
+                    _triggerParentSection.ChildDisplay = _oneShotTriggerEditor;
+                    break;
+                
+                case nameof(TimeElapsedTrigger):
+                    _triggerParentSection.ChildDisplay = _timeElapsedTriggerEditor;
+                    _timeElapsedTriggerEditor.Frequency = ((TimeElapsedTrigger) _particleTrigger).Frequency;
+                    break;
+                
+                default:
+                    _triggerParentSection.ChildDisplay = null;
+                    break;
             }
 
             _initializers.TryGetValue(InitializerType.ParticleCount, out var countInitializer);
             _particleCountSelector.SelectedType = countInitializer?.GetType();
-            if (countInitializer == null)
+            switch (countInitializer?.GetType().Name)
             {
-                _particleCountSelector.ChildDisplay = null;
-            }
-            else if (countInitializer.GetType() == typeof(StaticParticleCountInitializer))
-            {
-                _particleCountSelector.ChildDisplay = _staticParticleCountEditor;
-                _staticParticleCountEditor.ParticleSpawnCount = ((StaticParticleCountInitializer)countInitializer).ParticleSpawnCount;
-            }
-            else if (countInitializer.GetType() == typeof(RandomParticleCountInitializer))
-            {
-                _particleCountSelector.ChildDisplay = _randomParticleCountEditor;
-                _randomParticleCountEditor.MinSpawnCount = ((RandomParticleCountInitializer)countInitializer).MinimumToSpawn;
-                _randomParticleCountEditor.MaxSpawnCount = ((RandomParticleCountInitializer)countInitializer).MaximumToSpawn;
-            }
-            else
-            {
-                throw new NotSupportedException($"No known particle count editor for type {countInitializer.GetType()}");
+                case nameof(StaticParticleCountInitializer):
+                    _particleCountSelector.ChildDisplay = _staticParticleCountEditor;
+                    _staticParticleCountEditor.ParticleSpawnCount = ((StaticParticleCountInitializer)countInitializer).ParticleSpawnCount;
+                    break;
+                
+                case nameof(RandomParticleCountInitializer):
+                    _particleCountSelector.ChildDisplay = _randomParticleCountEditor;
+                    _randomParticleCountEditor.MinSpawnCount = ((RandomParticleCountInitializer)countInitializer).MinimumToSpawn;
+                    _randomParticleCountEditor.MaxSpawnCount = ((RandomParticleCountInitializer)countInitializer).MaximumToSpawn;
+                    break;
+                
+                default:
+                    _particleCountSelector.ChildDisplay = null;
+                    break;
             }
 
             _initializers.TryGetValue(InitializerType.ColorMultiplier, out var colorInitializer);
             _colorMultiplierSelector.SelectedType = colorInitializer?.GetType();
-            if (colorInitializer == null)
+            switch (colorInitializer?.GetType().Name)
             {
-                _colorMultiplierSelector.ChildDisplay = null;
+                case nameof(StaticColorInitializer):
+                    _colorMultiplierSelector.ChildDisplay = _staticColorMultiplierEditor;
+                    _staticColorMultiplierEditor.RedMultiplier = ((StaticColorInitializer) colorInitializer).RedMultiplier;
+                    _staticColorMultiplierEditor.GreenMultiplier = ((StaticColorInitializer) colorInitializer).GreenMultiplier;
+                    _staticColorMultiplierEditor.BlueMultiplier = ((StaticColorInitializer) colorInitializer).BlueMultiplier;
+                    _staticColorMultiplierEditor.AlphaMultiplier = ((StaticColorInitializer) colorInitializer).AlphaMultiplier;
+                    break;
+                
+                default:
+                    _colorMultiplierSelector.ChildDisplay = null;
+                    break;
             }
-            else if (colorInitializer.GetType() == typeof(StaticColorInitializer))
+
+            _initializers.TryGetValue(InitializerType.Position, out var positionInitializer);
+            _positionSelector.SelectedType = positionInitializer?.GetType();
+            switch (positionInitializer?.GetType().Name)
             {
-                _colorMultiplierSelector.ChildDisplay = _staticColorMultiplierEditor;
-                _staticColorMultiplierEditor.RedMultiplier = ((StaticColorInitializer) colorInitializer).RedMultiplier;
-                _staticColorMultiplierEditor.GreenMultiplier = ((StaticColorInitializer) colorInitializer).GreenMultiplier;
-                _staticColorMultiplierEditor.BlueMultiplier = ((StaticColorInitializer) colorInitializer).BlueMultiplier;
-                _staticColorMultiplierEditor.AlphaMultiplier = ((StaticColorInitializer) colorInitializer).AlphaMultiplier;
+                case nameof(StaticPositionInitializer):
+                    _positionSelector.ChildDisplay = _staticPositionEditor;
+                    _staticPositionEditor.XOffset = ((StaticPositionInitializer) positionInitializer).XOffset;
+                    _staticPositionEditor.YOffset = ((StaticPositionInitializer) positionInitializer).YOffset;
+                    break;
+                
+                case nameof(RandomRegionPositionInitializer):
+                    _positionSelector.ChildDisplay = _randomRegionPositionEditor;
+                    _randomRegionPositionEditor.MinXOffset = ((RandomRegionPositionInitializer) positionInitializer).MinXOffset;
+                    _randomRegionPositionEditor.MinYOffset = ((RandomRegionPositionInitializer) positionInitializer).MinYOffset;
+                    _randomRegionPositionEditor.MaxXOffset = ((RandomRegionPositionInitializer) positionInitializer).MaxXOffset;
+                    _randomRegionPositionEditor.MaxYOffset = ((RandomRegionPositionInitializer) positionInitializer).MaxYOffset;
+                    break;
+                
+                default:
+                    _positionSelector.ChildDisplay = null;
+                    break;
             }
 
             _ignoreChangeNotifications = false;
@@ -167,21 +210,14 @@ namespace Parme.Editor.Ui
         private void TriggerParentSectionOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_ignoreChangeNotifications) return;
-
+            
             if (e.PropertyName == nameof(TypeSelector.SelectedType))
             {
-                if (_triggerParentSection.SelectedType == typeof(OneShotTrigger))
-                {
-                    _particleTrigger = new OneShotTrigger();
-                }
-                else if (_triggerParentSection.SelectedType == typeof(TimeElapsedTrigger))
-                {
-                    _particleTrigger = new TimeElapsedTrigger();
-                }
-                else
-                {
-                    _particleTrigger = null;
-                }
+                var trigger = _triggerParentSection.SelectedType != null
+                    ? (IParticleTrigger) Activator.CreateInstance(_triggerParentSection.SelectedType)
+                    : null;
+
+                _particleTrigger = trigger;
             }
 
             UpdateUi();
@@ -205,26 +241,16 @@ namespace Parme.Editor.Ui
         private void ParticleCountSelectorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_ignoreChangeNotifications) return;
-
+            
             if (e.PropertyName == nameof(TypeSelector.SelectedType))
             {
-                IParticleInitializer initializer;
-                if (_particleCountSelector.SelectedType == typeof(StaticParticleCountInitializer))
-                {
-                    initializer = new StaticParticleCountInitializer();
-                }
-                else if (_particleCountSelector.SelectedType == typeof(RandomParticleCountInitializer))
-                {
-                    initializer = new RandomParticleCountInitializer();
-                }
-                else
-                {
-                    initializer = null;
-                }
+                var initializer = _particleCountSelector.SelectedType != null
+                    ? (IParticleInitializer) Activator.CreateInstance(_particleCountSelector.SelectedType)
+                    : null;
 
                 _initializers[InitializerType.ParticleCount] = initializer;
             }
-            
+
             UpdateUi();
             RaiseEmitterSettingsChangedEvent();
         }
@@ -268,18 +294,12 @@ namespace Parme.Editor.Ui
         private void ColorMultiplierSelectorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_ignoreChangeNotifications) return;
-
+            
             if (e.PropertyName == nameof(TypeSelector.SelectedType))
             {
-                IParticleInitializer initializer;
-                if (_colorMultiplierSelector.SelectedType == typeof(StaticColorInitializer))
-                {
-                    initializer = new StaticColorInitializer();
-                }
-                else
-                {
-                    initializer = null;
-                }
+                var initializer = _colorMultiplierSelector.SelectedType != null
+                    ? (IParticleInitializer) Activator.CreateInstance(_colorMultiplierSelector.SelectedType)
+                    : null;
 
                 _initializers[InitializerType.ColorMultiplier] = initializer;
             }
@@ -309,6 +329,71 @@ namespace Parme.Editor.Ui
                 
                 case nameof(StaticColorMultiplierEditor.AlphaMultiplier):
                     initializer.AlphaMultiplier = _staticColorMultiplierEditor.AlphaMultiplier;
+                    break;
+            }
+            
+            UpdateUi();
+            RaiseEmitterSettingsChangedEvent();
+        }
+
+        private void PositionSelectorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_ignoreChangeNotifications) return;
+
+            if (e.PropertyName == nameof(TypeSelector.SelectedType))
+            {
+                var initializer = _positionSelector.SelectedType != null
+                    ? (IParticleInitializer) Activator.CreateInstance(_positionSelector.SelectedType)
+                    : null;
+
+                _initializers[InitializerType.Position] = initializer;
+            }
+            
+            UpdateUi();
+            RaiseEmitterSettingsChangedEvent();
+        }
+
+        private void StaticPositionEditorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_ignoreChangeNotifications) return;
+
+            var initializer = (StaticPositionInitializer) _initializers[InitializerType.Position];
+            switch (e.PropertyName)
+            {
+                case nameof(StaticPositionEditor.XOffset):
+                    initializer.XOffset = _staticPositionEditor.XOffset;
+                    break;
+                
+                case nameof(StaticPositionEditor.YOffset):
+                    initializer.YOffset = _staticPositionEditor.YOffset;
+                    break;
+            }
+            
+            UpdateUi();
+            RaiseEmitterSettingsChangedEvent();
+        }
+
+        private void RandomRegionPositionEditorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_ignoreChangeNotifications) return;
+            
+            var initializer = (RandomRegionPositionInitializer) _initializers[InitializerType.Position];
+            switch (e.PropertyName)
+            {
+                case nameof(RandomRegionPositionEditor.MinXOffset):
+                    initializer.MinXOffset = _randomRegionPositionEditor.MinXOffset;
+                    break;
+                
+                case nameof(RandomRegionPositionEditor.MinYOffset):
+                    initializer.MinYOffset = _randomRegionPositionEditor.MinYOffset;
+                    break;
+                
+                case nameof(RandomRegionPositionEditor.MaxXOffset):
+                    initializer.MaxXOffset = _randomRegionPositionEditor.MaxXOffset;
+                    break;
+                
+                case nameof(RandomRegionPositionEditor.MaxYOffset):
+                    initializer.MaxYOffset = _randomRegionPositionEditor.MaxYOffset;
                     break;
             }
             
