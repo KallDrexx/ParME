@@ -57,6 +57,8 @@ namespace Parme.Editor
             texture.SetData(pixels);
 
             var settings = GetEmitterSettings();
+            _uiController.NewEmitterSettingsLoaded(settings);
+            
             var code = EmitterLogicClassGenerator.Generate(settings, "Parme.Editor", "Test", true);
             
             var scriptOptions = ScriptOptions.Default

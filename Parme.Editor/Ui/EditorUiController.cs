@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using ImGuiHandler;
+using Parme.CSharp;
 using Parme.Editor.Ui.Elements;
 
 namespace Parme.Editor.Ui
@@ -9,6 +10,7 @@ namespace Parme.Editor.Ui
         private readonly ImGuiManager _imGuiManager;
         private readonly DemoWindow _imguiDemoWindow;
         private readonly MainSidePanel _mainSidePanel;
+        private readonly EmitterSettingsManager _emitterSettingsManager;
 
         public bool AcceptingKeyboardInput => _imGuiManager.AcceptingKeyboardInput;
         public bool AcceptingMouseInput => _imGuiManager.AcceptingMouseInput;
@@ -23,6 +25,8 @@ namespace Parme.Editor.Ui
 
             _mainSidePanel = new MainSidePanel {IsVisible = true};
             _imGuiManager.AddElement(_mainSidePanel);
+            
+            _emitterSettingsManager = new EmitterSettingsManager(_mainSidePanel);
         }
 
         public void ToggleImGuiDemoWindow()
@@ -33,6 +37,11 @@ namespace Parme.Editor.Ui
         public void WindowResized(int width, int height)
         {
             _mainSidePanel.ViewportHeight = height;
+        }
+
+        public void NewEmitterSettingsLoaded(EmitterSettings settings)
+        {
+            _emitterSettingsManager.NewEmitterSettingsLoaded(settings);
         }
     }
 }

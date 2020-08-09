@@ -7,19 +7,14 @@ namespace Parme.Editor.Ui.Elements
 {
     public class MainSidePanel : ImGuiElement
     {
-        private readonly TriggerParentSection _triggerParentSection;
-        
         public int ViewportHeight { get; set; }
+        
+        public TriggerParentSection TriggerParentSection { get; set; }
 
         public Vector3 BackgroundColor
         {
             get => Get<Vector3>();
             set => Set(value);
-        }
-
-        public MainSidePanel()
-        {
-            _triggerParentSection = new TriggerParentSection {IsVisible = true};
         }
         
         protected override void CustomRender()
@@ -41,7 +36,7 @@ namespace Parme.Editor.Ui.Elements
 
                 if (ImGui.TreeNode("Trigger"))
                 {
-                    _triggerParentSection.Render();
+                    TriggerParentSection?.Render();
                     
                     ImGui.TreePop();
                 }
