@@ -67,6 +67,12 @@ namespace Parme.Editor.Ui.Elements
                     VelocitySelector?.Render();
                     ImGui.TreePop();
                 }
+                
+                if (ImGui.TreeNode("Size"))
+                {
+                    SizeSelector?.Render();
+                    ImGui.TreePop();
+                }
             }
             
             ImGui.End();

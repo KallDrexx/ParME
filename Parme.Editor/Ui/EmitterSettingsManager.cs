@@ -10,6 +10,7 @@ using Parme.Editor.Ui.Elements;
 using Parme.Editor.Ui.Elements.Initializers.ColorMultiplier;
 using Parme.Editor.Ui.Elements.Initializers.ParticleCount;
 using Parme.Editor.Ui.Elements.Initializers.Position;
+using Parme.Editor.Ui.Elements.Initializers.Size;
 using Parme.Editor.Ui.Elements.Triggers;
 
 namespace Parme.Editor.Ui
@@ -30,6 +31,10 @@ namespace Parme.Editor.Ui
         private readonly TypeSelector _positionSelector;
         private readonly StaticPositionEditor _staticPositionEditor;
         private readonly RandomRegionPositionEditor _randomRegionPositionEditor;
+
+        private readonly TypeSelector _sizeSelector;
+        private readonly StaticSizeEditor _staticSizeEditor;
+        private readonly RandomSizeEditor _randomSizeEditor;
         
         private readonly List<IParticleModifier> _modifiers = new List<IParticleModifier>();
         private float _particleMaxLife;
@@ -64,6 +69,12 @@ namespace Parme.Editor.Ui
                 {"Static", typeof(StaticPositionInitializer)},
                 {"Random Within Region", typeof(RandomRegionPositionInitializer)},
             };
+
+            var sizeTypes = new Dictionary<string, Type>
+            {
+                {"Static", typeof(StaticSizeInitializer)},
+                {"Random", typeof(RandomSizeInitializer)},
+            };
             
             _triggerParentSection = new TypeSelector(triggerTypes){IsVisible = true};
             _oneShotTriggerEditor = new OneShotTriggerEditor{IsVisible = true};
@@ -79,11 +90,16 @@ namespace Parme.Editor.Ui
             _positionSelector = new TypeSelector(positionTypes) {IsVisible = true};
             _staticPositionEditor = new StaticPositionEditor {IsVisible = true};
             _randomRegionPositionEditor = new RandomRegionPositionEditor {IsVisible = true};
+            
+            _sizeSelector = new TypeSelector(sizeTypes) {IsVisible = true};
+            _staticSizeEditor = new StaticSizeEditor {IsVisible = true};
+            _randomSizeEditor = new RandomSizeEditor {IsVisible = true};
 
             mainSidePanel.TriggerParentSection = _triggerParentSection;
             mainSidePanel.ParticleCountSelector = _particleCountSelector;
             mainSidePanel.ColorMultiplierSelector = _colorMultiplierSelector;
             mainSidePanel.PositionSelector = _positionSelector;
+            mainSidePanel.SizeSelector = _sizeSelector;
             
             _triggerParentSection.PropertyChanged += TriggerParentSectionOnPropertyChanged;
             _timeElapsedTriggerEditor.PropertyChanged += TimeElapsedTriggerEditorOnPropertyChanged;
@@ -98,6 +114,10 @@ namespace Parme.Editor.Ui
             _positionSelector.PropertyChanged += PositionSelectorOnPropertyChanged;
             _staticPositionEditor.PropertyChanged += StaticPositionEditorOnPropertyChanged;
             _randomRegionPositionEditor.PropertyChanged += RandomRegionPositionEditorOnPropertyChanged;
+            
+            _sizeSelector.PropertyChanged += SizeSelectorOnPropertyChanged;
+            _staticSizeEditor.PropertyChanged += StaticSizeEditorOnPropertyChanged;
+            _randomSizeEditor.PropertyChanged += RandomSizeEditorOnPropertyChanged;
         }
 
         public void NewEmitterSettingsLoaded(EmitterSettings settings)
@@ -201,6 +221,29 @@ namespace Parme.Editor.Ui
                 
                 default:
                     _positionSelector.ChildDisplay = null;
+                    break;
+            }
+
+            _initializers.TryGetValue(InitializerType.Size, out var sizeInitializer);
+            _sizeSelector.SelectedType = sizeInitializer?.GetType();
+            switch (sizeInitializer?.GetType().Name)
+            {
+                case nameof(StaticSizeInitializer):
+                    _sizeSelector.ChildDisplay = _staticSizeEditor;
+                    _staticSizeEditor.Width = ((StaticSizeInitializer) sizeInitializer).Width;
+                    _staticSizeEditor.Height = ((StaticSizeInitializer) sizeInitializer).Height;
+                    break;
+                
+                case nameof(RandomSizeInitializer):
+                    _sizeSelector.ChildDisplay = _randomSizeEditor;
+                    _randomSizeEditor.MinWidth = ((RandomSizeInitializer) sizeInitializer).MinWidth;
+                    _randomSizeEditor.MinHeight = ((RandomSizeInitializer) sizeInitializer).MinHeight;
+                    _randomSizeEditor.MaxWidth = ((RandomSizeInitializer) sizeInitializer).MaxWidth;
+                    _randomSizeEditor.MaxHeight = ((RandomSizeInitializer) sizeInitializer).MaxHeight;
+                    break;
+                
+                default:
+                    _sizeSelector.ChildDisplay = null;
                     break;
             }
 
@@ -394,6 +437,71 @@ namespace Parme.Editor.Ui
                 
                 case nameof(RandomRegionPositionEditor.MaxYOffset):
                     initializer.MaxYOffset = _randomRegionPositionEditor.MaxYOffset;
+                    break;
+            }
+            
+            UpdateUi();
+            RaiseEmitterSettingsChangedEvent();
+        }
+
+        private void SizeSelectorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_ignoreChangeNotifications) return;
+
+            if (e.PropertyName == nameof(TypeSelector.SelectedType))
+            {
+                var initializer = _sizeSelector.SelectedType != null
+                    ? (IParticleInitializer) Activator.CreateInstance(_sizeSelector.SelectedType)
+                    : null;
+
+                _initializers[InitializerType.Size] = initializer;
+            }
+            
+            UpdateUi();
+            RaiseEmitterSettingsChangedEvent();
+        }
+
+        private void StaticSizeEditorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_ignoreChangeNotifications) return;
+
+            var initializer = (StaticSizeInitializer) _initializers[InitializerType.Size];
+            switch (e.PropertyName)
+            {
+                case nameof(StaticSizeEditor.Width):
+                    initializer.Width = _staticSizeEditor.Width;
+                    break;
+                
+                case nameof(StaticSizeEditor.Height):
+                    initializer.Height = _staticSizeEditor.Height;
+                    break;
+            }
+            
+            UpdateUi();
+            RaiseEmitterSettingsChangedEvent();
+        }
+
+        private void RandomSizeEditorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_ignoreChangeNotifications) return;
+            
+            var initializer = (RandomSizeInitializer) _initializers[InitializerType.Size];
+            switch (e.PropertyName)
+            {
+                case nameof(RandomSizeEditor.MinWidth):
+                    initializer.MinWidth = _randomSizeEditor.MinWidth;
+                    break;
+                
+                case nameof(RandomSizeEditor.MinHeight):
+                    initializer.MinHeight = _randomSizeEditor.MinHeight;
+                    break;
+                
+                case nameof(RandomSizeEditor.MaxWidth):
+                    initializer.MaxWidth = _randomSizeEditor.MaxWidth;
+                    break;
+                
+                case nameof(RandomSizeEditor.MaxHeight):
+                    initializer.MaxHeight = _randomSizeEditor.MaxHeight;
                     break;
             }
             
