@@ -1,4 +1,7 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
+﻿using ImGuiHandler;
+using ImGuiHandler.MonoGame;
+using ImGuiNET;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,6 +10,7 @@ using Parme.Core.Modifiers;
 using Parme.Core.Triggers;
 using Parme.CSharp;
 using Parme.CSharp.CodeGen;
+using Parme.Editor.Ui;
 using Parme.MonoGame;
 
 namespace Parme.Editor
@@ -14,6 +18,9 @@ namespace Parme.Editor
     public class App : Game
     {
         private MonoGameEmitter _emitter;
+        private ImGuiManager _imGuiManager;
+        private EditorUiController _uiController;
+        private InputHandler _inputHandler;
         
         public App()
         {
@@ -24,10 +31,18 @@ namespace Parme.Editor
                 PreferredBackBufferHeight = 768,
                 PreferMultiSampling = true
             };
+
+            IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
+            _imGuiManager = new ImGuiManager(new MonoGameImGuiRenderer(this));
+            _uiController = new EditorUiController(_imGuiManager);
+            _inputHandler = new InputHandler(_uiController);
+
+            ImGui.GetIO().FontGlobalScale = 1.2f;
+
             var pixels = new Color[10*10];
             for (var x = 0; x < pixels.Length; x++)
             {
@@ -53,6 +68,7 @@ namespace Parme.Editor
 
         protected override void Update(GameTime gameTime)
         {
+            _inputHandler.Update();
             _emitter.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
             
             base.Update(gameTime);
@@ -63,6 +79,7 @@ namespace Parme.Editor
             GraphicsDevice.Clear(Color.LightSkyBlue);
             
             _emitter.Render();
+            _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
             base.Draw(gameTime);
         }
