@@ -14,10 +14,10 @@ namespace Parme.Editor.Ui
 {
     public class EmitterSettingsManager
     {
-        private readonly TriggerParentSection _triggerParentSection;
+        private readonly TypeSelector _triggerParentSection;
         private readonly OneShotTriggerEditor _oneShotTriggerEditor;
         private readonly TimeElapsedTriggerEditor _timeElapsedTriggerEditor;
-        private readonly ParticleCountSelector _particleCountSelector;
+        private readonly TypeSelector _particleCountSelector;
         private readonly StaticParticleCountEditor _staticParticleCountEditor;
         private readonly RandomParticleCountEditor _randomParticleCountEditor;
         
@@ -32,10 +32,22 @@ namespace Parme.Editor.Ui
 
         public EmitterSettingsManager(MainSidePanel mainSidePanel)
         {
-            _triggerParentSection = new TriggerParentSection{IsVisible = true};
+            var triggerTypes = new Dictionary<string, Type>
+            {
+                {"One Shot", typeof(OneShotTrigger)},
+                {"Time Elapsed", typeof(TimeElapsedTrigger)}
+            };
+
+            var particleCountTypes = new Dictionary<string, Type>
+            {
+                {"Static", typeof(StaticParticleCountInitializer)},
+                {"Random", typeof(RandomParticleCountInitializer)},
+            };
+            
+            _triggerParentSection = new TypeSelector(triggerTypes){IsVisible = true};
             _oneShotTriggerEditor = new OneShotTriggerEditor{IsVisible = true};
             _timeElapsedTriggerEditor = new TimeElapsedTriggerEditor {IsVisible = true};
-            _particleCountSelector = new ParticleCountSelector {IsVisible = true};
+            _particleCountSelector = new TypeSelector(particleCountTypes) {IsVisible = true};
             _staticParticleCountEditor = new StaticParticleCountEditor {IsVisible = true};
             _randomParticleCountEditor = new RandomParticleCountEditor {IsVisible = true};
 
@@ -76,20 +88,18 @@ namespace Parme.Editor.Ui
         {
             _ignoreChangeNotifications = true;
 
+            _triggerParentSection.SelectedType = _particleTrigger?.GetType();
             if (_particleTrigger == null)
             {
-                _triggerParentSection.TriggerDisplaySection = null;
-                _triggerParentSection.SelectedTriggerType = null;
+                _triggerParentSection.ChildDisplay = null;
             }
             else if (_particleTrigger.GetType() == typeof(OneShotTrigger))
             {
-                _triggerParentSection.TriggerDisplaySection = _oneShotTriggerEditor;
-                _triggerParentSection.SelectedTriggerType = TriggerParentSection.TriggerTypes.OneShot;
+                _triggerParentSection.ChildDisplay = _oneShotTriggerEditor;
             }
             else if (_particleTrigger.GetType() == typeof(TimeElapsedTrigger))
             {
-                _triggerParentSection.TriggerDisplaySection = _timeElapsedTriggerEditor;
-                _triggerParentSection.SelectedTriggerType = TriggerParentSection.TriggerTypes.TimeElapsed;
+                _triggerParentSection.ChildDisplay = _timeElapsedTriggerEditor;
                 _timeElapsedTriggerEditor.Frequency = ((TimeElapsedTrigger) _particleTrigger).Frequency;
             }
             else
@@ -97,30 +107,26 @@ namespace Parme.Editor.Ui
                 throw new NotSupportedException($"No known editor for trigger type {_particleTrigger.GetType()}");
             }
 
-            if (_initializers.TryGetValue(InitializerType.ParticleCount, out var countInitializer))
+            _initializers.TryGetValue(InitializerType.ParticleCount, out var countInitializer);
+            _particleCountSelector.SelectedType = countInitializer?.GetType();
+            if (countInitializer == null)
             {
-                if (countInitializer == null)
-                {
-                    _particleCountSelector.ChildElement = null;
-                    _particleCountSelector.SelectedInitializerType = null;
-                }
-                else if (countInitializer.GetType() == typeof(StaticParticleCountInitializer))
-                {
-                    _particleCountSelector.ChildElement = _staticParticleCountEditor;
-                    _particleCountSelector.SelectedInitializerType = ParticleCountSelector.InitializerTypes.Static;
-                    _staticParticleCountEditor.ParticleSpawnCount = ((StaticParticleCountInitializer)countInitializer).ParticleSpawnCount;
-                }
-                else if (countInitializer.GetType() == typeof(RandomParticleCountInitializer))
-                {
-                    _particleCountSelector.ChildElement = _randomParticleCountEditor;
-                    _particleCountSelector.SelectedInitializerType = ParticleCountSelector.InitializerTypes.Random;
-                    _randomParticleCountEditor.MinSpawnCount = ((RandomParticleCountInitializer)countInitializer).MinimumToSpawn;
-                    _randomParticleCountEditor.MaxSpawnCount = ((RandomParticleCountInitializer)countInitializer).MaximumToSpawn;
-                }
-                else
-                {
-                    throw new NotSupportedException($"No known particle count editor for type {countInitializer.GetType()}");
-                }
+                _particleCountSelector.ChildDisplay = null;
+            }
+            else if (countInitializer.GetType() == typeof(StaticParticleCountInitializer))
+            {
+                _particleCountSelector.ChildDisplay = _staticParticleCountEditor;
+                _staticParticleCountEditor.ParticleSpawnCount = ((StaticParticleCountInitializer)countInitializer).ParticleSpawnCount;
+            }
+            else if (countInitializer.GetType() == typeof(RandomParticleCountInitializer))
+            {
+                _particleCountSelector.ChildDisplay = _randomParticleCountEditor;
+                _randomParticleCountEditor.MinSpawnCount = ((RandomParticleCountInitializer)countInitializer).MinimumToSpawn;
+                _randomParticleCountEditor.MaxSpawnCount = ((RandomParticleCountInitializer)countInitializer).MaximumToSpawn;
+            }
+            else
+            {
+                throw new NotSupportedException($"No known particle count editor for type {countInitializer.GetType()}");
             }
 
             _ignoreChangeNotifications = false;
@@ -130,16 +136,20 @@ namespace Parme.Editor.Ui
         {
             if (_ignoreChangeNotifications) return;
 
-            if (e.PropertyName == nameof(TriggerParentSection.SelectedTriggerType))
+            if (e.PropertyName == nameof(TypeSelector.SelectedType))
             {
-                _particleTrigger = _triggerParentSection.SelectedTriggerType switch
+                if (_triggerParentSection.SelectedType == typeof(OneShotTrigger))
                 {
-                    null => null,
-                    TriggerParentSection.TriggerTypes.OneShot => new OneShotTrigger(),
-                    TriggerParentSection.TriggerTypes.TimeElapsed => new TimeElapsedTrigger(),
-                    _ => throw new NotSupportedException(
-                        $"No known UI exists for trigger of type {_triggerParentSection.SelectedTriggerType}")
-                };
+                    _particleTrigger = new OneShotTrigger();
+                }
+                else if (_triggerParentSection.SelectedType == typeof(TimeElapsedTrigger))
+                {
+                    _particleTrigger = new TimeElapsedTrigger();
+                }
+                else
+                {
+                    _particleTrigger = null;
+                }
             }
 
             UpdateUi();
@@ -164,16 +174,21 @@ namespace Parme.Editor.Ui
         {
             if (_ignoreChangeNotifications) return;
 
-            if (e.PropertyName == nameof(ParticleCountSelector.SelectedInitializerType))
+            if (e.PropertyName == nameof(TypeSelector.SelectedType))
             {
-                IParticleInitializer initializer = _particleCountSelector.SelectedInitializerType switch
+                IParticleInitializer initializer;
+                if (_particleCountSelector.SelectedType == typeof(StaticParticleCountInitializer))
                 {
-                    null => null,
-                    ParticleCountSelector.InitializerTypes.Static => new StaticParticleCountInitializer(),
-                    ParticleCountSelector.InitializerTypes.Random => new RandomParticleCountInitializer(),
-                    _ => throw new NotSupportedException(
-                        $"Particle Count type {_particleCountSelector.SelectedInitializerType} is not supported"),
-                };
+                    initializer = new StaticParticleCountInitializer();
+                }
+                else if (_particleCountSelector.SelectedType == typeof(RandomParticleCountInitializer))
+                {
+                    initializer = new RandomParticleCountInitializer();
+                }
+                else
+                {
+                    initializer = null;
+                }
 
                 _initializers[InitializerType.ParticleCount] = initializer;
             }
