@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using ImGuiHandler;
 using ImGuiNET;
+using Parme.Editor.Ui.Elements.Initializers.ParticleCount;
 using Parme.Editor.Ui.Elements.Triggers;
 
 namespace Parme.Editor.Ui.Elements
@@ -10,6 +11,7 @@ namespace Parme.Editor.Ui.Elements
         public int ViewportHeight { get; set; }
         
         public TriggerParentSection TriggerParentSection { get; set; }
+        public ParticleCountSelector ParticleCountSelector { get; set; }
 
         public Vector3 BackgroundColor
         {
@@ -37,7 +39,12 @@ namespace Parme.Editor.Ui.Elements
                 if (ImGui.TreeNode("Trigger"))
                 {
                     TriggerParentSection?.Render();
-                    
+                    ImGui.TreePop();
+                }
+
+                if (ImGui.TreeNode("Particle Count"))
+                {
+                    ParticleCountSelector?.Render();
                     ImGui.TreePop();
                 }
             }
