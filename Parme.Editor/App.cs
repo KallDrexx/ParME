@@ -45,6 +45,7 @@ namespace Parme.Editor
             _inputHandler = new InputHandler(_uiController);
 
             ImGui.GetIO().FontGlobalScale = 1.2f;
+            _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 
             var pixels = new Color[10*10];
             for (var x = 0; x < pixels.Length; x++)
@@ -79,7 +80,12 @@ namespace Parme.Editor
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.LightSkyBlue);
+            var backgroundColorVector = _uiController.BackgroundColor;
+            var backgroundColor = new Color(backgroundColorVector.X, 
+                backgroundColorVector.Y, 
+                backgroundColorVector.Z);
+            
+            GraphicsDevice.Clear(backgroundColor);
             
             _emitter.Render();
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
@@ -152,9 +158,9 @@ namespace Parme.Editor
             return new EmitterSettings(trigger, initializers, modifiers, 1f);
         }
 
-        private void WindowOnClientSizeChanged(object? sender, EventArgs e)
+        private void WindowOnClientSizeChanged(object sender, EventArgs e)
         {
-            
+            _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
         }
     }
 }
