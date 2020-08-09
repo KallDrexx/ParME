@@ -38,39 +38,51 @@ namespace Parme.Editor.Ui.Elements
                 
                 ImGui.Separator();
 
+                ImGui.SetNextItemOpen(true, ImGuiCond.FirstUseEver);
                 if (ImGui.TreeNode("Trigger"))
                 {
                     TriggerParentSection?.Render();
+                    ImGui.NewLine();
                     ImGui.TreePop();
                 }
 
+                ImGui.SetNextItemOpen(true, ImGuiCond.FirstUseEver);
                 if (ImGui.TreeNode("Particle Count"))
                 {
                     ParticleCountSelector?.Render();
+                    ImGui.NewLine();
                     ImGui.TreePop();
                 }
 
+                ImGui.SetNextItemOpen(true, ImGuiCond.FirstUseEver);
                 if (ImGui.TreeNode("Color Multiplier"))
                 {
                     ColorMultiplierSelector?.Render();
+                    ImGui.NewLine();
                     ImGui.TreePop();
                 }
 
+                ImGui.SetNextItemOpen(true, ImGuiCond.FirstUseEver);
                 if (ImGui.TreeNode("Position"))
                 {
                     PositionSelector?.Render();
+                    ImGui.NewLine();
                     ImGui.TreePop();
                 }
 
+                ImGui.SetNextItemOpen(true, ImGuiCond.FirstUseEver);
                 if (ImGui.TreeNode("Velocity"))
                 {
                     VelocitySelector?.Render();
+                    ImGui.NewLine();
                     ImGui.TreePop();
                 }
                 
+                ImGui.SetNextItemOpen(true, ImGuiCond.FirstUseEver);
                 if (ImGui.TreeNode("Size"))
                 {
                     SizeSelector?.Render();
+                    ImGui.NewLine();
                     ImGui.TreePop();
                 }
             }

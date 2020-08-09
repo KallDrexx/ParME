@@ -16,11 +16,13 @@ namespace Parme.Editor.Ui
         public bool AcceptingMouseInput => _imGuiManager.AcceptingMouseInput;
         public Vector3 BackgroundColor => _mainSidePanel.BackgroundColor;
 
+        public EmitterSettingsManager SettingsManager => _emitterSettingsManager;
+
         public EditorUiController(ImGuiManager imGuiManager)
         {
             _imGuiManager = imGuiManager;
             
-            _imguiDemoWindow = new DemoWindow();
+            _imguiDemoWindow = new DemoWindow{IsVisible = false};
             _imGuiManager.AddElement(_imguiDemoWindow);
 
             _mainSidePanel = new MainSidePanel {IsVisible = true};

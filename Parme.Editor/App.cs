@@ -22,6 +22,8 @@ namespace Parme.Editor
         private ImGuiManager _imGuiManager;
         private EditorUiController _uiController;
         private InputHandler _inputHandler;
+
+        private Texture2D _testTexture;
         
         public App()
         {
@@ -53,29 +55,23 @@ namespace Parme.Editor
                 pixels[x] = Color.White;
             }
             
-            var texture = new Texture2D(GraphicsDevice, 10, 10);
-            texture.SetData(pixels);
+            _testTexture = new Texture2D(GraphicsDevice, 10, 10);
+            _testTexture.SetData(pixels);
 
-            var settings = GetEmitterSettings();
-            _uiController.NewEmitterSettingsLoaded(settings);
+            var settings = GetInitialEmitterSettings();
+            UpdateEmitter(settings);
             
-            var code = EmitterLogicClassGenerator.Generate(settings, "Parme.Editor", "Test", true);
-            
-            var scriptOptions = ScriptOptions.Default
-                .WithReferences(typeof(IEmitterLogic).Assembly);
-                
-            var logicClass = CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions).GetAwaiter().GetResult();
-            
-            _emitter = new MonoGameEmitter(logicClass, GraphicsDevice, texture);
-            _emitter.Start();
-            
+            _uiController.SettingsManager.NewEmitterSettingsLoaded(settings);
+            _uiController.SettingsManager.EmitterSettingsChanged +=
+                (sender, emitterSettings) => UpdateEmitter(emitterSettings);
+
             base.Initialize();
         }
 
         protected override void Update(GameTime gameTime)
         {
             _inputHandler.Update();
-            _emitter.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
+            _emitter?.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
             
             base.Update(gameTime);
         }
@@ -89,13 +85,13 @@ namespace Parme.Editor
             
             GraphicsDevice.Clear(backgroundColor);
             
-            _emitter.Render();
+            _emitter?.Render();
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
             base.Draw(gameTime);
         }
 
-        private static EmitterSettings GetEmitterSettings()
+        private static EmitterSettings GetInitialEmitterSettings()
         {
             var trigger = new TimeElapsedTrigger{Frequency = 0.01f};
             var initializers = new IParticleInitializer[]
@@ -158,6 +154,29 @@ namespace Parme.Editor
             };
             
             return new EmitterSettings(trigger, initializers, modifiers, 1f);
+        }
+
+        private void UpdateEmitter(EmitterSettings settings)
+        {
+            if (_emitter != null)
+            {
+                _emitter.Stop();
+                _emitter.KillAllParticles();
+                _emitter = null;
+            }
+
+            if (settings != null)
+            {
+                var code = EmitterLogicClassGenerator.Generate(settings, "Parme.Editor", "Test", true);
+            
+                var scriptOptions = ScriptOptions.Default
+                    .WithReferences(typeof(IEmitterLogic).Assembly);
+                
+                var logicClass = CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions).GetAwaiter().GetResult();
+            
+                _emitter = new MonoGameEmitter(logicClass, GraphicsDevice, _testTexture);
+                _emitter.Start();
+            }
         }
 
         private void WindowOnClientSizeChanged(object sender, EventArgs e)
