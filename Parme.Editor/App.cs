@@ -1,4 +1,5 @@
-﻿using ImGuiHandler;
+﻿using System;
+using ImGuiHandler;
 using ImGuiHandler.MonoGame;
 using ImGuiNET;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
@@ -33,6 +34,8 @@ namespace Parme.Editor
             };
 
             IsMouseVisible = true;
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += WindowOnClientSizeChanged;
         }
 
         protected override void Initialize()
@@ -147,6 +150,11 @@ namespace Parme.Editor
             };
             
             return new EmitterSettings(trigger, initializers, modifiers, 1f);
+        }
+
+        private void WindowOnClientSizeChanged(object? sender, EventArgs e)
+        {
+            
         }
     }
 }
