@@ -11,6 +11,7 @@ using Parme.Editor.Ui.Elements.Initializers.ColorMultiplier;
 using Parme.Editor.Ui.Elements.Initializers.ParticleCount;
 using Parme.Editor.Ui.Elements.Initializers.Position;
 using Parme.Editor.Ui.Elements.Initializers.Size;
+using Parme.Editor.Ui.Elements.Initializers.Velocity;
 using Parme.Editor.Ui.Elements.Triggers;
 
 namespace Parme.Editor.Ui
@@ -35,6 +36,10 @@ namespace Parme.Editor.Ui
         private readonly TypeSelector _sizeSelector;
         private readonly StaticSizeEditor _staticSizeEditor;
         private readonly RandomSizeEditor _randomSizeEditor;
+
+        private readonly TypeSelector _velocitySelector;
+        private readonly RandomRangeVelocityEditor _randomRangeVelocityEditor;
+        private readonly RadialVelocityEditor _radialVelocityEditor;
         
         private readonly List<IParticleModifier> _modifiers = new List<IParticleModifier>();
         private float _particleMaxLife;
@@ -75,6 +80,12 @@ namespace Parme.Editor.Ui
                 {"Static", typeof(StaticSizeInitializer)},
                 {"Random", typeof(RandomSizeInitializer)},
             };
+
+            var velocityTypes = new Dictionary<string, Type>
+            {
+                {"Random Between Values", typeof(RandomRangeVelocityInitializer)},
+                {"Radial", typeof(RadialVelocityInitializer)},
+            };
             
             _triggerParentSection = new TypeSelector(triggerTypes){IsVisible = true};
             _oneShotTriggerEditor = new OneShotTriggerEditor{IsVisible = true};
@@ -94,12 +105,17 @@ namespace Parme.Editor.Ui
             _sizeSelector = new TypeSelector(sizeTypes) {IsVisible = true};
             _staticSizeEditor = new StaticSizeEditor {IsVisible = true};
             _randomSizeEditor = new RandomSizeEditor {IsVisible = true};
+            
+            _velocitySelector = new TypeSelector(velocityTypes) {IsVisible = true};
+            _randomRangeVelocityEditor = new RandomRangeVelocityEditor {IsVisible = true};
+            _radialVelocityEditor = new RadialVelocityEditor {IsVisible = true};
 
             mainSidePanel.TriggerParentSection = _triggerParentSection;
             mainSidePanel.ParticleCountSelector = _particleCountSelector;
             mainSidePanel.ColorMultiplierSelector = _colorMultiplierSelector;
             mainSidePanel.PositionSelector = _positionSelector;
             mainSidePanel.SizeSelector = _sizeSelector;
+            mainSidePanel.VelocitySelector = _velocitySelector;
             
             _triggerParentSection.PropertyChanged += TriggerParentSectionOnPropertyChanged;
             _timeElapsedTriggerEditor.PropertyChanged += TimeElapsedTriggerEditorOnPropertyChanged;
@@ -118,6 +134,10 @@ namespace Parme.Editor.Ui
             _sizeSelector.PropertyChanged += SizeSelectorOnPropertyChanged;
             _staticSizeEditor.PropertyChanged += StaticSizeEditorOnPropertyChanged;
             _randomSizeEditor.PropertyChanged += RandomSizeEditorOnPropertyChanged;
+            
+            _velocitySelector.PropertyChanged += VelocitySelectorOnPropertyChanged;
+            _randomRangeVelocityEditor.PropertyChanged += RandomRangeVelocityEditorOnPropertyChanged;
+            _radialVelocityEditor.PropertyChanged += RadialVelocityEditorOnPropertyChanged;
         }
 
         public void NewEmitterSettingsLoaded(EmitterSettings settings)
@@ -240,6 +260,30 @@ namespace Parme.Editor.Ui
                     _randomSizeEditor.MinHeight = ((RandomSizeInitializer) sizeInitializer).MinHeight;
                     _randomSizeEditor.MaxWidth = ((RandomSizeInitializer) sizeInitializer).MaxWidth;
                     _randomSizeEditor.MaxHeight = ((RandomSizeInitializer) sizeInitializer).MaxHeight;
+                    break;
+                
+                default:
+                    _sizeSelector.ChildDisplay = null;
+                    break;
+            }
+            
+            _initializers.TryGetValue(InitializerType.Velocity, out var velocityInitializer);
+            _velocitySelector.SelectedType = velocityInitializer?.GetType();
+            switch (velocityInitializer?.GetType().Name)
+            {
+                case nameof(RandomRangeVelocityInitializer):
+                    _velocitySelector.ChildDisplay = _randomRangeVelocityEditor;
+                    _randomRangeVelocityEditor.MinXVelocity = ((RandomRangeVelocityInitializer) velocityInitializer).MinXVelocity;
+                    _randomRangeVelocityEditor.MinYVelocity = ((RandomRangeVelocityInitializer) velocityInitializer).MinYVelocity;
+                    _randomRangeVelocityEditor.MaxXVelocity = ((RandomRangeVelocityInitializer) velocityInitializer).MaxXVelocity;
+                    _randomRangeVelocityEditor.MaxYVelocity = ((RandomRangeVelocityInitializer) velocityInitializer).MaxYVelocity;
+                    break;
+                
+                case nameof(RadialVelocityInitializer):
+                    _velocitySelector.ChildDisplay = _radialVelocityEditor;
+                    _radialVelocityEditor.Magnitude = ((RadialVelocityInitializer) velocityInitializer).Magnitude;
+                    _radialVelocityEditor.MinDegrees = ((RadialVelocityInitializer) velocityInitializer).MinDegrees;
+                    _radialVelocityEditor.MaxDegrees = ((RadialVelocityInitializer) velocityInitializer).MaxDegrees;
                     break;
                 
                 default:
@@ -502,6 +546,75 @@ namespace Parme.Editor.Ui
                 
                 case nameof(RandomSizeEditor.MaxHeight):
                     initializer.MaxHeight = _randomSizeEditor.MaxHeight;
+                    break;
+            }
+            
+            UpdateUi();
+            RaiseEmitterSettingsChangedEvent();
+        }
+
+        private void VelocitySelectorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_ignoreChangeNotifications) return;
+
+            if (e.PropertyName == nameof(TypeSelector.SelectedType))
+            {
+                var initializer = _velocitySelector.SelectedType != null
+                    ? (IParticleInitializer) Activator.CreateInstance(_velocitySelector.SelectedType)
+                    : null;
+
+                _initializers[InitializerType.Velocity] = initializer;
+            }
+            
+            UpdateUi();
+            RaiseEmitterSettingsChangedEvent();
+        }
+
+        private void RandomRangeVelocityEditorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_ignoreChangeNotifications) return;
+            
+            var initializer = (RandomRangeVelocityInitializer) _initializers[InitializerType.Velocity];
+            switch (e.PropertyName)
+            {
+                case nameof(RandomRangeVelocityEditor.MinXVelocity):
+                    initializer.MinXVelocity = _randomRangeVelocityEditor.MinXVelocity;
+                    break;
+                
+                case nameof(RandomRangeVelocityEditor.MinYVelocity):
+                    initializer.MinYVelocity = _randomRangeVelocityEditor.MinYVelocity;
+                    break;
+                
+                case nameof(RandomRangeVelocityEditor.MaxXVelocity):
+                    initializer.MaxXVelocity = _randomRangeVelocityEditor.MaxXVelocity;
+                    break;
+                
+                case nameof(RandomRangeVelocityEditor.MaxYVelocity):
+                    initializer.MaxYVelocity = _randomRangeVelocityEditor.MaxYVelocity;
+                    break;
+            }
+
+            UpdateUi();
+            RaiseEmitterSettingsChangedEvent();
+        }
+
+        private void RadialVelocityEditorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_ignoreChangeNotifications) return;
+            
+            var initializer = (RadialVelocityInitializer) _initializers[InitializerType.Velocity];
+            switch (e.PropertyName)
+            {
+                case nameof(RadialVelocityEditor.Magnitude):
+                    initializer.Magnitude = _radialVelocityEditor.Magnitude;
+                    break;
+                
+                case nameof(RadialVelocityEditor.MinDegrees):
+                    initializer.MinDegrees = _radialVelocityEditor.MinDegrees;
+                    break;
+                
+                case nameof(RadialVelocityEditor.MaxDegrees):
+                    initializer.MaxDegrees = _radialVelocityEditor.MaxDegrees;
                     break;
             }
             
