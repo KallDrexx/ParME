@@ -10,6 +10,7 @@ namespace Parme.Editor.Ui.Elements
         
         public TypeSelector TriggerParentSection { get; set; }
         public TypeSelector ParticleCountSelector { get; set; }
+        public TypeSelector ColorMultiplierSelector { get; set; }
 
         public Vector3 BackgroundColor
         {
@@ -43,6 +44,12 @@ namespace Parme.Editor.Ui.Elements
                 if (ImGui.TreeNode("Particle Count"))
                 {
                     ParticleCountSelector?.Render();
+                    ImGui.TreePop();
+                }
+
+                if (ImGui.TreeNode("Color Multiplier"))
+                {
+                    ColorMultiplierSelector?.Render();
                     ImGui.TreePop();
                 }
             }

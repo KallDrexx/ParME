@@ -33,8 +33,8 @@ namespace Parme.Editor.Ui.Elements
             set
             {
                 Set(value);
-                _selectedIndex = _typeIndexMap.TryGetValue(value, out var index)
-                    ? index
+                _selectedIndex = value != null
+                    ? _typeIndexMap[value]
                     : 0;
             }
         }

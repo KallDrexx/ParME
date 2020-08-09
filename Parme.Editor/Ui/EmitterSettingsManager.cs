@@ -7,6 +7,7 @@ using Parme.Core.Modifiers;
 using Parme.Core.Triggers;
 using Parme.CSharp;
 using Parme.Editor.Ui.Elements;
+using Parme.Editor.Ui.Elements.Initializers.ColorMultiplier;
 using Parme.Editor.Ui.Elements.Initializers.ParticleCount;
 using Parme.Editor.Ui.Elements.Triggers;
 
@@ -20,6 +21,8 @@ namespace Parme.Editor.Ui
         private readonly TypeSelector _particleCountSelector;
         private readonly StaticParticleCountEditor _staticParticleCountEditor;
         private readonly RandomParticleCountEditor _randomParticleCountEditor;
+        private readonly TypeSelector _colorMultiplierSelector;
+        private readonly StaticColorMultiplierEditor _staticColorMultiplierEditor;
         
         private readonly List<IParticleModifier> _modifiers = new List<IParticleModifier>();
         private float _particleMaxLife;
@@ -43,22 +46,36 @@ namespace Parme.Editor.Ui
                 {"Static", typeof(StaticParticleCountInitializer)},
                 {"Random", typeof(RandomParticleCountInitializer)},
             };
+
+            var colorMultiplierTypes = new Dictionary<string, Type>
+            {
+                {"Static", typeof(StaticColorInitializer)}
+            };
             
             _triggerParentSection = new TypeSelector(triggerTypes){IsVisible = true};
             _oneShotTriggerEditor = new OneShotTriggerEditor{IsVisible = true};
             _timeElapsedTriggerEditor = new TimeElapsedTriggerEditor {IsVisible = true};
+            
             _particleCountSelector = new TypeSelector(particleCountTypes) {IsVisible = true};
             _staticParticleCountEditor = new StaticParticleCountEditor {IsVisible = true};
             _randomParticleCountEditor = new RandomParticleCountEditor {IsVisible = true};
+            
+            _colorMultiplierSelector = new TypeSelector(colorMultiplierTypes) {IsVisible = true};
+            _staticColorMultiplierEditor = new StaticColorMultiplierEditor {IsVisible = true};
 
             mainSidePanel.TriggerParentSection = _triggerParentSection;
             mainSidePanel.ParticleCountSelector = _particleCountSelector;
+            mainSidePanel.ColorMultiplierSelector = _colorMultiplierSelector;
             
             _triggerParentSection.PropertyChanged += TriggerParentSectionOnPropertyChanged;
             _timeElapsedTriggerEditor.PropertyChanged += TimeElapsedTriggerEditorOnPropertyChanged;
+            
             _particleCountSelector.PropertyChanged += ParticleCountSelectorOnPropertyChanged;
             _staticParticleCountEditor.PropertyChanged += StaticParticleCountEditorOnPropertyChanged;
             _randomParticleCountEditor.PropertyChanged += RandomParticleCountEditorOnPropertyChanged;
+            
+            _colorMultiplierSelector.PropertyChanged += ColorMultiplierSelectorOnPropertyChanged;
+            _staticColorMultiplierEditor.PropertyChanged += StaticColorMultiplierEditorOnPropertyChanged;
         }
 
         public void NewEmitterSettingsLoaded(EmitterSettings settings)
@@ -127,6 +144,21 @@ namespace Parme.Editor.Ui
             else
             {
                 throw new NotSupportedException($"No known particle count editor for type {countInitializer.GetType()}");
+            }
+
+            _initializers.TryGetValue(InitializerType.ColorMultiplier, out var colorInitializer);
+            _colorMultiplierSelector.SelectedType = colorInitializer?.GetType();
+            if (colorInitializer == null)
+            {
+                _colorMultiplierSelector.ChildDisplay = null;
+            }
+            else if (colorInitializer.GetType() == typeof(StaticColorInitializer))
+            {
+                _colorMultiplierSelector.ChildDisplay = _staticColorMultiplierEditor;
+                _staticColorMultiplierEditor.RedMultiplier = ((StaticColorInitializer) colorInitializer).RedMultiplier;
+                _staticColorMultiplierEditor.GreenMultiplier = ((StaticColorInitializer) colorInitializer).GreenMultiplier;
+                _staticColorMultiplierEditor.BlueMultiplier = ((StaticColorInitializer) colorInitializer).BlueMultiplier;
+                _staticColorMultiplierEditor.AlphaMultiplier = ((StaticColorInitializer) colorInitializer).AlphaMultiplier;
             }
 
             _ignoreChangeNotifications = false;
@@ -226,6 +258,57 @@ namespace Parme.Editor.Ui
             {
                 case nameof(StaticParticleCountEditor.ParticleSpawnCount):
                     initializer.ParticleSpawnCount = _staticParticleCountEditor.ParticleSpawnCount;
+                    break;
+            }
+            
+            UpdateUi();
+            RaiseEmitterSettingsChangedEvent();
+        }
+
+        private void ColorMultiplierSelectorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_ignoreChangeNotifications) return;
+
+            if (e.PropertyName == nameof(TypeSelector.SelectedType))
+            {
+                IParticleInitializer initializer;
+                if (_colorMultiplierSelector.SelectedType == typeof(StaticColorInitializer))
+                {
+                    initializer = new StaticColorInitializer();
+                }
+                else
+                {
+                    initializer = null;
+                }
+
+                _initializers[InitializerType.ColorMultiplier] = initializer;
+            }
+            
+            UpdateUi();
+            RaiseEmitterSettingsChangedEvent();
+        }
+
+        private void StaticColorMultiplierEditorOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (_ignoreChangeNotifications) return;
+
+            var initializer = (StaticColorInitializer) _initializers[InitializerType.ColorMultiplier];
+            switch (e.PropertyName)
+            {
+                case nameof(StaticColorMultiplierEditor.RedMultiplier):
+                    initializer.RedMultiplier = _staticColorMultiplierEditor.RedMultiplier;
+                    break;
+                
+                case nameof(StaticColorMultiplierEditor.GreenMultiplier):
+                    initializer.GreenMultiplier = _staticColorMultiplierEditor.GreenMultiplier;
+                    break;
+                
+                case nameof(StaticColorMultiplierEditor.BlueMultiplier):
+                    initializer.BlueMultiplier = _staticColorMultiplierEditor.BlueMultiplier;
+                    break;
+                
+                case nameof(StaticColorMultiplierEditor.AlphaMultiplier):
+                    initializer.AlphaMultiplier = _staticColorMultiplierEditor.AlphaMultiplier;
                     break;
             }
             
