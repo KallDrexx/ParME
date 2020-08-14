@@ -39,7 +39,7 @@ namespace Parme.MonoGame
 
                         var startX = cameraHalfWidth - positionDifference.X - particleHalfWidth;
                         var startY = camera.PositiveYAxisPointsUp
-                            ? cameraHalfHeight + positionDifference.Y + particleHalfHeight
+                            ? cameraHalfHeight + positionDifference.Y - particleHalfHeight
                             : cameraHalfHeight - positionDifference.Y - particleHalfHeight;
                         
                         var rectangle = new Rectangle((int) startX, (int) startY, (int) particle.Size.X, (int) particle.Size.Y);

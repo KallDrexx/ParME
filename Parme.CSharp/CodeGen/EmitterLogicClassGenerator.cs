@@ -132,16 +132,19 @@ using Parme.CSharp;
         {
             var fieldDefinitions = new StringBuilder();
 
-            var triggerCodeGenerator = GetCodeGenerator(settings.Trigger.GetType());
-            fieldDefinitions.Append(triggerCodeGenerator.GenerateFields(settings.Trigger));
+            if (settings.Trigger != null)
+            {
+                var triggerCodeGenerator = GetCodeGenerator(settings.Trigger.GetType());
+                fieldDefinitions.Append(triggerCodeGenerator.GenerateFields(settings.Trigger));
+            }
 
-            foreach (var initializer in settings.Initializers)
+            foreach (var initializer in settings.Initializers.Where(x => x != null))
             {
                 var codeGenerator = GetCodeGenerator(initializer.GetType());
                 fieldDefinitions.Append(codeGenerator.GenerateFields(initializer));
             }
 
-            foreach (var modifier in settings.Modifiers)
+            foreach (var modifier in settings.Modifiers.Where(x => x != null))
             {
                 var codeGenerator = GetCodeGenerator(modifier.GetType());
                 fieldDefinitions.Append(codeGenerator.GenerateFields(modifier));
@@ -154,16 +157,19 @@ using Parme.CSharp;
         {
             var properties = new StringBuilder();
 
-            var triggerCodeGenerator = GetCodeGenerator(settings.Trigger.GetType());
-            properties.Append(triggerCodeGenerator.GenerateProperties(settings.Trigger));
+            if (settings.Trigger != null)
+            {
+                var triggerCodeGenerator = GetCodeGenerator(settings.Trigger.GetType());
+                properties.Append(triggerCodeGenerator.GenerateProperties(settings.Trigger));
+            }
 
-            foreach (var initializer in settings.Initializers)
+            foreach (var initializer in settings.Initializers.Where(x => x != null))
             {
                 var codeGenerator = GetCodeGenerator(initializer.GetType());
                 properties.Append(codeGenerator.GenerateProperties(initializer));
             }
 
-            foreach (var modifier in settings.Modifiers)
+            foreach (var modifier in settings.Modifiers.Where(x => x != null))
             {
                 var codeGenerator = GetCodeGenerator(modifier.GetType());
                 properties.Append(codeGenerator.GenerateProperties(modifier));
@@ -177,7 +183,7 @@ using Parme.CSharp;
             var modifierCode = new StringBuilder();
             modifierCode.AppendLine();
             
-            foreach (var modifier in settings.Modifiers)
+            foreach (var modifier in settings.Modifiers.Where(x => x != null))
             {
                 var codeGenerator = GetCodeGenerator(modifier.GetType());
 
@@ -196,6 +202,7 @@ using Parme.CSharp;
             initializerCode.AppendLine();
 
             foreach (var initializer in settings.Initializers
+                .Where(x => x != null)
                 .Where(x => x.InitializerType != InitializerType.ParticleCount))
             {
                 var codeGenerator = GetCodeGenerator(initializer.GetType());
@@ -215,6 +222,7 @@ using Parme.CSharp;
             initializerCode.AppendLine();
 
             foreach (var initializer in settings.Initializers
+                .Where(x => x != null)
                 .Where(x => x.InitializerType == InitializerType.ParticleCount))
             {
                 var codeGenerator = GetCodeGenerator(initializer.GetType());
