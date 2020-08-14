@@ -6,8 +6,9 @@ namespace Parme.CSharp
     {
         private readonly IEmitterLogic _emitterLogic;
         protected readonly ParticleBuffer ParticleBuffer;
-
+        
         public Vector2 WorldCoordinates { get; set; }
+        public float ScaleFactor { get; set; } = 1f;
         public bool IsEmittingNewParticles { get; private set; }
 
         protected Emitter(IEmitterLogic emitterLogic)
@@ -49,6 +50,7 @@ namespace Parme.CSharp
             }
         }
         
+        // ReSharper disable once UnusedMemberInSuper.Global
         public abstract void Render(ParticleCamera camera);
     }
 }

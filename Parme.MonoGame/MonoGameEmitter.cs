@@ -9,6 +9,7 @@ namespace Parme.MonoGame
         private readonly GraphicsDevice _graphicsDevice;
         private readonly Texture2D _texture;
         private readonly SpriteBatch _spriteBatch;
+        private readonly BasicEffect _basicEffect;
         
         public MonoGameEmitter(IEmitterLogic emitterLogic, GraphicsDevice graphicsDevice, Texture2D texture) 
             : base(emitterLogic)
@@ -16,14 +17,28 @@ namespace Parme.MonoGame
             _graphicsDevice = graphicsDevice;
             _texture = texture;
             _spriteBatch = new SpriteBatch(_graphicsDevice);
+            _basicEffect = new BasicEffect(graphicsDevice);
         }
 
         public override void Render(ParticleCamera camera)
         {
-            _spriteBatch.Begin(blendState: BlendState.NonPremultiplied);
+            var totalHorizontalZoomFactor = camera.HorizontalZoomFactor * ScaleFactor;
+            var totalVerticalZoomFactor = camera.VerticalZoomFactor * ScaleFactor;
+            
+            _basicEffect.TextureEnabled = true;
+            _basicEffect.LightingEnabled = false;
+            _basicEffect.FogEnabled = false;
+            _basicEffect.VertexColorEnabled = true;
+            _basicEffect.World = Matrix.Identity;
+            _basicEffect.Projection = Matrix.CreateOrthographic(camera.PixelWidth, -camera.PixelHeight, -1, 1);
+            _basicEffect.View =
+                Matrix.CreateTranslation(
+                    -camera.Origin.X / totalHorizontalZoomFactor, 
+                    camera.Origin.Y / totalVerticalZoomFactor,
+                    0) *
+                Matrix.CreateScale(totalHorizontalZoomFactor, totalVerticalZoomFactor, 1);
 
-            var cameraHalfWidth = camera.PixelWidth / 2;
-            var cameraHalfHeight = camera.PixelHeight / 2;
+            _spriteBatch.Begin(blendState: BlendState.NonPremultiplied, effect: _basicEffect);
 
             var particles = ParticleBuffer.Particles;
             for (var x = 0; x < particles.Length; x++)
@@ -31,33 +46,30 @@ namespace Parme.MonoGame
                 ref var particle = ref particles[x];
                 if (particle.IsAlive)
                 {
-                    if (camera.IsInView(ref particle))
-                    {
-                        var positionDifference = camera.Origin - particle.Position;
-                        var particleHalfWidth = particle.Size.X / 2;
-                        var particleHalfHeight = particle.Size.Y / 2;
+                    var particleHalfWidth = particle.Size.X / 2;
+                    var particleHalfHeight = particle.Size.Y / 2;
 
-                        var startX = cameraHalfWidth - positionDifference.X - particleHalfWidth;
-                        var startY = camera.PositiveYAxisPointsUp
-                            ? cameraHalfHeight + positionDifference.Y - particleHalfHeight
-                            : cameraHalfHeight - positionDifference.Y - particleHalfHeight;
-                        
-                        var rectangle = new Rectangle((int) startX, (int) startY, (int) particle.Size.X, (int) particle.Size.Y);
-                        
-                        var colorModifier = new Color(particle.RedMultiplier, 
-                            particle.GreenMultiplier, 
-                            particle.BlueMultiplier,
-                            particle.AlphaMultiplier);
+                    var startX = particle.Position.X - particleHalfWidth;
+                    var startY = camera.PositiveYAxisPointsUp
+                        ? -particle.Position.Y - particleHalfHeight
+                        : particle.Position.Y - particleHalfHeight;
 
-                        _spriteBatch.Draw(_texture,
-                            rectangle,
-                            null,
-                            colorModifier,
-                            particle.RotationInRadians,
-                            Vector2.Zero,
-                            SpriteEffects.None,
-                            0f);
-                    }
+                    var rectangle = new Rectangle((int) startX, (int) startY, (int) particle.Size.X,
+                        (int) particle.Size.Y);
+
+                    var colorModifier = new Color(particle.RedMultiplier,
+                        particle.GreenMultiplier,
+                        particle.BlueMultiplier,
+                        particle.AlphaMultiplier);
+
+                    _spriteBatch.Draw(_texture,
+                        rectangle,
+                        null,
+                        colorModifier,
+                        particle.RotationInRadians,
+                        Vector2.Zero,
+                        SpriteEffects.None,
+                        0f);
                 }
             }
             
