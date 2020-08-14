@@ -18,13 +18,12 @@ namespace Parme.MonoGame
             _spriteBatch = new SpriteBatch(_graphicsDevice);
         }
 
-        public override void Render()
+        public override void Render(ParticleCamera camera)
         {
-            var middleOfScreen = new Vector2(
-                _graphicsDevice.Viewport.Width / 2f,
-                _graphicsDevice.Viewport.Height / 2f);
-            
             _spriteBatch.Begin(blendState: BlendState.NonPremultiplied);
+
+            var cameraHalfWidth = camera.PixelWidth / 2;
+            var cameraHalfHeight = camera.PixelHeight / 2;
 
             var particles = ParticleBuffer.Particles;
             for (var x = 0; x < particles.Length; x++)
@@ -32,21 +31,33 @@ namespace Parme.MonoGame
                 ref var particle = ref particles[x];
                 if (particle.IsAlive)
                 {
-                    var (posX, posY) = middleOfScreen + new Vector2(particle.Position.X, -particle.Position.Y);
-                    var rectangle = new Rectangle((int) posX, (int) posY, (int) particle.Size.X, (int) particle.Size.Y);
-                    var colorModifier = new Color(particle.RedMultiplier, 
-                        particle.GreenMultiplier, 
-                        particle.BlueMultiplier,
-                        particle.AlphaMultiplier);
+                    if (camera.IsInView(ref particle))
+                    {
+                        var positionDifference = camera.Origin - particle.Position;
+                        var particleHalfWidth = particle.Size.X / 2;
+                        var particleHalfHeight = particle.Size.Y / 2;
 
-                    _spriteBatch.Draw(_texture,
-                        rectangle,
-                        null,
-                        colorModifier,
-                        particle.RotationInRadians,
-                        Vector2.Zero,
-                        SpriteEffects.None,
-                        0f);
+                        var startX = cameraHalfWidth - positionDifference.X - particleHalfWidth;
+                        var startY = camera.PositiveYAxisPointsUp
+                            ? cameraHalfHeight + positionDifference.Y + particleHalfHeight
+                            : cameraHalfHeight - positionDifference.Y - particleHalfHeight;
+                        
+                        var rectangle = new Rectangle((int) startX, (int) startY, (int) particle.Size.X, (int) particle.Size.Y);
+                        
+                        var colorModifier = new Color(particle.RedMultiplier, 
+                            particle.GreenMultiplier, 
+                            particle.BlueMultiplier,
+                            particle.AlphaMultiplier);
+
+                        _spriteBatch.Draw(_texture,
+                            rectangle,
+                            null,
+                            colorModifier,
+                            particle.RotationInRadians,
+                            Vector2.Zero,
+                            SpriteEffects.None,
+                            0f);
+                    }
                 }
             }
             

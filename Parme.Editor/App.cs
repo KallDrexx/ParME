@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using ImGuiHandler;
 using ImGuiHandler.MonoGame;
 using ImGuiNET;
@@ -13,11 +14,13 @@ using Parme.CSharp;
 using Parme.CSharp.CodeGen;
 using Parme.Editor.Ui;
 using Parme.MonoGame;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Parme.Editor
 {
     public class App : Game
     {
+        private readonly ParticleCamera _camera = new ParticleCamera();
         private MonoGameEmitter _emitter;
         private ImGuiManager _imGuiManager;
         private EditorUiController _uiController;
@@ -42,9 +45,14 @@ namespace Parme.Editor
 
         protected override void Initialize()
         {
+            _camera.Origin = Vector2.Zero;
+            _camera.PositiveYAxisPointsUp = true;
+            _camera.PixelWidth = GraphicsDevice.Viewport.Width;
+            _camera.PixelHeight = GraphicsDevice.Viewport.Height;
+            
             _imGuiManager = new ImGuiManager(new MonoGameImGuiRenderer(this));
             _uiController = new EditorUiController(_imGuiManager);
-            _inputHandler = new InputHandler(_uiController);
+            _inputHandler = new InputHandler(_uiController, _camera);
 
             ImGui.GetIO().FontGlobalScale = 1.2f;
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -85,7 +93,7 @@ namespace Parme.Editor
             
             GraphicsDevice.Clear(backgroundColor);
             
-            _emitter?.Render();
+            _emitter?.Render(_camera);
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
             base.Draw(gameTime);
@@ -173,8 +181,11 @@ namespace Parme.Editor
                     .WithReferences(typeof(IEmitterLogic).Assembly);
                 
                 var logicClass = CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions).GetAwaiter().GetResult();
-            
-                _emitter = new MonoGameEmitter(logicClass, GraphicsDevice, _testTexture);
+
+                _emitter = new MonoGameEmitter(logicClass, GraphicsDevice, _testTexture)
+                {
+                    //WorldCoordinates = new System.Numerics.Vector2(400, -200)
+                };
                 _emitter.Start();
             }
         }
@@ -182,6 +193,8 @@ namespace Parme.Editor
         private void WindowOnClientSizeChanged(object sender, EventArgs e)
         {
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            _camera.PixelWidth = GraphicsDevice.Viewport.Width;
+            _camera.PixelHeight = GraphicsDevice.Viewport.Height;
         }
     }
 }

@@ -34,6 +34,8 @@ using Parme.CSharp;
         
         public void Update(ParticleBuffer particleBuffer, float timeSinceLastFrame, Emitter parent)
         {{
+            var emitterCoordinates = parent.WorldCoordinates;
+
             // Update existing particles
             var particles = particleBuffer.Particles;
             for (var particleIndex = 0; particleIndex < particles.Length; particleIndex++)
@@ -80,6 +82,9 @@ using Parme.CSharp;
                     
                     // Initializers
                     {8}
+
+                    // Adjust the particle's position by the emitter's location
+                    particle.Position += emitterCoordinates;
                     
                     particleBuffer.Add(particle);            
                 }}

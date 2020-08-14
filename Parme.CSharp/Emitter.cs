@@ -1,10 +1,13 @@
-﻿namespace Parme.CSharp
+﻿using System.Numerics;
+
+namespace Parme.CSharp
 {
     public abstract class Emitter
     {
         private readonly IEmitterLogic _emitterLogic;
         protected readonly ParticleBuffer ParticleBuffer;
 
+        public Vector2 WorldCoordinates { get; set; }
         public bool IsEmittingNewParticles { get; private set; }
 
         protected Emitter(IEmitterLogic emitterLogic)
@@ -46,6 +49,6 @@
             }
         }
         
-        public abstract void Render();
+        public abstract void Render(ParticleCamera camera);
     }
 }
