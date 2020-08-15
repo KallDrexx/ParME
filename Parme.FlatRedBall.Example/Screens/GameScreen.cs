@@ -60,6 +60,18 @@ namespace Parme.FlatRedBall.Example.Screens
             _emitter.X = SomeCircleInstance.X;
             _emitter.Y = SomeCircleInstance.Y;
             _emitter.Z = SomeCircleInstance.Z;
+
+            if (InputManager.Keyboard.KeyReleased(Keys.Enter))
+            {
+                if (_emitter.IsEmittingParticles)
+                {
+                    _emitter.StopEmitting();
+                }
+                else
+                {
+                    _emitter.StartEmitting();
+                }
+            }
         }
 
         void CustomDestroy()
