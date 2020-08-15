@@ -46,7 +46,7 @@
             {
                 if (cameraToReset == null)
                 {
-                    cameraToReset =  Camera.Main;
+                    cameraToReset = FlatRedBall.Camera.Main;
                 }
                 cameraToReset.Orthogonal = Data.Is2D;
                 if (Data.Is2D)

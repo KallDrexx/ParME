@@ -12,7 +12,11 @@ namespace Parme.Frb
         private readonly Emitter _emitter;
         private readonly ParticleCamera _particleCamera = new ParticleCamera{PositiveYAxisPointsUp = true};
 
-        public bool IsEmittingParticles => _emitter.IsEmittingNewParticles;
+        public bool IsEmitting
+        {
+            get => _emitter.IsEmittingNewParticles;
+            set => _emitter.IsEmittingNewParticles = value;
+        }
         
         public float X { get; set; }
         public float Y { get; set; }
@@ -48,8 +52,6 @@ namespace Parme.Frb
             _emitter.KillAllParticles();
         }
 
-        public void StartEmitting() => _emitter.Start();
-        public void StopEmitting() => _emitter.Stop();
         public void KillAllParticles() => _emitter.KillAllParticles();
 
         private static Texture2D GetWhiteTexture()

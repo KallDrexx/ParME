@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Parme.Frb.Example.Performance
 {
-    public class PoolList<T> where T : global::FlatRedBall.Performance.IPoolable
+    public class PoolList<T> where T : FlatRedBall.Performance.IPoolable
     {
         #region Fields
         List<T> mPoolables = new List<T>();

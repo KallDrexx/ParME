@@ -64,7 +64,7 @@ namespace Parme.Frb.Example
             GlobalContent.Initialize();
 
             			CameraSetup.SetupCamera(SpriteManager.Camera, graphics);
-            Type startScreenType = typeof(GameScreen);
+            Type startScreenType = typeof(Parme.Frb.Example.Screens.GameScreen);
 
             var commandLineArgs = Environment.GetCommandLineArgs();
             if (commandLineArgs.Length > 0)

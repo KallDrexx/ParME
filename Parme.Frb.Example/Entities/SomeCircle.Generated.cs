@@ -9,13 +9,10 @@ using FlatRedBall;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using FlatRedBall.Instructions;
 using FlatRedBall.Math.Geometry;
-using FlatRedBall.Screens;
-
 namespace Parme.Frb.Example.Entities
 {
-    public partial class SomeCircle : PositionedObject, IDestroyable, ICollidable
+    public partial class SomeCircle : FlatRedBall.PositionedObject, FlatRedBall.Graphics.IDestroyable, FlatRedBall.Math.Geometry.ICollidable
     {
         // This is made static so that static lazy-loaded content can access it.
         public static string ContentManagerName { get; set; }
@@ -26,8 +23,8 @@ namespace Parme.Frb.Example.Entities
         static System.Collections.Generic.List<string> mRegisteredUnloads = new System.Collections.Generic.List<string>();
         static System.Collections.Generic.List<string> LoadedContentManagers = new System.Collections.Generic.List<string>();
         
-        private Circle mCircleInstance;
-        public Circle CircleInstance
+        private FlatRedBall.Math.Geometry.Circle mCircleInstance;
+        public FlatRedBall.Math.Geometry.Circle CircleInstance
         {
             get
             {
@@ -38,17 +35,17 @@ namespace Parme.Frb.Example.Entities
                 mCircleInstance = value;
             }
         }
-        private ShapeCollection mGeneratedCollision;
-        public ShapeCollection Collision
+        private FlatRedBall.Math.Geometry.ShapeCollection mGeneratedCollision;
+        public FlatRedBall.Math.Geometry.ShapeCollection Collision
         {
             get
             {
                 return mGeneratedCollision;
             }
         }
-        protected Layer LayerProvidedByContainer = null;
+        protected FlatRedBall.Graphics.Layer LayerProvidedByContainer = null;
         public SomeCircle () 
-        	: this(ScreenManager.CurrentScreen.ContentManagerName, true)
+        	: this(FlatRedBall.Screens.ScreenManager.CurrentScreen.ContentManagerName, true)
         {
         }
         public SomeCircle (string contentManagerName) 
@@ -64,7 +61,7 @@ namespace Parme.Frb.Example.Entities
         protected virtual void InitializeEntity (bool addToManagers) 
         {
             LoadStaticContent(ContentManagerName);
-            mCircleInstance = new Circle();
+            mCircleInstance = new FlatRedBall.Math.Geometry.Circle();
             mCircleInstance.Name = "mCircleInstance";
             
             PostInitialize();
@@ -73,17 +70,17 @@ namespace Parme.Frb.Example.Entities
                 AddToManagers(null);
             }
         }
-        public virtual void ReAddToManagers (Layer layerToAddTo) 
+        public virtual void ReAddToManagers (FlatRedBall.Graphics.Layer layerToAddTo) 
         {
             LayerProvidedByContainer = layerToAddTo;
-            SpriteManager.AddPositionedObject(this);
-            ShapeManager.AddToLayer(mCircleInstance, LayerProvidedByContainer);
+            FlatRedBall.SpriteManager.AddPositionedObject(this);
+            FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(mCircleInstance, LayerProvidedByContainer);
         }
-        public virtual void AddToManagers (Layer layerToAddTo) 
+        public virtual void AddToManagers (FlatRedBall.Graphics.Layer layerToAddTo) 
         {
             LayerProvidedByContainer = layerToAddTo;
-            SpriteManager.AddPositionedObject(this);
-            ShapeManager.AddToLayer(mCircleInstance, LayerProvidedByContainer);
+            FlatRedBall.SpriteManager.AddPositionedObject(this);
+            FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(mCircleInstance, LayerProvidedByContainer);
             AddToManagersBottomUp(layerToAddTo);
             CustomInitialize();
         }
@@ -94,39 +91,39 @@ namespace Parme.Frb.Example.Entities
         }
         public virtual void Destroy () 
         {
-            SpriteManager.RemovePositionedObject(this);
+            FlatRedBall.SpriteManager.RemovePositionedObject(this);
             
             if (CircleInstance != null)
             {
-                ShapeManager.Remove(CircleInstance);
+                FlatRedBall.Math.Geometry.ShapeManager.Remove(CircleInstance);
             }
             mGeneratedCollision.RemoveFromManagers(clearThis: false);
             CustomDestroy();
         }
         public virtual void PostInitialize () 
         {
-            bool oldShapeManagerSuppressAdd = ShapeManager.SuppressAddingOnVisibilityTrue;
-            ShapeManager.SuppressAddingOnVisibilityTrue = true;
+            bool oldShapeManagerSuppressAdd = FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue;
+            FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = true;
             if (mCircleInstance.Parent == null)
             {
                 mCircleInstance.CopyAbsoluteToRelative();
                 mCircleInstance.AttachTo(this, false);
             }
             CircleInstance.Radius = 16f;
-            mGeneratedCollision = new ShapeCollection();
+            mGeneratedCollision = new FlatRedBall.Math.Geometry.ShapeCollection();
             Collision.Circles.AddOneWay(mCircleInstance);
-            ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
+            FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
         }
-        public virtual void AddToManagersBottomUp (Layer layerToAddTo) 
+        public virtual void AddToManagersBottomUp (FlatRedBall.Graphics.Layer layerToAddTo) 
         {
             AssignCustomVariables(false);
         }
         public virtual void RemoveFromManagers () 
         {
-            SpriteManager.ConvertToManuallyUpdated(this);
+            FlatRedBall.SpriteManager.ConvertToManuallyUpdated(this);
             if (CircleInstance != null)
             {
-                ShapeManager.RemoveOneWay(CircleInstance);
+                FlatRedBall.Math.Geometry.ShapeManager.RemoveOneWay(CircleInstance);
             }
             mGeneratedCollision.RemoveFromManagers(clearThis: false);
         }
@@ -140,7 +137,7 @@ namespace Parme.Frb.Example.Entities
         public virtual void ConvertToManuallyUpdated () 
         {
             this.ForceUpdateDependenciesDeep();
-            SpriteManager.ConvertToManuallyUpdated(this);
+            FlatRedBall.SpriteManager.ConvertToManuallyUpdated(this);
         }
         public static void LoadStaticContent (string contentManagerName) 
         {
@@ -150,7 +147,7 @@ namespace Parme.Frb.Example.Entities
             }
             ContentManagerName = contentManagerName;
             #if DEBUG
-            if (contentManagerName == FlatRedBallServices.GlobalContentManager)
+            if (contentManagerName == FlatRedBall.FlatRedBallServices.GlobalContentManager)
             {
                 HasBeenLoadedWithGlobalContentManager = true;
             }
@@ -165,20 +162,20 @@ namespace Parme.Frb.Example.Entities
                 LoadedContentManagers.Add(contentManagerName);
                 lock (mLockObject)
                 {
-                    if (!mRegisteredUnloads.Contains(ContentManagerName) && ContentManagerName != FlatRedBallServices.GlobalContentManager)
+                    if (!mRegisteredUnloads.Contains(ContentManagerName) && ContentManagerName != FlatRedBall.FlatRedBallServices.GlobalContentManager)
                     {
-                        FlatRedBallServices.GetContentManagerByName(ContentManagerName).AddUnloadMethod("SomeCircleStaticUnload", UnloadStaticContent);
+                        FlatRedBall.FlatRedBallServices.GetContentManagerByName(ContentManagerName).AddUnloadMethod("SomeCircleStaticUnload", UnloadStaticContent);
                         mRegisteredUnloads.Add(ContentManagerName);
                     }
                 }
             }
-            if (registerUnload && ContentManagerName != FlatRedBallServices.GlobalContentManager)
+            if (registerUnload && ContentManagerName != FlatRedBall.FlatRedBallServices.GlobalContentManager)
             {
                 lock (mLockObject)
                 {
-                    if (!mRegisteredUnloads.Contains(ContentManagerName) && ContentManagerName != FlatRedBallServices.GlobalContentManager)
+                    if (!mRegisteredUnloads.Contains(ContentManagerName) && ContentManagerName != FlatRedBall.FlatRedBallServices.GlobalContentManager)
                     {
-                        FlatRedBallServices.GetContentManagerByName(ContentManagerName).AddUnloadMethod("SomeCircleStaticUnload", UnloadStaticContent);
+                        FlatRedBall.FlatRedBallServices.GetContentManagerByName(ContentManagerName).AddUnloadMethod("SomeCircleStaticUnload", UnloadStaticContent);
                         mRegisteredUnloads.Add(ContentManagerName);
                     }
                 }
@@ -210,24 +207,24 @@ namespace Parme.Frb.Example.Entities
             return null;
         }
         protected bool mIsPaused;
-        public override void Pause (InstructionList instructions) 
+        public override void Pause (FlatRedBall.Instructions.InstructionList instructions) 
         {
             base.Pause(instructions);
             mIsPaused = true;
         }
         public virtual void SetToIgnorePausing () 
         {
-            InstructionManager.IgnorePausingFor(this);
-            InstructionManager.IgnorePausingFor(CircleInstance);
+            FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(this);
+            FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(CircleInstance);
         }
-        public virtual void MoveToLayer (Layer layerToMoveTo) 
+        public virtual void MoveToLayer (FlatRedBall.Graphics.Layer layerToMoveTo) 
         {
             var layerToRemoveFrom = LayerProvidedByContainer;
             if (layerToRemoveFrom != null)
             {
                 layerToRemoveFrom.Remove(CircleInstance);
             }
-            ShapeManager.AddToLayer(CircleInstance, layerToMoveTo);
+            FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(CircleInstance, layerToMoveTo);
             LayerProvidedByContainer = layerToMoveTo;
         }
     }

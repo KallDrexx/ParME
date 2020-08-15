@@ -9,7 +9,7 @@ namespace Parme.CSharp
         
         public Vector2 WorldCoordinates { get; set; }
         public float ScaleFactor { get; set; } = 1f;
-        public bool IsEmittingNewParticles { get; private set; }
+        public bool IsEmittingNewParticles { get; set; }
 
         protected Emitter(IEmitterLogic emitterLogic)
         {

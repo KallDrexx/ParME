@@ -1,38 +1,18 @@
 using FlatRedBall;
 using FlatRedBall.Input;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Xna.Framework.Input;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
 using Parme.Core.Triggers;
 using Parme.CSharp;
-using Parme.CSharp.CodeGen;
-using Parme.Frb;
 
 namespace Parme.Frb.Example.Screens
 {
     public partial class GameScreen
     {
-        private EmitterDrawableBatch _emitter;
-        
         void CustomInitialize()
         {
-            var emitterSettings = GetBasicFlameEmitterSettings();
-            var code = EmitterLogicClassGenerator.Generate(emitterSettings, 
-                "Parme.Frb.Example.Settings",
-                "TestEmitter", 
-                true);
-
-            var scriptOptions = ScriptOptions.Default
-                .WithReferences(typeof(IEmitterLogic).Assembly);
-                
-            var logicClass = CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions).GetAwaiter().GetResult();
-
-            _emitter = new EmitterDrawableBatch(logicClass);
-            _emitter.StartEmitting();
-
-            SpriteManager.AddDrawableBatch(_emitter);
+            
         }
 
         void CustomActivity(bool firstTimeCalled)
@@ -58,20 +38,13 @@ namespace Parme.Frb.Example.Screens
                 SomeCircleInstance.X -= TimeManager.SecondDifference * movementSpeed;
             }
 
-            _emitter.X = SomeCircleInstance.X;
-            _emitter.Y = SomeCircleInstance.Y;
-            _emitter.Z = SomeCircleInstance.Z;
+            EmitterDrawableBatchInstance.X = SomeCircleInstance.X;
+            EmitterDrawableBatchInstance.Y = SomeCircleInstance.Y;
+            EmitterDrawableBatchInstance.Z = SomeCircleInstance.Z;
 
             if (InputManager.Keyboard.KeyReleased(Keys.Enter))
             {
-                if (_emitter.IsEmittingParticles)
-                {
-                    _emitter.StopEmitting();
-                }
-                else
-                {
-                    _emitter.StartEmitting();
-                }
+                EmitterDrawableBatchInstance.IsEmitting = !EmitterDrawableBatchInstance.IsEmitting;
             }
         }
 

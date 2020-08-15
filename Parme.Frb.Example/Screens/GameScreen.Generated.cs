@@ -7,20 +7,16 @@ using FlatRedBall;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using FlatRedBall.Math.Collision;
-using FlatRedBall.Math.Geometry;
-using FlatRedBall.Screens;
-using Parme.Frb.Example.Entities;
-
 namespace Parme.Frb.Example.Screens
 {
-    public partial class GameScreen : Screen
+    public partial class GameScreen : FlatRedBall.Screens.Screen
     {
         #if DEBUG
         static bool HasBeenLoadedWithGlobalContentManager = false;
         #endif
         
-        private SomeCircle SomeCircleInstance;
+        private Parme.Frb.Example.Entities.SomeCircle SomeCircleInstance;
+        private Parme.Frb.EmitterDrawableBatch EmitterDrawableBatchInstance;
         public GameScreen () 
         	: base ("GameScreen")
         {
@@ -28,8 +24,9 @@ namespace Parme.Frb.Example.Screens
         public override void Initialize (bool addToManagers) 
         {
             LoadStaticContent(ContentManagerName);
-            SomeCircleInstance = new SomeCircle(ContentManagerName, false);
+            SomeCircleInstance = new Parme.Frb.Example.Entities.SomeCircle(ContentManagerName, false);
             SomeCircleInstance.Name = "SomeCircleInstance";
+            EmitterDrawableBatchInstance = new EmitterDrawableBatch(new TestEmitter());
             
             
             PostInitialize();
@@ -42,6 +39,7 @@ namespace Parme.Frb.Example.Screens
         public override void AddToManagers () 
         {
             SomeCircleInstance.AddToManagers(mLayer);
+            FlatRedBall.SpriteManager.AddDrawableBatch(EmitterDrawableBatchInstance);
             base.AddToManagers();
             AddToManagersBottomUp();
             CustomInitialize();
@@ -71,14 +69,15 @@ namespace Parme.Frb.Example.Screens
                 SomeCircleInstance.Destroy();
                 SomeCircleInstance.Detach();
             }
-            CollisionManager.Self.Relationships.Clear();
+            FlatRedBall.Math.Collision.CollisionManager.Self.Relationships.Clear();
             CustomDestroy();
         }
         public virtual void PostInitialize () 
         {
-            bool oldShapeManagerSuppressAdd = ShapeManager.SuppressAddingOnVisibilityTrue;
-            ShapeManager.SuppressAddingOnVisibilityTrue = true;
-            ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
+            bool oldShapeManagerSuppressAdd = FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue;
+            FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = true;
+            EmitterDrawableBatchInstance.IsEmitting = true;
+            FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
         }
         public virtual void AddToManagersBottomUp () 
         {
@@ -95,6 +94,7 @@ namespace Parme.Frb.Example.Screens
             {
                 SomeCircleInstance.AssignCustomVariables(true);
             }
+            EmitterDrawableBatchInstance.IsEmitting = true;
         }
         public virtual void ConvertToManuallyUpdated () 
         {
@@ -107,7 +107,7 @@ namespace Parme.Frb.Example.Screens
                 throw new System.ArgumentException("contentManagerName cannot be empty or null");
             }
             #if DEBUG
-            if (contentManagerName == FlatRedBallServices.GlobalContentManager)
+            if (contentManagerName == FlatRedBall.FlatRedBallServices.GlobalContentManager)
             {
                 HasBeenLoadedWithGlobalContentManager = true;
             }
@@ -116,7 +116,7 @@ namespace Parme.Frb.Example.Screens
                 throw new System.Exception("This type has been loaded with a Global content manager, then loaded with a non-global.  This can lead to a lot of bugs");
             }
             #endif
-            SomeCircle.LoadStaticContent(contentManagerName);
+            Parme.Frb.Example.Entities.SomeCircle.LoadStaticContent(contentManagerName);
             CustomLoadStaticContent(contentManagerName);
         }
         public override void PauseThisScreen () 
