@@ -4,11 +4,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using FlatRedBall;
-using FlatRedBall.Instructions;
-using FlatRedBall.Screens;
 
-namespace Parme.FlatRedBall.Example
+namespace Parme.Frb.Example
 {
 
     public class GlueVariableSetData
@@ -94,7 +91,7 @@ namespace Parme.FlatRedBall.Example
         private string ProcessMessage(string message)
         {
             var screen =
-                ScreenManager.CurrentScreen;
+                FlatRedBall.Screens.ScreenManager.CurrentScreen;
             bool handledImmediately = false;
 
             string data = null;
@@ -114,7 +111,7 @@ namespace Parme.FlatRedBall.Example
 
             if(!handledImmediately)
             {
-                InstructionManager.AddSafe(() =>
+                FlatRedBall.Instructions.InstructionManager.AddSafe(() =>
                 {
                     switch (message)
                     {
@@ -139,18 +136,18 @@ namespace Parme.FlatRedBall.Example
 
                         case "AdvanceOneFrame":
                             screen.UnpauseThisScreen();
-                            var delegateInstruction = new DelegateInstruction(() =>
+                            var delegateInstruction = new FlatRedBall.Instructions.DelegateInstruction(() =>
                             {
                                 screen.PauseThisScreen();
                             });
-                            delegateInstruction.TimeToExecute = TimeManager.CurrentTime + .001;
+                            delegateInstruction.TimeToExecute = FlatRedBall.TimeManager.CurrentTime + .001;
 
-                            InstructionManager.Instructions.Add(delegateInstruction);
+                            FlatRedBall.Instructions.InstructionManager.Instructions.Add(delegateInstruction);
                             break;
 
                         case "SetSpeed":
                             var timeFactor = int.Parse(data);
-                            TimeManager.TimeFactor = timeFactor / 100.0f;
+                            FlatRedBall.TimeManager.TimeFactor = timeFactor / 100.0f;
                             break;
 
                         case "SetVariable":

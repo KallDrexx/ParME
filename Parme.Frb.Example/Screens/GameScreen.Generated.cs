@@ -10,9 +10,9 @@ using System.Text;
 using FlatRedBall.Math.Collision;
 using FlatRedBall.Math.Geometry;
 using FlatRedBall.Screens;
-using Parme.FlatRedBall.Example.Entities;
+using Parme.Frb.Example.Entities;
 
-namespace Parme.FlatRedBall.Example.Screens
+namespace Parme.Frb.Example.Screens
 {
     public partial class GameScreen : Screen
     {

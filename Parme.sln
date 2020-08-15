@@ -14,9 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine Support", "Engine Su
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FlatRedBall", "FlatRedBall", "{19029727-E477-4438-AE72-06AB56E95F25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.FlatRedBall.Example", "Parme.FlatRedBall.Example\Parme.FlatRedBall.Example.csproj", "{557AEC75-E158-48BA-980A-32666346D792}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.Frb.Example", "Parme.Frb.Example\Parme.Frb.Example.csproj", "{557AEC75-E158-48BA-980A-32666346D792}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.FlatRedBall", "Parme.FlatRedBall\Parme.FlatRedBall.csproj", "{088D4ABA-2570-4B5E-B805-D974A65E9AF3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.Frb", "Parme.Frb\Parme.Frb.csproj", "{088D4ABA-2570-4B5E-B805-D974A65E9AF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

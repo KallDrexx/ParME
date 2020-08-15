@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using FlatRedBall.Performance;
 
-namespace Parme.FlatRedBall.Example.Performance
+namespace Parme.Frb.Example.Performance
 {
-    public class PoolList<T> where T : IPoolable
+    public class PoolList<T> where T : global::FlatRedBall.Performance.IPoolable
     {
         #region Fields
         List<T> mPoolables = new List<T>();

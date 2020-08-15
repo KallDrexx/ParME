@@ -8,8 +8,9 @@ using Parme.Core.Modifiers;
 using Parme.Core.Triggers;
 using Parme.CSharp;
 using Parme.CSharp.CodeGen;
+using Parme.Frb;
 
-namespace Parme.FlatRedBall.Example.Screens
+namespace Parme.Frb.Example.Screens
 {
     public partial class GameScreen
     {
@@ -19,7 +20,7 @@ namespace Parme.FlatRedBall.Example.Screens
         {
             var emitterSettings = GetBasicFlameEmitterSettings();
             var code = EmitterLogicClassGenerator.Generate(emitterSettings, 
-                "Parme.FlatRedBall.Example.Settings",
+                "Parme.Frb.Example.Settings",
                 "TestEmitter", 
                 true);
 

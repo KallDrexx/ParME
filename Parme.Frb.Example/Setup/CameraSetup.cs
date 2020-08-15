@@ -1,11 +1,7 @@
     // This is a generated file created by Glue. To change this file, edit the camera settings in Glue.
     // To access the camera settings, push the camera icon.
-
-    using FlatRedBall;
-    using FlatRedBall.Graphics;
-    using FlatRedBall.Math;
     using Camera = FlatRedBall.Camera;
-    namespace Parme.FlatRedBall.Example
+    namespace Parme.Frb.Example
     {
         public class CameraSetupData
         {
@@ -50,7 +46,7 @@
             {
                 if (cameraToReset == null)
                 {
-                    cameraToReset = Camera.Main;
+                    cameraToReset =  Camera.Main;
                 }
                 cameraToReset.Orthogonal = Data.Is2D;
                 if (Data.Is2D)
@@ -73,17 +69,17 @@
                 CameraSetup.graphicsDeviceManager = graphicsDeviceManager;
                 ResetWindow();
                 ResetCamera(cameraToSetUp);
-                FlatRedBallServices.GraphicsOptions.SizeOrOrientationChanged += HandleResolutionChange;
+                FlatRedBall.FlatRedBallServices.GraphicsOptions.SizeOrOrientationChanged += HandleResolutionChange;
             }
             internal static void ResetWindow () 
             {
                 #if WINDOWS || DESKTOP_GL
-                FlatRedBallServices.Game.Window.AllowUserResizing = Data.AllowWidowResizing;
+                FlatRedBall.FlatRedBallServices.Game.Window.AllowUserResizing = Data.AllowWidowResizing;
                 if (Data.IsFullScreen)
                 {
                     #if DESKTOP_GL
                     graphicsDeviceManager.HardwareModeSwitch = false;
-                    FlatRedBallServices.GraphicsOptions.SetResolution(Microsoft.Xna.Framework.Graphics.GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, Microsoft.Xna.Framework.Graphics.GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, WindowedFullscreenMode.FullscreenBorderless);
+                    FlatRedBall.FlatRedBallServices.GraphicsOptions.SetResolution(Microsoft.Xna.Framework.Graphics.GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, Microsoft.Xna.Framework.Graphics.GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height, FlatRedBall.Graphics.WindowedFullscreenMode.FullscreenBorderless);
                     #elif WINDOWS
                     System.IntPtr hWnd = FlatRedBall.FlatRedBallServices.Game.Window.Handle;
                     var control = System.Windows.Forms.Control.FromHandle(hWnd);
@@ -101,7 +97,7 @@
                     var maxHeight = Microsoft.Xna.Framework.Graphics.GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 28;
                     width = System.Math.Min(width, maxWidth);
                     height = System.Math.Min(height, maxHeight);
-                    FlatRedBallServices.GraphicsOptions.SetResolution(width, height);
+                    FlatRedBall.FlatRedBallServices.GraphicsOptions.SetResolution(width, height);
                 }
                 #elif IOS || ANDROID
                 FlatRedBall.FlatRedBallServices.GraphicsOptions.SetFullScreen(FlatRedBall.FlatRedBallServices.GraphicsOptions.ResolutionWidth, FlatRedBall.FlatRedBallServices.GraphicsOptions.ResolutionHeight);
@@ -126,30 +122,30 @@
                 }
                 if (Data.Is2D && Data.ResizeBehavior == ResizeBehavior.IncreaseVisibleArea)
                 {
-                    Camera.Main.OrthogonalHeight = Camera.Main.DestinationRectangle.Height / (Data.Scale/ 100.0f);
-                    Camera.Main.FixAspectRatioYConstant();
+                    FlatRedBall.Camera.Main.OrthogonalHeight = FlatRedBall.Camera.Main.DestinationRectangle.Height / (Data.Scale/ 100.0f);
+                    FlatRedBall.Camera.Main.FixAspectRatioYConstant();
                 }
             }
             private static void SetAspectRatioTo (decimal aspectRatio, WidthOrHeight dominantInternalCoordinates, int desiredWidth, int desiredHeight) 
             {
-                var resolutionAspectRatio = FlatRedBallServices.GraphicsOptions.ResolutionWidth / (decimal)FlatRedBallServices.GraphicsOptions.ResolutionHeight;
+                var resolutionAspectRatio = FlatRedBall.FlatRedBallServices.GraphicsOptions.ResolutionWidth / (decimal)FlatRedBall.FlatRedBallServices.GraphicsOptions.ResolutionHeight;
                 int destinationRectangleWidth;
                 int destinationRectangleHeight;
                 int x = 0;
                 int y = 0;
                 if (aspectRatio > resolutionAspectRatio)
                 {
-                    destinationRectangleWidth = FlatRedBallServices.GraphicsOptions.ResolutionWidth;
-                    destinationRectangleHeight = MathFunctions.RoundToInt(destinationRectangleWidth / (float)aspectRatio);
-                    y = (FlatRedBallServices.GraphicsOptions.ResolutionHeight - destinationRectangleHeight) / 2;
+                    destinationRectangleWidth = FlatRedBall.FlatRedBallServices.GraphicsOptions.ResolutionWidth;
+                    destinationRectangleHeight = FlatRedBall.Math.MathFunctions.RoundToInt(destinationRectangleWidth / (float)aspectRatio);
+                    y = (FlatRedBall.FlatRedBallServices.GraphicsOptions.ResolutionHeight - destinationRectangleHeight) / 2;
                 }
                 else
                 {
-                    destinationRectangleHeight = FlatRedBallServices.GraphicsOptions.ResolutionHeight;
-                    destinationRectangleWidth = MathFunctions.RoundToInt(destinationRectangleHeight * (float)aspectRatio);
-                    x = (FlatRedBallServices.GraphicsOptions.ResolutionWidth - destinationRectangleWidth) / 2;
+                    destinationRectangleHeight = FlatRedBall.FlatRedBallServices.GraphicsOptions.ResolutionHeight;
+                    destinationRectangleWidth = FlatRedBall.Math.MathFunctions.RoundToInt(destinationRectangleHeight * (float)aspectRatio);
+                    x = (FlatRedBall.FlatRedBallServices.GraphicsOptions.ResolutionWidth - destinationRectangleWidth) / 2;
                 }
-                foreach (var camera in SpriteManager.Cameras)
+                foreach (var camera in FlatRedBall.SpriteManager.Cameras)
                 {
                     int currentX = x;
                     int currentY = y;

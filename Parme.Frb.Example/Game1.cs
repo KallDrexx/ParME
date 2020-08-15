@@ -11,9 +11,9 @@ using System.Linq;
 
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Parme.FlatRedBall.Example.Screens;
+using Parme.Frb.Example.Screens;
 
-namespace Parme.FlatRedBall.Example
+namespace Parme.Frb.Example
 {
     public partial class Game1 : Microsoft.Xna.Framework.Game
     {

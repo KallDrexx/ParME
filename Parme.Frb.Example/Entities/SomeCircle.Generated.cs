@@ -13,7 +13,7 @@ using FlatRedBall.Instructions;
 using FlatRedBall.Math.Geometry;
 using FlatRedBall.Screens;
 
-namespace Parme.FlatRedBall.Example.Entities
+namespace Parme.Frb.Example.Entities
 {
     public partial class SomeCircle : PositionedObject, IDestroyable, ICollidable
     {

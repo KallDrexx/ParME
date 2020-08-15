@@ -10,8 +10,8 @@
     <ProjectGuid>{557AEC75-E158-48BA-980A-32666346D792}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Parme.FlatRedBall.Example</RootNamespace>
-    <AssemblyName>Parme.FlatRedBall.Example</AssemblyName>
+    <RootNamespace>Parme.Frb.Example</RootNamespace>
+    <AssemblyName>Parme.Frb.Example</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -58,7 +58,9 @@
     </Compile>
     <Compile Include="FileAliases.Generated.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="Game1.Generated.cs" />
+    <Compile Include="Game1.Generated.cs">
+      <DependentUpon>Game1.cs</DependentUpon>
+    </Compile>
     <Compile Include="GlobalContent.Generated.cs" />
     <Compile Include="GlueControl\GlueControlManager.Generated.cs" />
     <Compile Include="Performance\IEntityFactory.Generated.cs" />
@@ -86,7 +88,9 @@
     <Compile Include="TileGraphics\MapTilesetTile.cs" />
     <Compile Include="TileGraphics\NamedValue.cs" />
     <Compile Include="TileGraphics\ReducedTileMapInfo.cs" />
-    <Compile Include="TileGraphics\ReducedTileMapInfo.TiledMapSave.cs" />
+    <Compile Include="TileGraphics\ReducedTileMapInfo.TiledMapSave.cs">
+      <DependentUpon>ReducedTileMapInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="TileGraphics\TileAnimation.cs" />
     <Compile Include="TileGraphics\TileAnimationFrame.cs" />
     <Compile Include="TileGraphics\TiledMapSave.Conversion.cs" />
@@ -256,9 +260,9 @@
       <Project>{13292589-3e6b-4367-a644-07282b2382ab}</Project>
       <Name>Parme.CSharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Parme.FlatRedBall\Parme.FlatRedBall.csproj">
+    <ProjectReference Include="..\Parme.Frb\Parme.Frb.csproj">
       <Project>{088d4aba-2570-4b5e-b805-d974a65e9af3}</Project>
-      <Name>Parme.FlatRedBall</Name>
+      <Name>Parme.Frb</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -270,7 +274,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.0.0\build\Microsoft.CodeAnalysis.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.Analyzers.3.0.0\build\Microsoft.CodeAnalysis.Analyzers.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.CodeAnalysis.Analyzers.3.0.0\build\Microsoft.CodeAnalysis.Analyzers.targets" Condition="Exists('..\packages\Microsoft.CodeAnalysis.Analyzers.3.0.0\build\Microsoft.CodeAnalysis.Analyzers.targets')" />
-<!--  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />-->
+  <!--  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />-->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

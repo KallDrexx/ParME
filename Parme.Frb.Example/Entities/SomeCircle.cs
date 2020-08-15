@@ -9,7 +9,7 @@ using FlatRedBall.Graphics.Animation;
 using FlatRedBall.Graphics.Particle;
 using FlatRedBall.Math.Geometry;
 
-namespace Parme.FlatRedBall.Example.Entities
+namespace Parme.Frb.Example.Entities
 {
     public partial class SomeCircle
     {

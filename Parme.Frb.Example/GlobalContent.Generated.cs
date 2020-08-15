@@ -14,7 +14,7 @@ using FlatRedBall.Utilities;
 using BitmapFont = FlatRedBall.Graphics.BitmapFont;
 using FlatRedBall.Localization;
 
-namespace Parme.FlatRedBall.Example
+namespace Parme.Frb.Example
 {
     public static partial class GlobalContent
     {

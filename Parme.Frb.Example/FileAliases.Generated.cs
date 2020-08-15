@@ -1,4 +1,4 @@
-namespace Parme.FlatRedBall.Example
+namespace Parme.Frb.Example
 {
     public class FileAliasLogic
     {

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Parme.CSharp;
 using Parme.MonoGame;
 
-namespace Parme.FlatRedBall
+namespace Parme.Frb
 {
     public class EmitterDrawableBatch : IDrawableBatch
     {

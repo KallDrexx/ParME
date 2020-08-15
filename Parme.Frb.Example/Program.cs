@@ -1,6 +1,6 @@
 using System;
 
-namespace Parme.FlatRedBall.Example
+namespace Parme.Frb.Example
 {
     /// <summary>
     /// The main class.

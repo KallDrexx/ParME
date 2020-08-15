@@ -1,9 +1,9 @@
-using Parme.FlatRedBall.Example.DataTypes;
+using Parme.Frb.Example.DataTypes;
 using FlatRedBall.TileGraphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Parme.FlatRedBall.Example.Performance;
+using Parme.Frb.Example.Performance;
 using FlatRedBall.Graphics;
 using System.Reflection;
 using TMXGlueLib.DataTypes;
