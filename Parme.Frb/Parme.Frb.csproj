@@ -8,11 +8,11 @@
     <ItemGroup>
       <Reference Include="FlatRedBallDesktopGL, Version=2020.8.12.552, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\Parme.Frb.Example\Libraries\DesktopGl\Debug\FlatRedBallDesktopGL.dll</HintPath>
-        <Private>True</Private>
+        <Private>false</Private>
       </Reference>
       <Reference Include="MonoGame.Framework, Version=3.7.0.1027, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\Parme.Frb.Example\Libraries\DesktopGl\Debug\MonoGame.Framework.dll</HintPath>
-        <Private>True</Private>
+        <Private>false</Private>
       </Reference>
     </ItemGroup>
 
