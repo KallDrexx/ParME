@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Parme.Core;
 using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen

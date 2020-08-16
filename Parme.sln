@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.Frb", "Parme.Frb\Parm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.Frb.GluePlugin", "Parme.Frb.GluePlugin\Parme.Frb.GluePlugin.csproj", "{32906974-1B68-4193-BE4D-C75A613A0DF7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.Core.Tests", "Parme.Core.Tests\Parme.Core.Tests.csproj", "{39B75222-A214-4372-AC84-A146E46537A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{32906974-1B68-4193-BE4D-C75A613A0DF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32906974-1B68-4193-BE4D-C75A613A0DF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32906974-1B68-4193-BE4D-C75A613A0DF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39B75222-A214-4372-AC84-A146E46537A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39B75222-A214-4372-AC84-A146E46537A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39B75222-A214-4372-AC84-A146E46537A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39B75222-A214-4372-AC84-A146E46537A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F53FCB69-D833-4C0E-A912-07329ACB9786} = {4AAC2D77-788B-471E-B603-D3F0AA1348C4}

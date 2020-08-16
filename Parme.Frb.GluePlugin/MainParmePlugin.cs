@@ -6,6 +6,7 @@ using FlatRedBall.Glue.Plugins;
 using FlatRedBall.Glue.Plugins.ExportedImplementations;
 using FlatRedBall.Glue.Plugins.Interfaces;
 using FlatRedBall.IO;
+using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
 using Parme.Core.Triggers;

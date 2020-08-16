@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
 using Parme.Core.Triggers;
