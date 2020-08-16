@@ -6,7 +6,7 @@ using Parme.CSharp;
 namespace Parme.Frb.Example
 {
 
-    public class TestEmitter : IEmitterLogic
+    public class FireExample : IEmitterLogic
     {
         private readonly Random _random = new Random();
         private float _timeSinceLastTrigger;

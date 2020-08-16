@@ -26,7 +26,7 @@ namespace Parme.Frb.Example.Screens
             LoadStaticContent(ContentManagerName);
             SomeCircleInstance = new Parme.Frb.Example.Entities.SomeCircle(ContentManagerName, false);
             SomeCircleInstance.Name = "SomeCircleInstance";
-            EmitterDrawableBatchInstance = new EmitterDrawableBatch(new TestEmitter());
+            EmitterDrawableBatchInstance = new EmitterDrawableBatch(new FireExample());
             
             
             PostInitialize();
