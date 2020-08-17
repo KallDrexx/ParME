@@ -11,21 +11,12 @@ namespace Parme.Core
 {
     public class EmitterSettings
     {
-        public float MaxParticleLifeTime { get; }
-        public IParticleTrigger Trigger { get; }
-        public IReadOnlyList<IParticleInitializer> Initializers { get; }
-        public IReadOnlyList<IParticleModifier> Modifiers { get; }
-
-        public EmitterSettings(IParticleTrigger trigger,
-            IEnumerable<IParticleInitializer> initializers,
-            IEnumerable<IParticleModifier> modifiers,
-            float maxParticleLifeTime)
-        {
-            MaxParticleLifeTime = maxParticleLifeTime;
-            Trigger = trigger ?? throw new ArgumentNullException(nameof(trigger));
-            Initializers = new List<IParticleInitializer>(initializers);
-            Modifiers = new List<IParticleModifier>(modifiers);
-        }
+        public float MaxParticleLifeTime { get; set; }
+        public string TextureFileName { get; set; }
+        public Dictionary<int, TextureSectionCoords> TextureSections { get; set; } = new Dictionary<int, TextureSectionCoords>();
+        public IParticleTrigger Trigger { get; set; }
+        public IReadOnlyList<IParticleInitializer> Initializers { get; set; }
+        public IReadOnlyList<IParticleModifier> Modifiers { get; set; }
 
         public static EmitterSettings FromJson(string json)
         {

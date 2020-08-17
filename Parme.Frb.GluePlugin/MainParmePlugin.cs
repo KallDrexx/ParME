@@ -106,7 +106,13 @@ namespace Parme.Frb.GluePlugin
                 },
             };
 
-            return new EmitterSettings(trigger, initializers, modifiers, 1f);
+            return new EmitterSettings
+            {
+                Trigger = trigger,
+                Initializers = initializers,
+                Modifiers = modifiers,
+                MaxParticleLifeTime = 1f,
+            };
         }
 
         private void GluxLoaded()

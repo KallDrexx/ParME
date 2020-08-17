@@ -42,7 +42,14 @@ namespace Parme.CSharp.Tests.CodeGen
                 .Select(x => (IParticleModifier) Activator.CreateInstance(x))
                 .ToList();
 
-            var settings = new EmitterSettings(allTriggers.First(), allInitializers, allModifiers, 1f);
+            var settings = new EmitterSettings
+            {
+                Trigger = allTriggers.First(),
+                Initializers = allInitializers,
+                Modifiers = allModifiers,
+                MaxParticleLifeTime = 1f
+            };
+            
             var code = EmitterLogicClassGenerator.Generate(settings, "ParmeTest", "ParmeClass", true);
             
             var scriptOptions = ScriptOptions.Default

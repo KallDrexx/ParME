@@ -626,8 +626,15 @@ namespace Parme.Editor.Ui
         private void RaiseEmitterSettingsChangedEvent()
         {
             if (_particleTrigger == null) return; // Trigger is required
+
+            var settings = new EmitterSettings
+            {
+                Trigger = _particleTrigger,
+                Initializers = _initializers.Values.ToArray(),
+                Modifiers = _modifiers,
+                MaxParticleLifeTime = _particleMaxLife
+            };
             
-            var settings = new EmitterSettings(_particleTrigger, _initializers.Values, _modifiers, _particleMaxLife);
             EmitterSettingsChanged?.Invoke(this, settings);
         }
     }

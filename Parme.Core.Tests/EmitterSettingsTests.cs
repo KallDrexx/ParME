@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
@@ -16,7 +17,13 @@ namespace Parme.Core.Tests
             var trigger = new TimeElapsedTrigger {Frequency = 1.2f};
             var initializer = new StaticPositionInitializer {XOffset = 1.1f, YOffset = 2.2f};
             var modifier = new ConstantRotationModifier {DegreesPerSecond = 5.2f};
-            var emitter = new EmitterSettings(trigger, new []{initializer}, new[]{modifier}, 5.5f);
+            var emitter = new EmitterSettings
+            {
+                Trigger = trigger,
+                Initializers = new []{initializer},
+                Modifiers = new[]{modifier},
+                MaxParticleLifeTime = 5.5f
+            };
 
             var json = emitter.ToJson();
 
@@ -69,7 +76,13 @@ namespace Parme.Core.Tests
             var initializers = initializerTypes.Select(x => (IParticleInitializer) Activator.CreateInstance(x)).ToArray();
             var modifiers = modifierTypes.Select(x => (IParticleModifier) Activator.CreateInstance(x)).ToArray();
             
-            var emitter = new EmitterSettings(trigger, initializers, modifiers, 5);
+            var emitter = new EmitterSettings{
+                Trigger = trigger, 
+                Initializers = initializers, 
+                Modifiers = modifiers, 
+                MaxParticleLifeTime = 5
+            };
+            
             var json = emitter.ToJson();
             var deserializedEmitter = EmitterSettings.FromJson(json);
             
@@ -151,6 +164,52 @@ namespace Parme.Core.Tests
             ((ConstantColorMultiplierChangeModifier) emitter.Modifiers[3]).GreenMultiplierChangePerSecond.ShouldBe(-1);
             ((ConstantColorMultiplierChangeModifier) emitter.Modifiers[3]).BlueMultiplierChangePerSecond.ShouldBe(-1);
             ((ConstantColorMultiplierChangeModifier) emitter.Modifiers[3]).AlphaMultiplierChangePerSecond.ShouldBe(-1);
+        }
+
+        [Fact]
+        public void Texture_File_Name_Serialized_And_Deserialized()
+        {
+            var emitter = new EmitterSettings
+            {
+                Trigger = new OneShotTrigger(),
+                Initializers = new IParticleInitializer[0],
+                Modifiers = new IParticleModifier[0],
+                MaxParticleLifeTime = 5.5f,
+                TextureFileName = "..\\SomeFile.png",
+            };
+            
+            var json = emitter.ToJson();
+            var deserializedEmitter = EmitterSettings.FromJson(json);
+            
+            deserializedEmitter.ShouldNotBeNull();
+            deserializedEmitter.TextureFileName.ShouldBe(emitter.TextureFileName);
+        }
+
+        [Fact]
+        public void Texture_Sections_Serialized_And_Deserialized()
+        {
+            var emitter = new EmitterSettings
+            {
+                Trigger = new OneShotTrigger(),
+                Initializers = new IParticleInitializer[0],
+                Modifiers = new IParticleModifier[0],
+                MaxParticleLifeTime = 5.5f,
+                TextureSections = new Dictionary<int, TextureSectionCoords>
+                {
+                    {1, new TextureSectionCoords(1, 2, 3, 4)},
+                    {5, new TextureSectionCoords(5, 6, 7, 8)},
+                }
+            };
+            
+            var json = emitter.ToJson();
+            var deserializedEmitter = EmitterSettings.FromJson(json);
+            
+            deserializedEmitter.ShouldNotBeNull();
+            deserializedEmitter.TextureSections.ShouldNotBeNull();
+            deserializedEmitter.TextureSections.Count.ShouldBe(2);
+            
+            deserializedEmitter.TextureSections.ShouldContainKeyAndValue(1, new TextureSectionCoords(1, 2, 3, 4));
+            deserializedEmitter.TextureSections.ShouldContainKeyAndValue(5, new TextureSectionCoords(5, 6, 7, 8));
         }
     }
 }
