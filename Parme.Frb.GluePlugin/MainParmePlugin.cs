@@ -77,8 +77,8 @@ namespace Parme.Frb.GluePlugin
 
                 new StaticSizeInitializer
                 {
-                    Width = 10,
-                    Height = 10,
+                    Width = 100,
+                    Height = 100,
                 },
             };
 
@@ -93,8 +93,8 @@ namespace Parme.Frb.GluePlugin
 
                 new ConstantSizeModifier
                 {
-                    WidthChangePerSecond = -10,
-                    HeightChangePerSecond = -10,
+                    WidthChangePerSecond = -100,
+                    HeightChangePerSecond = -100,
                 },
 
                 new ConstantColorMultiplierChangeModifier
@@ -112,6 +112,12 @@ namespace Parme.Frb.GluePlugin
                 Initializers = initializers,
                 Modifiers = modifiers,
                 MaxParticleLifeTime = 1f,
+                TextureFileName = "Content\\SampleParticles.png",
+                TextureSections = new []
+                {
+                    new TextureSectionCoords(16, 0, 31, 15),
+                    new TextureSectionCoords(48, 16, 63, 31), 
+                },
             };
         }
 

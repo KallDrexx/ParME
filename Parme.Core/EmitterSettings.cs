@@ -13,7 +13,7 @@ namespace Parme.Core
     {
         public float MaxParticleLifeTime { get; set; }
         public string TextureFileName { get; set; }
-        public Dictionary<int, TextureSectionCoords> TextureSections { get; set; } = new Dictionary<int, TextureSectionCoords>();
+        public IReadOnlyList<TextureSectionCoords> TextureSections { get; set; }
         public IParticleTrigger Trigger { get; set; }
         public IReadOnlyList<IParticleInitializer> Initializers { get; set; }
         public IReadOnlyList<IParticleModifier> Modifiers { get; set; }

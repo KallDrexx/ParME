@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Parme.CSharp;
 
@@ -6,17 +7,22 @@ namespace Parme.MonoGame
 {
     public class MonoGameEmitter : Emitter
     {
-        private readonly GraphicsDevice _graphicsDevice;
         private readonly Texture2D _texture;
         private readonly SpriteBatch _spriteBatch;
         private readonly BasicEffect _basicEffect;
         
-        public MonoGameEmitter(IEmitterLogic emitterLogic, GraphicsDevice graphicsDevice, Texture2D texture) 
+        public MonoGameEmitter(IEmitterLogic emitterLogic, 
+            GraphicsDevice graphicsDevice,
+            ITextureFileLoader textureFileLoader) 
             : base(emitterLogic)
         {
-            _graphicsDevice = graphicsDevice;
-            _texture = texture;
-            _spriteBatch = new SpriteBatch(_graphicsDevice);
+            if (textureFileLoader == null)
+            {
+                throw new ArgumentNullException(nameof(textureFileLoader));
+            }
+            
+            _texture = textureFileLoader.LoadTexture2D(emitterLogic.TextureFilePath);
+            _spriteBatch = new SpriteBatch(graphicsDevice);
             _basicEffect = new BasicEffect(graphicsDevice);
         }
 
@@ -54,8 +60,16 @@ namespace Parme.MonoGame
                         ? -particle.Position.Y - particleHalfHeight
                         : particle.Position.Y - particleHalfHeight;
 
-                    var rectangle = new Rectangle((int) startX, (int) startY, (int) particle.Size.X,
+                    var destinationRectangle = new Rectangle((int) startX, 
+                        (int) startY, 
+                        (int) particle.Size.X,
                         (int) particle.Size.Y);
+
+                    ref var section = ref EmitterLogic.TextureSections[particle.TextureSectionIndex];
+                    var sourceRectangle = new Rectangle(section.LeftX, 
+                        section.TopY,
+                        section.RightX - section.LeftX,
+                        section.BottomY - section.TopY);
 
                     var colorModifier = new Color(particle.RedMultiplier,
                         particle.GreenMultiplier,
@@ -63,8 +77,8 @@ namespace Parme.MonoGame
                         particle.AlphaMultiplier);
 
                     _spriteBatch.Draw(_texture,
-                        rectangle,
-                        null,
+                        destinationRectangle,
+                        sourceRectangle,
                         colorModifier,
                         particle.RotationInRadians,
                         Vector2.Zero,

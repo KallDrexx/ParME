@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Parme.Core;
 using Parme.Core.Initializers;
+using Parme.Core.Modifiers;
 
 namespace Parme.CSharp.CodeGen
 {
@@ -21,6 +22,7 @@ namespace Parme.CSharp.CodeGen
         private const string Template = @"
 using System;
 using System.Numerics;
+using Parme.Core;
 using Parme.CSharp;
 
 {0}
@@ -30,6 +32,9 @@ using Parme.CSharp;
         {2}
 
         public int MaxParticleLifeTime {{ get; set; }} = {3};
+        
+        public string TextureFilePath {{ get; }} = {10};
+        {11}        
         
         {4}
         
@@ -104,12 +109,17 @@ using Parme.CSharp;
             {
                 throw new ArgumentNullException(nameof(settings));
             }
+            
+            settings.Initializers ??= new IParticleInitializer[0];
+            settings.Modifiers ??= new IParticleModifier[0];
+            settings.TextureSections ??= new TextureSectionCoords[0];
 
             var fieldDefinitions = GetFieldDefinitions(settings);
             var properties = GetProperties(settings);
             var modifiers = GetModifierCode(settings);
             var initializers = GetInitializerCode(settings);
             var particleCountCode = GetParticleCountCode(settings);
+            var textureSectionCode = GetTextureCoordinateMapCode(settings);
 
             var triggerGenerator = GetCodeGenerator(settings.Trigger.GetType());
             
@@ -125,7 +135,9 @@ using Parme.CSharp;
                 initializers,
                 generateScriptCode 
                     ? $"return new {className}();"
-                    : "}"
+                    : "}",
+                $"@\"{settings.TextureFileName}\"",
+                textureSectionCode
             );
         }
 
@@ -235,6 +247,21 @@ using Parme.CSharp;
             }
 
             return initializerCode.ToString();
+        }
+
+        private static string GetTextureCoordinateMapCode(EmitterSettings settings)
+        {
+            var code = new StringBuilder();
+            code.AppendLine("public TextureSectionCoords[] TextureSections { get; } = new TextureSectionCoords[] {");
+
+            foreach (var section in settings.TextureSections ?? new List<TextureSectionCoords>())
+            {
+                code.AppendLine($"            new TextureSectionCoords({section.LeftX}, {section.TopY}, {section.RightX}, {section.BottomY}),");
+            }
+            
+            code.AppendLine("        };");
+
+            return code.ToString();
         }
 
         private static IGenerateCode GetCodeGenerator(Type type)

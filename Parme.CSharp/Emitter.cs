@@ -4,7 +4,7 @@ namespace Parme.CSharp
 {
     public abstract class Emitter
     {
-        private readonly IEmitterLogic _emitterLogic;
+        protected readonly IEmitterLogic EmitterLogic;
         protected readonly ParticleBuffer ParticleBuffer;
         
         public Vector2 WorldCoordinates { get; set; }
@@ -13,7 +13,7 @@ namespace Parme.CSharp
 
         protected Emitter(IEmitterLogic emitterLogic)
         {
-            _emitterLogic = emitterLogic;
+            EmitterLogic = emitterLogic;
             
             // TODO: find a way to estimate initial capacity from particle count initializer and trigger
             ParticleBuffer = new ParticleBuffer(50);
@@ -21,7 +21,7 @@ namespace Parme.CSharp
 
         public void Update(float timeSinceLastFrame)
         {
-            _emitterLogic.Update(ParticleBuffer, timeSinceLastFrame, this);
+            EmitterLogic.Update(ParticleBuffer, timeSinceLastFrame, this);
         }
 
         /// <summary>

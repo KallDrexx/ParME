@@ -46,6 +46,8 @@ namespace Parme.Editor.Ui
         private float _particleMaxLife;
         private IParticleTrigger _particleTrigger;
         private Dictionary<InitializerType, IParticleInitializer> _initializers = new Dictionary<InitializerType, IParticleInitializer>();
+        private string _textureFileName;
+        private TextureSectionCoords[] _textureSections;
             
         private bool _ignoreChangeNotifications;
 
@@ -147,9 +149,13 @@ namespace Parme.Editor.Ui
             _initializers.Clear();
             _particleTrigger = null;
             _particleMaxLife = 0f;
+            _textureSections = new TextureSectionCoords[0];
+            _textureFileName = string.Empty;
 
             if (settings != null)
             {
+                _textureFileName = settings.TextureFileName;
+                _textureSections = settings.TextureSections.ToArray();
                 _particleMaxLife = settings.MaxParticleLifeTime;
                 _particleTrigger = settings.Trigger;
                 _initializers = settings.Initializers
@@ -632,7 +638,9 @@ namespace Parme.Editor.Ui
                 Trigger = _particleTrigger,
                 Initializers = _initializers.Values.ToArray(),
                 Modifiers = _modifiers,
-                MaxParticleLifeTime = _particleMaxLife
+                MaxParticleLifeTime = _particleMaxLife,
+                TextureFileName = _textureFileName,
+                TextureSections = _textureSections,
             };
             
             EmitterSettingsChanged?.Invoke(this, settings);

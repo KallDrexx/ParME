@@ -1,6 +1,7 @@
 
 using System;
 using System.Numerics;
+using Parme.Core;
 using Parme.CSharp;
 
 namespace Parme.Frb.Example
@@ -12,6 +13,13 @@ namespace Parme.Frb.Example
         private float _timeSinceLastTrigger;
 
         public int MaxParticleLifeTime { get; set; } = 1;
+        
+        public string TextureFilePath { get; } = @"Content\SampleParticles.png";
+        public TextureSectionCoords[] TextureSections { get; } = new TextureSectionCoords[] {
+            new TextureSectionCoords(16, 0, 31, 15),
+            new TextureSectionCoords(48, 16, 63, 31),
+        };
+        
         
         public float TimeElapsedTriggerFrequency { get; set; } = 0.01f; 
 
@@ -33,16 +41,16 @@ namespace Parme.Frb.Example
         public float RandomRegionPositionMinYOffset { get; set; } = -50f;
         public float RandomRegionPositionMaxYOffset { get; set; } = -50f;
 
-        public int StaticSizeWidth { get; set; } = 10;
-        public int StaticSizeHeight { get; set; } = 10;
+        public int StaticSizeWidth { get; set; } = 100;
+        public int StaticSizeHeight { get; set; } = 100;
 
         public float ConstantRotationRadiansPerSecond { get; set; } = 1.7453292519943295f;
 
         public float ConstantAccelerationX { get; set; } = -5f;
         public float ConstantAccelerationY { get; set; } = 5f;
 
-        public float ConstantSizeWidthChangePerSecond { get; set; } = -10f;
-        public float ConstantSizeHeightChangePerSecond { get; set; } = -10f;
+        public float ConstantSizeWidthChangePerSecond { get; set; } = -100f;
+        public float ConstantSizeHeightChangePerSecond { get; set; } = -100f;
 
         public float ConstantColorRedMultiplierChangePerSecond { get; set; } = -1f;
         public float ConstantColorGreenMultiplierChangePerSecond { get; set; } = -1f;

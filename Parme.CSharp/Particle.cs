@@ -5,7 +5,7 @@ namespace Parme.CSharp
     public struct Particle
     {
         public bool IsAlive;
-        public byte TextureCoordinateIndex;
+        public byte TextureSectionIndex;
         
         /// <summary>
         /// The standard (non-zoomed) width and height of the particle, in pixels

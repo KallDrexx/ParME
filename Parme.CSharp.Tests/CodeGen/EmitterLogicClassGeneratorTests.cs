@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
@@ -58,6 +59,50 @@ namespace Parme.CSharp.Tests.CodeGen
             var emitterLogic = await CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions);
             
             emitterLogic.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public async Task Logic_Class_Contains_Accessible_Texture_FileName()
+        {
+            var settings = new EmitterSettings
+            {
+                Trigger = new OneShotTrigger(),
+                TextureFileName = @"C:\test\some.png",
+            };
+            
+            var code = EmitterLogicClassGenerator.Generate(settings, "ParmeTest", "ParmeClass", true);
+            var scriptOptions = ScriptOptions.Default.WithReferences(typeof(IEmitterLogic).Assembly);
+
+            var emitterLogic = await CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions);
+            
+            emitterLogic.ShouldNotBeNull();
+            emitterLogic.TextureFilePath.ShouldBe(settings.TextureFileName);
+        }
+
+        [Fact]
+        public async Task Logic_Class_Contains_Accessible_Texture_Sections()
+        {
+            var settings = new EmitterSettings
+            {
+                Trigger = new OneShotTrigger(),
+                TextureFileName = @"C:\test\some.png",
+                TextureSections = new[]
+                {
+                    new TextureSectionCoords(1, 2, 3, 4),
+                    new TextureSectionCoords(5, 6, 7, 8),
+                }
+            };
+            
+            var code = EmitterLogicClassGenerator.Generate(settings, "ParmeTest", "ParmeClass", true);
+            var scriptOptions = ScriptOptions.Default.WithReferences(typeof(IEmitterLogic).Assembly);
+
+            var emitterLogic = await CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions);
+            
+            emitterLogic.ShouldNotBeNull();
+            emitterLogic.TextureSections.ShouldNotBeNull();
+            emitterLogic.TextureSections.Length.ShouldBe(2);
+            emitterLogic.TextureSections[0].ShouldBe(new TextureSectionCoords(1, 2, 3, 4));
+            emitterLogic.TextureSections[1].ShouldBe(new TextureSectionCoords(5, 6, 7, 8));
         }
     }
 }

@@ -194,10 +194,10 @@ namespace Parme.Core.Tests
                 Initializers = new IParticleInitializer[0],
                 Modifiers = new IParticleModifier[0],
                 MaxParticleLifeTime = 5.5f,
-                TextureSections = new Dictionary<int, TextureSectionCoords>
+                TextureSections = new[]
                 {
-                    {1, new TextureSectionCoords(1, 2, 3, 4)},
-                    {5, new TextureSectionCoords(5, 6, 7, 8)},
+                    new TextureSectionCoords(1, 2, 3, 4),
+                    new TextureSectionCoords(5, 6, 7, 8),
                 }
             };
             
@@ -207,9 +207,8 @@ namespace Parme.Core.Tests
             deserializedEmitter.ShouldNotBeNull();
             deserializedEmitter.TextureSections.ShouldNotBeNull();
             deserializedEmitter.TextureSections.Count.ShouldBe(2);
-            
-            deserializedEmitter.TextureSections.ShouldContainKeyAndValue(1, new TextureSectionCoords(1, 2, 3, 4));
-            deserializedEmitter.TextureSections.ShouldContainKeyAndValue(5, new TextureSectionCoords(5, 6, 7, 8));
+            deserializedEmitter.TextureSections[0].ShouldBe(new TextureSectionCoords(1, 2, 3, 4));
+            deserializedEmitter.TextureSections[1].ShouldBe(new TextureSectionCoords(5, 6, 7, 8));
         }
     }
 }

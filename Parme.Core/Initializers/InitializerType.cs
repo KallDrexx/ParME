@@ -35,6 +35,6 @@
         /// <summary>
         /// An initializer that determines which part of a texture the particle should be rendered with 
         /// </summary>
-        TextureId = 6,
+        TextureSectionIndex = 6,
     }
 }

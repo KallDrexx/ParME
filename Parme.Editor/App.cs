@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using ImGuiHandler;
 using ImGuiHandler.MonoGame;
 using ImGuiNET;
@@ -22,6 +21,7 @@ namespace Parme.Editor
     public class App : Game
     {
         private readonly ParticleCamera _camera = new ParticleCamera();
+        private ITextureFileLoader _textureFileLoader;
         private MonoGameEmitter _emitter;
         private ImGuiManager _imGuiManager;
         private EditorUiController _uiController;
@@ -46,6 +46,8 @@ namespace Parme.Editor
 
         protected override void Initialize()
         {
+            _textureFileLoader = new TextureFileLoader(GraphicsDevice);
+            
             _camera.Origin = Vector2.Zero;
             _camera.PositiveYAxisPointsUp = true;
             _camera.PixelWidth = GraphicsDevice.Viewport.Width;
@@ -168,6 +170,12 @@ namespace Parme.Editor
                 Initializers = initializers,
                 Modifiers = modifiers,
                 MaxParticleLifeTime = 1f,
+                TextureFileName = "SampleParticles.png",
+                TextureSections = new []
+                {
+                    new TextureSectionCoords(16, 0, 31, 15),
+                    new TextureSectionCoords(48, 16, 63, 31), 
+                }
             };
         }
 
@@ -189,7 +197,7 @@ namespace Parme.Editor
                 
                 var logicClass = CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions).GetAwaiter().GetResult();
 
-                _emitter = new MonoGameEmitter(logicClass, GraphicsDevice, _testTexture)
+                _emitter = new MonoGameEmitter(logicClass, GraphicsDevice, _textureFileLoader)
                 {
                     //WorldCoordinates = new System.Numerics.Vector2(400, -200)
                 };

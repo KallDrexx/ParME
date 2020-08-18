@@ -25,8 +25,8 @@ namespace Parme.Frb
 
         public EmitterDrawableBatch(IEmitterLogic emitterLogic)
         {
-            var texture = GetWhiteTexture();
-            _emitter = new MonoGameEmitter(emitterLogic, FlatRedBallServices.GraphicsDevice, texture);
+            var textureFileLoader = new FrbTextureFileLoader();
+            _emitter = new MonoGameEmitter(emitterLogic, FlatRedBallServices.GraphicsDevice, textureFileLoader);
         }
         
         public void Draw(Camera camera)
