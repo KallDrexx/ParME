@@ -107,13 +107,13 @@ namespace Parme.Editor
             var trigger = new TimeElapsedTrigger{Frequency = 0.01f};
             var initializers = new IParticleInitializer[]
             {
-                new RandomParticleCountInitializer {MinimumToSpawn = 0, MaximumToSpawn = 5},
+                new RandomParticleCountInitializer {MinimumToSpawn = 0, MaximumToSpawn = 2},
                 new StaticColorInitializer
                 {
                     // Orange
                     RedMultiplier = 1.0f,
-                    GreenMultiplier = 165f / 255f,
-                    BlueMultiplier = 0f,
+                    GreenMultiplier = 1.0f, // 165f / 255f,
+                    BlueMultiplier = 1f, //0f,
                     AlphaMultiplier = 1f
                 },
 
@@ -127,17 +127,19 @@ namespace Parme.Editor
 
                 new RandomRegionPositionInitializer
                 {
-                    MinXOffset = -25,
-                    MaxXOffset = 25,
+                    MinXOffset = -50,
+                    MaxXOffset = 50,
                     MinYOffset = -50,
                     MaxYOffset = -50,
                 },
 
                 new StaticSizeInitializer
                 {
-                    Width = 10,
-                    Height = 10,
+                    Width = 50,
+                    Height = 50,
                 },
+                
+                new RandomTextureInitializer(), 
             };
 
             var modifiers = new IParticleModifier[]
@@ -155,13 +157,15 @@ namespace Parme.Editor
                     HeightChangePerSecond = -10,
                 },
 
-                new ConstantColorMultiplierChangeModifier
-                {
-                    RedMultiplierChangePerSecond = -1,
-                    GreenMultiplierChangePerSecond = -1,
-                    BlueMultiplierChangePerSecond = -1,
-                    //AlphaMultiplierChangePerSecond = -1,
-                },
+                // new ConstantColorMultiplierChangeModifier
+                // {
+                //     RedMultiplierChangePerSecond = -1,
+                //     GreenMultiplierChangePerSecond = -1,
+                //     BlueMultiplierChangePerSecond = -1,
+                //     AlphaMultiplierChangePerSecond = -1,
+                // },
+                
+                new AnimatingTextureModifier(), 
             };
 
             return new EmitterSettings
@@ -173,8 +177,12 @@ namespace Parme.Editor
                 TextureFileName = "SampleParticles.png",
                 TextureSections = new []
                 {
-                    new TextureSectionCoords(16, 0, 31, 15),
-                    new TextureSectionCoords(48, 16, 63, 31), 
+                    new TextureSectionCoords(0, 64, 31, 96),
+                    new TextureSectionCoords(32, 64, 63, 96),
+                    new TextureSectionCoords(64, 64, 95, 96),
+                    new TextureSectionCoords(0, 96, 31, 127),
+                    new TextureSectionCoords(32, 96, 63, 127),
+                    new TextureSectionCoords(64, 96, 95, 127),
                 }
             };
         }

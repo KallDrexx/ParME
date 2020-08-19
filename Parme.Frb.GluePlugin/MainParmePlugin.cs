@@ -104,6 +104,8 @@ namespace Parme.Frb.GluePlugin
                     BlueMultiplierChangePerSecond = -1,
                     AlphaMultiplierChangePerSecond = -1,
                 },
+                
+                new AnimatingTextureModifier(), 
             };
 
             return new EmitterSettings
@@ -115,8 +117,12 @@ namespace Parme.Frb.GluePlugin
                 TextureFileName = "Content\\SampleParticles.png",
                 TextureSections = new []
                 {
-                    new TextureSectionCoords(16, 0, 31, 15),
-                    new TextureSectionCoords(48, 16, 63, 31), 
+                    new TextureSectionCoords(0, 64, 31, 96),
+                    new TextureSectionCoords(32, 64, 63, 96),
+                    new TextureSectionCoords(64, 64, 95, 96),
+                    new TextureSectionCoords(0, 96, 31, 127),
+                    new TextureSectionCoords(32, 96, 63, 127),
+                    new TextureSectionCoords(64, 96, 95, 127),
                 },
             };
         }

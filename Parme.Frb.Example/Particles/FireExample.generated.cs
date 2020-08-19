@@ -16,8 +16,12 @@ namespace Parme.Frb.Example
         
         public string TextureFilePath { get; } = @"Content\SampleParticles.png";
         public TextureSectionCoords[] TextureSections { get; } = new TextureSectionCoords[] {
-            new TextureSectionCoords(16, 0, 31, 15),
-            new TextureSectionCoords(48, 16, 63, 31),
+            new TextureSectionCoords(0, 64, 31, 96),
+            new TextureSectionCoords(32, 64, 63, 96),
+            new TextureSectionCoords(64, 64, 95, 96),
+            new TextureSectionCoords(0, 96, 31, 127),
+            new TextureSectionCoords(32, 96, 63, 127),
+            new TextureSectionCoords(64, 96, 95, 127),
         };
         
         
@@ -95,6 +99,11 @@ namespace Parme.Frb.Example
                         particle.GreenMultiplier += timeSinceLastFrame * ConstantColorGreenMultiplierChangePerSecond;
                         particle.BlueMultiplier += timeSinceLastFrame * ConstantColorBlueMultiplierChangePerSecond;
                         particle.AlphaMultiplier += timeSinceLastFrame * ConstantColorAlphaMultiplierChangePerSecond;
+                }
+                {
+                        
+                        particle.TextureSectionIndex = (byte) ((particle.TimeAlive / MaxParticleLifeTime) * 
+                                                               (TextureSections.Length / MaxParticleLifeTime));
                 }
 
                 
