@@ -157,13 +157,13 @@ namespace Parme.Editor
                     HeightChangePerSecond = -10,
                 },
 
-                // new ConstantColorMultiplierChangeModifier
-                // {
-                //     RedMultiplierChangePerSecond = -1,
-                //     GreenMultiplierChangePerSecond = -1,
-                //     BlueMultiplierChangePerSecond = -1,
-                //     AlphaMultiplierChangePerSecond = -1,
-                // },
+                new ConstantColorMultiplierChangeModifier
+                {
+                    RedMultiplierChangePerSecond = -1,
+                    GreenMultiplierChangePerSecond = -1,
+                    BlueMultiplierChangePerSecond = -1,
+                    AlphaMultiplierChangePerSecond = -1,
+                },
                 
                 new AnimatingTextureModifier(), 
             };
