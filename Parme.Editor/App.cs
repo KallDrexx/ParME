@@ -72,7 +72,7 @@ namespace Parme.Editor
             var settings = GetInitialEmitterSettings();
             UpdateEmitter(settings);
             
-            _uiController.SettingsManager.NewEmitterSettingsLoaded(settings);
+            _uiController.NewEmitterSettingsLoaded(settings);
             _uiController.SettingsManager.EmitterSettingsChanged +=
                 (sender, emitterSettings) => UpdateEmitter(emitterSettings);
 

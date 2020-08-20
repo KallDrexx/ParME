@@ -6,7 +6,6 @@ using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
 using Parme.Core.Triggers;
-using Parme.CSharp;
 using Parme.Editor.Ui.Elements;
 using Parme.Editor.Ui.Elements.Initializers.ColorMultiplier;
 using Parme.Editor.Ui.Elements.Initializers.ParticleCount;
