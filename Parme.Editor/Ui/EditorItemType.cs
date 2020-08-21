@@ -1,6 +1,6 @@
 ﻿namespace Parme.Editor.Ui
 {
-    public enum WorkbenchItemType
+    public enum EditorItemType
     {
         TextureFileName,
         TextureSection,

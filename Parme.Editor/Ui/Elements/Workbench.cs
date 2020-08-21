@@ -121,9 +121,9 @@ namespace Parme.Editor.Ui.Elements
         public ObservableCollection<IParticleModifier> Modifiers { get; }
         public ObservableCollection<TextureSectionCoords> TextureSections { get; }
 
-        public WorkbenchItem? SelectedItem
+        public EditorItem? SelectedItem
         {
-            get => Get<WorkbenchItem?>();
+            get => Get<EditorItem?>();
             set => Set(value);
         }
 
@@ -185,61 +185,61 @@ namespace Parme.Editor.Ui.Elements
             
             ImGui.NextColumn();
             var fileName = !string.IsNullOrWhiteSpace(TextureFilename) ? TextureFilename : "<None>"; 
-            Selectable(fileName, new WorkbenchItem(WorkbenchItemType.TextureFileName, null, null));
+            Selectable(fileName, new EditorItem(EditorItemType.TextureFileName, null));
             
             ImGui.NextColumn();
             RightAlignText("Texture Sections Defined:");
             
             ImGui.NextColumn();
-            Selectable(TextureSections.Count.ToString(), new WorkbenchItem(WorkbenchItemType.TextureSection, null, null));
+            Selectable(TextureSections.Count.ToString(), new EditorItem(EditorItemType.TextureSection, null));
 
             ImGui.NextColumn();
             RightAlignText("Max Particle Lifetime:"); 
             
             ImGui.NextColumn();
-            Selectable($"{ParticleLifeTime} Seconds", new WorkbenchItem(WorkbenchItemType.Lifetime, null, null));
+            Selectable($"{ParticleLifeTime} Seconds", new EditorItem(EditorItemType.Lifetime, null));
 
             ImGui.NextColumn();
             RightAlignText("Particles Emitted:");
             
             ImGui.NextColumn();
             Selectable(EditorObjectNameAndValue(ParticleCountInitializer), 
-                new WorkbenchItem(WorkbenchItemType.Initializer, InitializerType.ParticleCount, ParticleCountInitializer));
+                new EditorItem(EditorItemType.Initializer, InitializerType.ParticleCount));
             
             ImGui.NextColumn();
             RightAlignText("Texture:");
             
             ImGui.NextColumn();
             Selectable(EditorObjectNameAndValue(TextureSectionInitializer),
-                new WorkbenchItem(WorkbenchItemType.Initializer, InitializerType.TextureSectionIndex, TextureSectionInitializer));
+                new EditorItem(EditorItemType.Initializer, InitializerType.TextureSectionIndex));
             
             ImGui.NextColumn();
             RightAlignText("Color Multiplier:");
             
             ImGui.NextColumn();
             Selectable(EditorObjectNameAndValue(ColorMultiplierInitializer),
-                new WorkbenchItem(WorkbenchItemType.Initializer, InitializerType.ColorMultiplier, ColorMultiplierInitializer));
+                new EditorItem(EditorItemType.Initializer, InitializerType.ColorMultiplier));
             
             ImGui.NextColumn();
             RightAlignText("Position:");
             
             ImGui.NextColumn();
             Selectable(EditorObjectNameAndValue(PositionInitializer), 
-                new WorkbenchItem(WorkbenchItemType.Initializer, InitializerType.Position, PositionInitializer));
+                new EditorItem(EditorItemType.Initializer, InitializerType.Position));
             
             ImGui.NextColumn();
             RightAlignText("Size:");
             
             ImGui.NextColumn();
             Selectable(EditorObjectNameAndValue(SizeInitializer),
-                new WorkbenchItem(WorkbenchItemType.Initializer, InitializerType.Size, SizeInitializer));
+                new EditorItem(EditorItemType.Initializer, InitializerType.Size));
             
             ImGui.NextColumn();
             RightAlignText("Velocity:");
             
             ImGui.NextColumn();
             Selectable(EditorObjectNameAndValue(VelocityInitializer),
-                new WorkbenchItem(WorkbenchItemType.Initializer, InitializerType.Velocity, VelocityInitializer));
+                new EditorItem(EditorItemType.Initializer, InitializerType.Velocity));
             
             ImGui.Columns(1);
             ImGui.EndChild();
@@ -252,7 +252,7 @@ namespace Parme.Editor.Ui.Elements
             foreach (var modifier in Modifiers.Where(x => x != null))
             {
                 Selectable($"{EditorObjectNameAndValue(modifier)}",
-                    new WorkbenchItem(WorkbenchItemType.Modifier, null, modifier));
+                    new EditorItem(modifier));
             }
             
             ImGui.EndChild();
@@ -266,7 +266,7 @@ namespace Parme.Editor.Ui.Elements
         {
         }
         
-        private void Selectable(string text, WorkbenchItem item)
+        private void Selectable(string text, EditorItem item)
         {
             var isSelected = item.Equals(SelectedItem);
             ImGui.Selectable(text, ref isSelected);
