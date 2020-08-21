@@ -138,7 +138,7 @@ namespace Parme.Editor.Ui.Elements
             {
                 ImGui.Text("Initializers"); 
                 
-                ImGui.SameLine(Size.X / 2 + 5);
+                ImGui.SameLine(Size.X / 2 + 25);
                 ImGui.Text("Modifiers");
                 
                 RenderInitializersSection();
@@ -151,91 +151,82 @@ namespace Parme.Editor.Ui.Elements
             ImGui.End();
         }
 
-        private static string InitializerSummary(IParticleInitializer initializer)
+        private static string EditorObjectNameAndValue(IEditorObject initializer)
         {
-            if (initializer == null)
-            {
-                return "<None>";
-            }
-
-            switch (initializer.GetType().Name)
-            {
-                default:
-                    return $"{initializer.GetType().Name}";
-            }
-        }
-
-        private static string ModifierValueSummary(IParticleModifier modifier)
-        {
-            if (modifier == null)
-            {
-                throw new ArgumentNullException(nameof(modifier));
-            }
-            
-            switch (modifier.GetType().Name)
-            {
-                default:
-                    return "<Undefined>";
-            }
+            return initializer == null 
+                ? "<None>" 
+                : $"{initializer.EditorShortName} {initializer.EditorShortValue}";
         }
 
         private void RenderInitializersSection()
         {
-            ImGui.BeginChild("Initializers", new Vector2((Size.X / 2) - 15, Size.Y - 60), true);
+            const int firstColumnWidth = 225;
+            
+            void RightAlignText(string text)
+            {
+                var textWidth = ImGui.CalcTextSize(text).X;
+                var position = ImGui.GetCursorPosX() + firstColumnWidth - textWidth - 10;
+                ImGui.SetCursorPosX(position);
+                ImGui.Text(text);
+            }
+            
+            ImGui.BeginChild("Initializers", new Vector2((Size.X / 2), Size.Y - 60), true);
             
             ImGui.Columns(2, "initializercolumns", false);
-            ImGui.Text("Texture File:"); 
+            ImGui.SetColumnWidth(0, firstColumnWidth);
+            
+            RightAlignText("Texture File:"); 
             
             ImGui.NextColumn();
             ImGui.Selectable(!string.IsNullOrWhiteSpace(TextureFilename) ? TextureFilename : "<None>");
             
             ImGui.NextColumn();
-            ImGui.Text("Texture Sections Defined:");
+            RightAlignText("Texture Sections Defined:");
             
             ImGui.NextColumn();
             ImGui.Selectable(TextureSections.Count.ToString());
             
             ImGui.NextColumn();
-            ImGui.Text("Max Particle Lifetime:"); 
+            RightAlignText("Max Particle Lifetime:"); 
             
             ImGui.NextColumn();
-            InputFloat(nameof(ParticleLifeTime), "Seconds");
+            ImGui.Selectable($"{ParticleLifeTime} Seconds");
             
             ImGui.NextColumn();
-            ImGui.Text("Particles Emitted:");
+            RightAlignText("Particles Emitted:");
             
             ImGui.NextColumn();
-            ImGui.Selectable(InitializerSummary(ParticleCountInitializer));
+            ImGui.Selectable(EditorObjectNameAndValue(ParticleCountInitializer));
             
             ImGui.NextColumn();
-            ImGui.Text("Texture:");
+            RightAlignText("Texture:");
             
             ImGui.NextColumn();
-            ImGui.Selectable(InitializerSummary(TextureSectionInitializer));
+            ImGui.Selectable(EditorObjectNameAndValue(TextureSectionInitializer));
             
             ImGui.NextColumn();
-            ImGui.Text("Color Multiplier:");
+            RightAlignText("Color Multiplier:");
             
             ImGui.NextColumn();
-            ImGui.Selectable(InitializerSummary(ColorMultiplierInitializer));
+            ImGui.Selectable(EditorObjectNameAndValue(ColorMultiplierInitializer));
             
             ImGui.NextColumn();
-            ImGui.Text("Position:");
+            RightAlignText("Position:");
             
             ImGui.NextColumn();
-            ImGui.Selectable(InitializerSummary(PositionInitializer));
+            ImGui.Selectable(EditorObjectNameAndValue(PositionInitializer));
             
             ImGui.NextColumn();
-            ImGui.Text("Size:");
+            RightAlignText("Size:");
             
             ImGui.NextColumn();
-            ImGui.Selectable(InitializerSummary(SizeInitializer));
+            ImGui.Selectable(EditorObjectNameAndValue(SizeInitializer));
             
             ImGui.NextColumn();
-            ImGui.Text("Velocity:");
+            RightAlignText("Velocity:");
             
             ImGui.NextColumn();
-            ImGui.Selectable(InitializerSummary(VelocityInitializer));
+            ImGui.Selectable(EditorObjectNameAndValue(VelocityInitializer));
             
             ImGui.Columns(1);
             ImGui.EndChild();
@@ -243,13 +234,11 @@ namespace Parme.Editor.Ui.Elements
 
         private void RenderModifiersSection()
         {
-            ImGui.BeginChild("Modifiers", new Vector2((Size.X / 2) - 15, Size.Y - 60), true);
+            ImGui.BeginChild("Modifiers", new Vector2((Size.X / 2) - 30, Size.Y - 60), true);
 
             foreach (var modifier in Modifiers.Where(x => x != null))
             {
-                ImGui.Selectable(modifier.GetType().Name);
-                ImGui.SameLine();
-                ImGui.Text($"({ModifierValueSummary(modifier)})");
+                ImGui.Selectable($"{EditorObjectNameAndValue(modifier)}");
             }
             
             ImGui.EndChild();

@@ -1,6 +1,6 @@
 ﻿namespace Parme.Core.Triggers
 {
-    public interface IParticleTrigger
+    public interface IParticleTrigger : IEditorObject
     {
         
     }

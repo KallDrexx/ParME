@@ -1,6 +1,6 @@
 ﻿namespace Parme.Core.Modifiers
 {
-    public interface IParticleModifier
+    public interface IParticleModifier : IEditorObject
     {
         
     }

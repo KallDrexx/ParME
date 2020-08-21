@@ -3,6 +3,8 @@
     public class StaticColorInitializer : IParticleInitializer
     {
         public InitializerType InitializerType => InitializerType.ColorMultiplier;
+        public string EditorShortName => "Static";
+        public string EditorShortValue => $"{RedMultiplier}, {GreenMultiplier}, {BlueMultiplier}, {AlphaMultiplier}";
 
         /// <summary>
         /// The value to multiply the red color by.  Valid values are between 0.0 and 1.0.
