@@ -24,7 +24,7 @@ namespace Parme.Editor.Ui.Elements.Editors
 
         protected override void OnSelfManagedPropertyChanged(string propertyName)
         {
-            CommandHandler.CommandPerformed(new UpdateParticleLifetimeCommand(Lifetime));
+            CommandHandler.Execute(new UpdateParticleLifetimeCommand(Lifetime));
         }
     }
 }

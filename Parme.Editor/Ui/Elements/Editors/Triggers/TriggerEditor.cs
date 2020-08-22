@@ -20,12 +20,12 @@ namespace Parme.Editor.Ui.Elements.Editors.Triggers
         {
             if (SelectedType == null)
             {
-                CommandHandler.CommandPerformed(new UpdateTriggerCommand(null));
+                CommandHandler.Execute(new UpdateTriggerCommand(null));
             }
             else
             {
                 var trigger = (IParticleTrigger) Activator.CreateInstance(SelectedType);
-                CommandHandler.CommandPerformed(new UpdateTriggerCommand(trigger));    
+                CommandHandler.Execute(new UpdateTriggerCommand(trigger));    
             }
         }
     }

@@ -57,7 +57,7 @@ namespace Parme.Editor
             EmitterUpdated?.Invoke(this, GetCurrentSettings());
         }
 
-        public void CommandPerformed(ICommand command)
+        public void Execute(ICommand command)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
 

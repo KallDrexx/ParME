@@ -96,7 +96,7 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier
                 AlphaMultiplier = AlphaMultiplier,
             };
             
-            CommandHandler.CommandPerformed(new UpdateInitializerCommand(InitializerType.ColorMultiplier, initializer));
+            CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.ColorMultiplier, initializer));
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Parme.Editor.Ui.Elements.Editors.Triggers
                 Frequency = Frequency,
             };
             
-            CommandHandler.CommandPerformed(new UpdateTriggerCommand(trigger));
+            CommandHandler.Execute(new UpdateTriggerCommand(trigger));
         }
     }
 }

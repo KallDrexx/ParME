@@ -1,10 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Triggers;
 using Parme.Editor.Ui.Elements.Editors;
 using Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier;
+using Parme.Editor.Ui.Elements.Editors.Initializers.ParticleCount;
 using Parme.Editor.Ui.Elements.Editors.Triggers;
 
 namespace Parme.Editor.Ui
@@ -29,6 +29,8 @@ namespace Parme.Editor.Ui
                 nameof(OneShotTrigger) => new OneShotTriggerEditor(),
                 nameof(TimeElapsedTrigger) => new TimeElapsedTriggerEditor(),
                 nameof(StaticColorInitializer) => new StaticColorMultiplierEditor(),
+                nameof(RandomParticleCountInitializer) => new RandomParticleCountEditor(),
+                nameof(StaticParticleCountInitializer) => new StaticParticleCountEditor(),
                 _ => null
             };
         }
@@ -44,6 +46,9 @@ namespace Parme.Editor.Ui
             {
                 case InitializerType.ColorMultiplier:
                     return new ColorMultiplierInitializerEditor();
+                
+                case InitializerType.ParticleCount:
+                    return new ParticleCountEditor();
                 
                 case InitializerType.Unspecified:
                 case null:

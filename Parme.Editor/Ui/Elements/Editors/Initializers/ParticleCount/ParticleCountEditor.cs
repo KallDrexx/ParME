@@ -3,12 +3,12 @@ using System.Linq;
 using Parme.Core.Initializers;
 using Parme.Editor.Commands;
 
-namespace Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier
+namespace Parme.Editor.Ui.Elements.Editors.Initializers.ParticleCount
 {
-    public class ColorMultiplierInitializerEditor : TypeSelectorEditor
+    public class ParticleCountEditor : TypeSelectorEditor
     {
-        public ColorMultiplierInitializerEditor() 
-            : base(new[] {typeof(StaticColorInitializer)})
+        public ParticleCountEditor() 
+            : base(new[] {typeof(RandomParticleCountInitializer), typeof(StaticParticleCountInitializer)})
         {
         }
 
@@ -16,7 +16,7 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier
         {
             SelectedType = (EmitterSettings.Initializers ?? Array.Empty<IParticleInitializer>())
                 .Where(x => x != null)
-                .Where(x => x.InitializerType == InitializerType.ColorMultiplier)
+                .Where(x => x.InitializerType == InitializerType.ParticleCount)
                 .Select(x => x.GetType())
                 .FirstOrDefault();
         }
@@ -25,12 +25,12 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier
         {
             if (SelectedType == null)
             {
-                CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.ColorMultiplier, null));
+                CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.ParticleCount, null));
             }
             else
             {
                 var initializer = (IParticleInitializer) Activator.CreateInstance(SelectedType);
-                CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.ColorMultiplier, initializer));
+                CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.ParticleCount, initializer));
             }
         }
     }
