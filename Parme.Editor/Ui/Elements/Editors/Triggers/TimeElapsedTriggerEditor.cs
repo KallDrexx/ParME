@@ -1,10 +1,11 @@
-﻿using System.ComponentModel;
-using Parme.Core.Triggers;
+﻿using Parme.Core.Triggers;
+using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Triggers
 {
     public class TimeElapsedTriggerEditor : SettingsEditorBase
     {
+        [SelfManagedProperty]
         public float Frequency
         {
             get => Get<float>();
@@ -21,15 +22,14 @@ namespace Parme.Editor.Ui.Elements.Editors.Triggers
             Frequency = ((TimeElapsedTrigger) EmitterSettings.Trigger).Frequency;
         }
 
-        protected override void OnSelfPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnSelfManagedPropertyChanged(string propertyName)
         {
-            var trigger = (TimeElapsedTrigger) EmitterSettings.Trigger;
-            switch (e.PropertyName)
+            var trigger = new TimeElapsedTrigger
             {
-                case nameof(Frequency):
-                    trigger.Frequency = Frequency;
-                    break;
-            }
+                Frequency = Frequency,
+            };
+            
+            CommandHandler.CommandPerformed(new UpdateTriggerCommand(trigger));
         }
     }
 }

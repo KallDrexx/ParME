@@ -19,7 +19,7 @@ namespace Parme.Editor.Ui
 
         public EmitterSettingsManager SettingsManager => _emitterSettingsManager;
 
-        public EditorUiController(ImGuiManager imGuiManager)
+        public EditorUiController(ImGuiManager imGuiManager, SettingsCommandHandler commandHandler)
         {
             _imGuiManager = imGuiManager;
 
@@ -30,7 +30,7 @@ namespace Parme.Editor.Ui
             _imGuiManager.AddElement(_mainSidePanel);
 
             _emitterSettingsManager = new EmitterSettingsManager(_mainSidePanel);
-            _emitterSettingsController = new EmitterSettingsController(imGuiManager);
+            _emitterSettingsController = new EmitterSettingsController(imGuiManager, commandHandler);
         }
 
         public void ToggleImGuiDemoWindow()

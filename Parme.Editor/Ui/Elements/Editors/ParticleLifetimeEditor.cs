@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors
 {
@@ -20,12 +21,12 @@ namespace Parme.Editor.Ui.Elements.Editors
             Lifetime = EmitterSettings.MaxParticleLifeTime;
         }
 
-        protected override void OnSelfPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnSelfManagedPropertyChanged(string propertyName)
         {
-            switch (e.PropertyName)
+            switch (propertyName)
             {
                 case nameof(Lifetime):
-                    EmitterSettings.MaxParticleLifeTime = Lifetime;
+                    CommandHandler.CommandPerformed(new UpdateParticleLifetimeCommand(Lifetime));
                     break;
             }
         }

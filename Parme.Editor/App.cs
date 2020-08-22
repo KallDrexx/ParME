@@ -21,6 +21,7 @@ namespace Parme.Editor
     public class App : Game
     {
         private readonly ParticleCamera _camera = new ParticleCamera();
+        private readonly SettingsCommandHandler _commandHandler = new SettingsCommandHandler();
         private ITextureFileLoader _textureFileLoader;
         private MonoGameEmitter _emitter;
         private ImGuiManager _imGuiManager;
@@ -54,8 +55,8 @@ namespace Parme.Editor
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
             
             _imGuiManager = new ImGuiManager(new MonoGameImGuiRenderer(this));
-            _uiController = new EditorUiController(_imGuiManager);
-            _inputHandler = new InputHandler(_uiController, _camera);
+            _uiController = new EditorUiController(_imGuiManager, _commandHandler);
+            _inputHandler = new InputHandler(_uiController, _camera, _commandHandler);
 
             ImGui.GetIO().FontGlobalScale = 1.2f;
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);

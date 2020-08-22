@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using ImGuiNET;
 using Parme.Core;
@@ -13,10 +12,9 @@ namespace Parme.Editor.Ui.Elements.Editors
         private readonly IReadOnlyDictionary<Type, int> _typeIndexMap;
         private readonly string[] _typeNames;
         private int _selectedIndex;
-        private bool _ignoreNotifications;
-
-        public SettingsEditorBase ChildDisplay { get; set; }
+        private SettingsEditorBase _childDisplay;
         
+        [SelfManagedProperty]
         public Type SelectedType
         {
             get => Get<Type>();
@@ -54,43 +52,40 @@ namespace Parme.Editor.Ui.Elements.Editors
                     : null;
             }
             
-            ChildDisplay?.Render();
+            _childDisplay?.Render();
         }
 
         protected override void OnNewSettingsLoaded()
         {
-            _ignoreNotifications = true;
             UpdateSelectedTypeFromSettings();
-            ChildDisplay?.LoadNewSettings(EmitterSettings);
-            _ignoreNotifications = false;
-            
-            OnSelfPropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedType)));
+            SetChildDisplay();
         }
 
-        protected override void OnSelfPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnSelfManagedPropertyChanged(string propertyName)
         {
-            if (_ignoreNotifications) return;
-
-            switch (e.PropertyName)
-            {
-                case nameof(SelectedType):
-                    if (SelectedType == null)
-                    {
-                        ChildDisplay = null;
-                    }
-                    else
-                    {
-                        var instance = (IEditorObject) Activator.CreateInstance(SelectedType);
-                        var editor = EditorRetriever.GetEditor(instance);
-                        editor.LoadNewSettings(EmitterSettings);
-
-                        ChildDisplay = editor ?? throw new InvalidOperationException($"No editor known for type {SelectedType.FullName}");
-                    }
-
-                    break;
-            }
+            NewTypeSelected();
+            SetChildDisplay();
         }
 
         protected abstract void UpdateSelectedTypeFromSettings();
+
+        protected abstract void NewTypeSelected();
+
+        private void SetChildDisplay()
+        {
+            if (SelectedType == null)
+            {
+                _childDisplay = null;
+            }
+            else
+            {
+                var instance = (IEditorObject) Activator.CreateInstance(SelectedType);
+                var editor = EditorRetriever.GetEditor(instance);
+
+                _childDisplay = editor ?? throw new InvalidOperationException($"No editor known for type {SelectedType.FullName}");
+                _childDisplay.CommandHandler = CommandHandler;
+                _childDisplay.EmitterSettings = EmitterSettings;
+            }
+        }
     }
 }

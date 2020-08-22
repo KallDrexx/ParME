@@ -9,13 +9,16 @@ namespace Parme.Editor
     {
         private readonly EditorUiController _uiController;
         private readonly ParticleCamera _camera;
+        private readonly SettingsCommandHandler _commandHandler;
+        
         private KeyboardState _previousKeyState, _currentKeyState;
         private MouseState _previousMouseState, _currentMouseState;
 
-        public InputHandler(EditorUiController uiController, ParticleCamera camera)
+        public InputHandler(EditorUiController uiController, ParticleCamera camera, SettingsCommandHandler commandHandler)
         {
             _uiController = uiController;
             _camera = camera;
+            _commandHandler = commandHandler;
         }
         
         /// <summary>
@@ -34,9 +37,22 @@ namespace Parme.Editor
 
         private void HandleKeyboardInput()
         {
-            if (HasBeenPressed(Keys.F12))
+            if (!_uiController.AcceptingKeyboardInput)
             {
-                _uiController.ToggleImGuiDemoWindow();
+                if (HasBeenPressed(Keys.F12))
+                {
+                    _uiController.ToggleImGuiDemoWindow();
+                }
+
+                if (_currentKeyState.IsKeyDown(Keys.LeftControl) && HasBeenPressed(Keys.Z))
+                {
+                    _commandHandler.Undo();
+                }
+
+                if (_currentKeyState.IsKeyDown(Keys.LeftControl) && HasBeenPressed(Keys.Y))
+                {
+                    _commandHandler.Redo();
+                }
             }
         }
 

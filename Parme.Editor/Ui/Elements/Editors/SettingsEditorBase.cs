@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using ImGuiHandler;
 using Parme.Core;
 
@@ -6,24 +8,41 @@ namespace Parme.Editor.Ui.Elements.Editors
 {
     public abstract class SettingsEditorBase : ImGuiElement
     {
-        protected EmitterSettings EmitterSettings;
+        public SettingsCommandHandler CommandHandler { get; set; }
+        
+        public EmitterSettings EmitterSettings
+        {
+            get => Get<EmitterSettings>();
+            set => Set(value);
+        }
 
         protected SettingsEditorBase()
         {
-            PropertyChanged += OnSelfPropertyChanged;
-        }
+            var selfManagedProperties = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Select(x => (Property: x, Attribute: x.GetCustomAttribute<SelfManagedPropertyAttribute>()))
+                .Where(x => x.Attribute != null)
+                .Select(x => x.Property.Name)
+                .ToHashSet();
 
-        public void LoadNewSettings(EmitterSettings settings)
-        {
-            using (DisablePropertyChangedNotifications())
+            PropertyChanged += (sender, args) =>
             {
-                EmitterSettings = settings;
-                OnNewSettingsLoaded();
-            }
+                if (args.PropertyName == nameof(EmitterSettings))
+                {
+                    using (DisablePropertyChangedNotifications())
+                    {
+                        OnNewSettingsLoaded();
+                    }
+                }
+                
+                else if (selfManagedProperties.Contains(args.PropertyName))
+                {
+                    OnSelfManagedPropertyChanged(args.PropertyName);
+                }
+            };
         }
 
         protected abstract void OnNewSettingsLoaded();
 
-        protected abstract void OnSelfPropertyChanged(object sender, PropertyChangedEventArgs e);
+        protected abstract void OnSelfManagedPropertyChanged(string propertyName);
     }
 }

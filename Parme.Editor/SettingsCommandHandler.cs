@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Parme.Core;
+using Parme.Core.Initializers;
+using Parme.Core.Modifiers;
+using Parme.Editor.Commands;
+
+namespace Parme.Editor
+{
+    public class SettingsCommandHandler
+    {
+        private readonly List<ICommand> _commands = new List<ICommand>();
+        private readonly Stack<ICommand> _redoStack = new Stack<ICommand>();
+        private int _minimumStackSize;
+
+        public event EventHandler<EmitterSettings> EmitterUpdated; 
+        public bool CanUndo => _commands.Count > _minimumStackSize;
+        public bool CanRedo => _redoStack.Count > 0;
+
+        public SettingsCommandHandler()
+        {
+            NewStartingEmitter(new EmitterSettings());
+        }
+
+        public void NewStartingEmitter(EmitterSettings settings)
+        {
+            settings ??= new EmitterSettings();
+            _commands.Clear();
+
+            _commands.Add(new UpdateParticleLifetimeCommand(settings.MaxParticleLifeTime));
+            _commands.Add(new UpdateTextureFileNameCommand(settings.TextureFileName));
+            _commands.Add(new UpdateTextureSectionsCommand(settings.TextureSections));
+            _commands.Add(new UpdateTriggerCommand(settings.Trigger));
+
+            foreach (var initializer in settings.Initializers ?? Array.Empty<IParticleInitializer>())
+            {
+                _commands.Add(new UpdateInitializerCommand(initializer.InitializerType, initializer));
+            }
+
+            foreach (var modifier in settings.Modifiers ?? Array.Empty<IParticleModifier>())
+            {
+                _commands.Add(new UpdateModifierCommand(modifier));
+            }
+
+            _minimumStackSize = _commands.Count;
+            
+            EmitterUpdated?.Invoke(this, GetCurrentSettings());
+        }
+
+        public void CommandPerformed(ICommand command)
+        {
+            if (command == null) throw new ArgumentNullException(nameof(command));
+            
+            _commands.Add(command);
+            _redoStack.Clear();
+            
+            EmitterUpdated?.Invoke(this, GetCurrentSettings());
+        }
+
+        public void Undo()
+        {
+            if (CanUndo)
+            {
+                _redoStack.Push(_commands.Last());
+                _commands.RemoveAt(_commands.Count - 1);
+                
+                EmitterUpdated?.Invoke(this, GetCurrentSettings());
+            }
+        }
+
+        public void Redo()
+        {
+            if (CanRedo)
+            {
+                _commands.Add(_redoStack.Pop());
+                
+                EmitterUpdated?.Invoke(this, GetCurrentSettings());
+            }
+        }
+
+        public EmitterSettings GetCurrentSettings()
+        {
+            var settings = new EmitterSettings();
+            foreach (var command in _commands)
+            {
+                command.ApplyToEmitter(settings);
+            }
+
+            return settings;
+        }
+    }
+}

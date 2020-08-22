@@ -2,6 +2,7 @@
 using ImGuiHandler;
 using ImGuiNET;
 using Parme.Core.Initializers;
+using Parme.Editor.Ui.Elements.Editors;
 
 namespace Parme.Editor.Ui.Elements
 {
@@ -10,7 +11,7 @@ namespace Parme.Editor.Ui.Elements
         public Vector2 Position { get; set; }
         public Vector2 Size { get; set; }
         
-        public ImGuiElement Child { get; set; }
+        public SettingsEditorBase Child { get; set; }
 
         public EditorItem? ItemBeingEdited
         {

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace Parme.Editor.Ui.Elements.Editors.Triggers
+﻿namespace Parme.Editor.Ui.Elements.Editors.Triggers
 {
     public class OneShotTriggerEditor : SettingsEditorBase
     {
@@ -14,7 +12,7 @@ namespace Parme.Editor.Ui.Elements.Editors.Triggers
             
         }
 
-        protected override void OnSelfPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnSelfManagedPropertyChanged(string propertyName)
         {
             
         }

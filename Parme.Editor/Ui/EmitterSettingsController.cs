@@ -12,15 +12,15 @@ namespace Parme.Editor.Ui
     public class EmitterSettingsController
     {
         private const float WorkbenchHeight = 250f;
-        
+
+        private readonly SettingsCommandHandler _commandHandler;
         private readonly Workbench _workbench;
         private readonly ActiveEditorWindow _activeEditorWindow;
         private bool _ignoreChangeNotifications;
-        private EmitterSettings _currentSettings;
 
-        public EmitterSettingsController(ImGuiManager imGuiManager)
+        public EmitterSettingsController(ImGuiManager imGuiManager, SettingsCommandHandler commandHandler)
         {
-            _currentSettings = new EmitterSettings();
+            _commandHandler = commandHandler;
             
             _workbench = new Workbench();
             imGuiManager.AddElement(_workbench);
@@ -29,6 +29,11 @@ namespace Parme.Editor.Ui
             imGuiManager.AddElement(_activeEditorWindow);
             
             _workbench.PropertyChanged += WorkbenchOnPropertyChanged;
+            _commandHandler.EmitterUpdated += (sender, settings) =>
+            {
+                UpdateWorkbench(settings);
+                UpdateActiveEditor(settings);
+            };
         }
 
         public void ViewportResized(int width, int height)
@@ -42,9 +47,9 @@ namespace Parme.Editor.Ui
 
         public void LoadNewSettings(EmitterSettings settings)
         {
-            _currentSettings = settings ?? new EmitterSettings();
+            _commandHandler.NewStartingEmitter(settings);
 
-            UpdateWorkbench();
+            UpdateWorkbench(settings);
         }
 
         private void WorkbenchOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -69,27 +74,28 @@ namespace Parme.Editor.Ui
                 var editor = EditorRetriever.GetEditor(item.Value);
                 if (editor != null)
                 {
-                    editor.LoadNewSettings(_currentSettings);
                     _activeEditorWindow.Child = editor;
+
+                    UpdateActiveEditor(_commandHandler.GetCurrentSettings());
                 }
             }
         }
 
-        private void UpdateWorkbench()
+        private void UpdateWorkbench(EmitterSettings settings)
         {
             _ignoreChangeNotifications = true;
 
-            _workbench.ParticleLifeTime = _currentSettings.MaxParticleLifeTime;
-            _workbench.TextureFilename = _currentSettings.TextureFileName;
-            _workbench.Trigger = _currentSettings.Trigger;
+            _workbench.ParticleLifeTime = settings.MaxParticleLifeTime;
+            _workbench.TextureFilename = settings.TextureFileName;
+            _workbench.Trigger = settings.Trigger;
 
             _workbench.TextureSections.Clear();
-            foreach (var textureSection in _currentSettings.TextureSections ?? Array.Empty<TextureSectionCoords>())
+            foreach (var textureSection in settings.TextureSections ?? Array.Empty<TextureSectionCoords>())
             {
                 _workbench.TextureSections.Add(textureSection);
             }
 
-            foreach (var initializer in _currentSettings.Initializers ?? Array.Empty<IParticleInitializer>())
+            foreach (var initializer in settings.Initializers ?? Array.Empty<IParticleInitializer>())
             {
                 switch (initializer.InitializerType)
                 {
@@ -120,12 +126,21 @@ namespace Parme.Editor.Ui
             }
 
             _workbench.Modifiers.Clear();
-            foreach (var modifier in _currentSettings.Modifiers ?? Array.Empty<IParticleModifier>())
+            foreach (var modifier in settings.Modifiers ?? Array.Empty<IParticleModifier>())
             {
                 _workbench.Modifiers.Add(modifier);
             }
 
             _ignoreChangeNotifications = false;
+        }
+
+        private void UpdateActiveEditor(EmitterSettings settings)
+        {
+            if (_activeEditorWindow.Child != null)
+            {
+                _activeEditorWindow.Child.CommandHandler = _commandHandler; // Must be first
+                _activeEditorWindow.Child.EmitterSettings = settings;
+            }
         }
     }
 }
