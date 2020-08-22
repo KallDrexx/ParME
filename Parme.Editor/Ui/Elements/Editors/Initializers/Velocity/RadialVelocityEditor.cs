@@ -1,7 +1,7 @@
 using ImGuiHandler;
 using ImGuiNET;
 
-namespace Parme.Editor.Ui.Elements.Initializers.Velocity
+namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
 {
     public class RadialVelocityEditor : ImGuiElement
     {

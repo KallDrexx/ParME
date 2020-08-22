@@ -2,7 +2,7 @@ using System.Numerics;
 using ImGuiHandler;
 using ImGuiNET;
 
-namespace Parme.Editor.Ui.Elements.Initializers.ColorMultiplier
+namespace Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier
 {
     public class StaticColorMultiplierEditor : ImGuiElement
     {

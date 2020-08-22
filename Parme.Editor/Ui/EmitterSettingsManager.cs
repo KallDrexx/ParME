@@ -7,12 +7,12 @@ using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
 using Parme.Core.Triggers;
 using Parme.Editor.Ui.Elements;
-using Parme.Editor.Ui.Elements.Initializers.ColorMultiplier;
-using Parme.Editor.Ui.Elements.Initializers.ParticleCount;
-using Parme.Editor.Ui.Elements.Initializers.Position;
-using Parme.Editor.Ui.Elements.Initializers.Size;
-using Parme.Editor.Ui.Elements.Initializers.Velocity;
-using Parme.Editor.Ui.Elements.Triggers;
+using Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier;
+using Parme.Editor.Ui.Elements.Editors.Initializers.ParticleCount;
+using Parme.Editor.Ui.Elements.Editors.Initializers.Position;
+using Parme.Editor.Ui.Elements.Editors.Initializers.Size;
+using Parme.Editor.Ui.Elements.Editors.Initializers.Velocity;
+using Parme.Editor.Ui.Elements.Editors.Triggers;
 
 namespace Parme.Editor.Ui
 {

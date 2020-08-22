@@ -1,6 +1,6 @@
 using ImGuiHandler;
 
-namespace Parme.Editor.Ui.Elements.Initializers.Size
+namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
 {
     public class StaticSizeEditor : ImGuiElement
     {

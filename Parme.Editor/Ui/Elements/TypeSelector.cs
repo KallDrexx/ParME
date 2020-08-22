@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ImGuiHandler;
 using ImGuiNET;
+using Parme.Core.Triggers;
 
 namespace Parme.Editor.Ui.Elements
 {
@@ -25,6 +26,12 @@ namespace Parme.Editor.Ui.Elements
             _typeIndexMap = orderedTypeNames
                 .Select((str, index) => new {name = str, index = index, type = typeMap[str]})
                 .ToDictionary(x => x.type, x => x.index + 1);
+        }
+
+        public TypeSelector(IEnumerable<IParticleTrigger> triggers)
+            : this(triggers
+                .ToDictionary(x => x.EditorShortName, x => x.GetType()))
+        {
         }
 
         public Type SelectedType

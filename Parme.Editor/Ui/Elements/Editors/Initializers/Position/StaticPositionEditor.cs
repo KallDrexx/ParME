@@ -1,6 +1,6 @@
 using ImGuiHandler;
 
-namespace Parme.Editor.Ui.Elements.Initializers.Position
+namespace Parme.Editor.Ui.Elements.Editors.Initializers.Position
 {
     public class StaticPositionEditor : ImGuiElement
     {

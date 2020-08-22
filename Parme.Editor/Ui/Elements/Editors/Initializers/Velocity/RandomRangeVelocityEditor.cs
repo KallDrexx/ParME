@@ -2,49 +2,49 @@ using System.Numerics;
 using ImGuiHandler;
 using ImGuiNET;
 
-namespace Parme.Editor.Ui.Elements.Initializers.Position
+namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
 {
-    public class RandomRegionPositionEditor : ImGuiElement
+    public class RandomRangeVelocityEditor : ImGuiElement
     {
-        public float MinXOffset
-        {
-            get => Get<float>();
-            set => Set(value);
-        }
-
-        public float MinYOffset
+        public float MinXVelocity
         {
             get => Get<float>();
             set => Set(value);
         }
         
-        public float MaxXOffset
+        public float MaxXVelocity
         {
             get => Get<float>();
             set => Set(value);
         }
 
-        public float MaxYOffset
+        public float MinYVelocity
         {
             get => Get<float>();
             set => Set(value);
         }
-        
+
+        public float MaxYVelocity
+        {
+            get => Get<float>();
+            set => Set(value);
+        }
+
         protected override void CustomRender()
         {
-            var min = new Vector2(MinXOffset, MinYOffset);
-            var max = new Vector2(MaxXOffset, MaxYOffset);
+            var min = new Vector2(MinXVelocity, MinYVelocity);
+            var max = new Vector2(MaxXVelocity, MaxYVelocity);
 
             if (ImGui.InputFloat2("Minimum", ref min))
             {
-                MinXOffset = min.X;
-                MinYOffset = min.Y;
+                MinXVelocity = min.X;
+                MinYVelocity = min.Y;
             }
 
             if (ImGui.InputFloat2("Maximum", ref max))
             {
-                MaxXOffset = max.X;
-                MaxYOffset = max.Y;
+                MaxXVelocity = max.X;
+                MaxYVelocity = max.Y;
             }
         }
     }

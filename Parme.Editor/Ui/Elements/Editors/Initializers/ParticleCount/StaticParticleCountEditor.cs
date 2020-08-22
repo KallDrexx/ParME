@@ -1,6 +1,6 @@
 using ImGuiHandler;
 
-namespace Parme.Editor.Ui.Elements.Initializers.ParticleCount
+namespace Parme.Editor.Ui.Elements.Editors.Initializers.ParticleCount
 {
     public class StaticParticleCountEditor : ImGuiElement
     {
