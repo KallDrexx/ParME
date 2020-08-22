@@ -8,11 +8,14 @@ using ImGuiNET;
 using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
+using Parme.Core.Triggers;
 
 namespace Parme.Editor.Ui.Elements
 {
     public class Workbench : ImGuiElement
     {
+        private const int ChildWindowHeightModifier = 40;
+        
         public Vector2 Position { get; set; }
         public Vector2 Size { get; set; }
 
@@ -25,6 +28,12 @@ namespace Parme.Editor.Ui.Elements
         public float ParticleLifeTime
         {
             get => Get<float>();
+            set => Set(value);
+        }
+
+        public IParticleTrigger Trigger
+        {
+            get => Get<IParticleTrigger>();
             set => Set(value);
         }
 
@@ -176,7 +185,7 @@ namespace Parme.Editor.Ui.Elements
                 ImGui.Text(text);
             }
             
-            ImGui.BeginChild("Initializers", new Vector2((Size.X / 2), Size.Y - 60), true);
+            ImGui.BeginChild("Initializers", new Vector2((Size.X / 2), Size.Y - ChildWindowHeightModifier), true);
             
             ImGui.Columns(2, "initializercolumns", false);
             ImGui.SetColumnWidth(0, firstColumnWidth);
@@ -206,6 +215,13 @@ namespace Parme.Editor.Ui.Elements
             Selectable(EditorObjectNameAndValue(ParticleCountInitializer), 
                 new EditorItem(EditorItemType.Initializer, InitializerType.ParticleCount));
             
+            ImGui.NextColumn();
+            RightAlignText("Spawn Trigger:");
+            
+            ImGui.NextColumn();
+            Selectable(EditorObjectNameAndValue(Trigger), 
+                new EditorItem(EditorItemType.Trigger, null));
+
             ImGui.NextColumn();
             RightAlignText("Texture:");
             
@@ -247,7 +263,7 @@ namespace Parme.Editor.Ui.Elements
 
         private void RenderModifiersSection()
         {
-            ImGui.BeginChild("Modifiers", new Vector2((Size.X / 2) - 30, Size.Y - 60), true);
+            ImGui.BeginChild("Modifiers", new Vector2((Size.X / 2) - 30, Size.Y - ChildWindowHeightModifier), true);
 
             foreach (var modifier in Modifiers.Where(x => x != null))
             {

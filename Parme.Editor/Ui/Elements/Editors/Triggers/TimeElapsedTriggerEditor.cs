@@ -1,15 +1,10 @@
 ﻿using System.ComponentModel;
-using Parme.Core;
 using Parme.Core.Triggers;
 
 namespace Parme.Editor.Ui.Elements.Editors.Triggers
 {
     public class TimeElapsedTriggerEditor : SettingsEditorBase
     {
-        public TimeElapsedTriggerEditor(EmitterSettings settings) : base(settings)
-        {
-        }
-        
         public float Frequency
         {
             get => Get<float>();
@@ -19,6 +14,11 @@ namespace Parme.Editor.Ui.Elements.Editors.Triggers
         protected override void CustomRender()
         {
             InputFloat(nameof(Frequency), "Frequency");
+        }
+
+        protected override void OnNewSettingsLoaded()
+        {
+            Frequency = ((TimeElapsedTrigger) EmitterSettings.Trigger).Frequency;
         }
 
         protected override void OnSelfPropertyChanged(object sender, PropertyChangedEventArgs e)

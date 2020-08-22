@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
+﻿using System.Numerics;
 using ImGuiHandler;
 using ImGuiNET;
 using Parme.Core.Initializers;
@@ -11,7 +10,7 @@ namespace Parme.Editor.Ui.Elements
         public Vector2 Position { get; set; }
         public Vector2 Size { get; set; }
         
-        public List<ImGuiElement> Children { get; } = new List<ImGuiElement>();
+        public ImGuiElement Child { get; set; }
 
         public EditorItem? ItemBeingEdited
         {
@@ -96,10 +95,7 @@ namespace Parme.Editor.Ui.Elements
                 }
 
                 ImGui.NewLine();
-                foreach (var child in Children)
-                {
-                    child.Render();
-                }
+                Child?.Render();
             }
             
             ImGui.End();

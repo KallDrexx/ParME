@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
 using ImGuiHandler;
 using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
-using Parme.Core.Triggers;
 using Parme.Editor.Ui.Elements;
-using Parme.Editor.Ui.Elements.Editors;
-using Parme.Editor.Ui.Elements.Editors.Triggers;
 
 namespace Parme.Editor.Ui
 {
@@ -66,17 +62,16 @@ namespace Parme.Editor.Ui
         private void NewEditorItemSelected(EditorItem? item)
         {
             _activeEditorWindow.ItemBeingEdited = item;
-            _activeEditorWindow.Children.Clear();
+            _activeEditorWindow.Child = null;
 
-            switch (item?.ItemType)
+            if (item != null)
             {
-                case EditorItemType.Lifetime:
-                    
-                    break;
-
-                case EditorItemType.Trigger:
-                    
-                    break;
+                var editor = EditorRetriever.GetEditor(item.Value);
+                if (editor != null)
+                {
+                    editor.LoadNewSettings(_currentSettings);
+                    _activeEditorWindow.Child = editor;
+                }
             }
         }
 
@@ -86,6 +81,7 @@ namespace Parme.Editor.Ui
 
             _workbench.ParticleLifeTime = _currentSettings.MaxParticleLifeTime;
             _workbench.TextureFilename = _currentSettings.TextureFileName;
+            _workbench.Trigger = _currentSettings.Trigger;
 
             _workbench.TextureSections.Clear();
             foreach (var textureSection in _currentSettings.TextureSections ?? Array.Empty<TextureSectionCoords>())

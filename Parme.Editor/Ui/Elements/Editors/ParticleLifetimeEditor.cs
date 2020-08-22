@@ -1,14 +1,9 @@
 ﻿using System.ComponentModel;
-using Parme.Core;
 
 namespace Parme.Editor.Ui.Elements.Editors
 {
     public class ParticleLifetimeEditor : SettingsEditorBase
     {
-        public ParticleLifetimeEditor(EmitterSettings settings) : base(settings)
-        {
-        }
-        
         public float Lifetime
         {
             get => Get<float>();
@@ -18,6 +13,11 @@ namespace Parme.Editor.Ui.Elements.Editors
         protected override void CustomRender()
         {
             InputFloat(nameof(Lifetime), "Seconds");
+        }
+
+        protected override void OnNewSettingsLoaded()
+        {
+            Lifetime = EmitterSettings.MaxParticleLifeTime;
         }
 
         protected override void OnSelfPropertyChanged(object sender, PropertyChangedEventArgs e)

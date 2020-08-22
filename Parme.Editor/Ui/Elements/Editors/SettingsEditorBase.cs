@@ -7,15 +7,13 @@ namespace Parme.Editor.Ui.Elements.Editors
     public abstract class SettingsEditorBase : ImGuiElement
     {
         protected EmitterSettings EmitterSettings;
-        
-        public abstract EditorItemType Handleablei
 
         protected SettingsEditorBase()
         {
             PropertyChanged += OnSelfPropertyChanged;
         }
 
-        public void NewSettingsLoaded(EmitterSettings settings)
+        public void LoadNewSettings(EmitterSettings settings)
         {
             using (DisablePropertyChangedNotifications())
             {

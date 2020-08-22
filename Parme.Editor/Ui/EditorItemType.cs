@@ -2,6 +2,7 @@
 {
     public enum EditorItemType
     {
+        Unspecified = 0,
         TextureFileName,
         TextureSection,
         Lifetime,
