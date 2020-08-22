@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Numerics;
 using ImGuiHandler;
 using Parme.Core;
@@ -95,35 +96,23 @@ namespace Parme.Editor.Ui
                 _workbench.TextureSections.Add(textureSection);
             }
 
-            foreach (var initializer in settings.Initializers ?? Array.Empty<IParticleInitializer>())
-            {
-                switch (initializer.InitializerType)
-                {
-                    case InitializerType.Position:
-                        _workbench.PositionInitializer = initializer;
-                        break;
-
-                    case InitializerType.Size:
-                        _workbench.SizeInitializer = initializer;
-                        break;
-
-                    case InitializerType.Velocity:
-                        _workbench.VelocityInitializer = initializer;
-                        break;
-
-                    case InitializerType.ColorMultiplier:
-                        _workbench.ColorMultiplierInitializer = initializer;
-                        break;
-
-                    case InitializerType.ParticleCount:
-                        _workbench.ParticleCountInitializer = initializer;
-                        break;
-
-                    case InitializerType.TextureSectionIndex:
-                        _workbench.TextureSectionInitializer = initializer;
-                        break;
-                }
-            }
+            _workbench.PositionInitializer = (settings.Initializers ?? Array.Empty<IParticleInitializer>())
+                .FirstOrDefault(x => x.InitializerType == InitializerType.Position);
+            
+            _workbench.SizeInitializer = (settings.Initializers ?? Array.Empty<IParticleInitializer>())
+                .FirstOrDefault(x => x.InitializerType == InitializerType.Size);
+            
+            _workbench.VelocityInitializer = (settings.Initializers ?? Array.Empty<IParticleInitializer>())
+                .FirstOrDefault(x => x.InitializerType == InitializerType.Velocity);
+            
+            _workbench.ColorMultiplierInitializer = (settings.Initializers ?? Array.Empty<IParticleInitializer>())
+                .FirstOrDefault(x => x.InitializerType == InitializerType.ColorMultiplier);
+            
+            _workbench.ParticleCountInitializer = (settings.Initializers ?? Array.Empty<IParticleInitializer>())
+                .FirstOrDefault(x => x.InitializerType == InitializerType.ParticleCount);
+            
+            _workbench.TextureSectionInitializer = (settings.Initializers ?? Array.Empty<IParticleInitializer>())
+                .FirstOrDefault(x => x.InitializerType == InitializerType.TextureSectionIndex);
 
             _workbench.Modifiers.Clear();
             foreach (var modifier in settings.Modifiers ?? Array.Empty<IParticleModifier>())

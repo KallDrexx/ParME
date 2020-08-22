@@ -5,6 +5,7 @@ namespace Parme.Editor.Ui.Elements.Editors
 {
     public class ParticleLifetimeEditor : SettingsEditorBase
     {
+        [SelfManagedProperty]
         public float Lifetime
         {
             get => Get<float>();
@@ -23,12 +24,7 @@ namespace Parme.Editor.Ui.Elements.Editors
 
         protected override void OnSelfManagedPropertyChanged(string propertyName)
         {
-            switch (propertyName)
-            {
-                case nameof(Lifetime):
-                    CommandHandler.CommandPerformed(new UpdateParticleLifetimeCommand(Lifetime));
-                    break;
-            }
+            CommandHandler.CommandPerformed(new UpdateParticleLifetimeCommand(Lifetime));
         }
     }
 }
