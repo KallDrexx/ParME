@@ -1,29 +1,35 @@
+using System.Linq;
 using System.Numerics;
-using ImGuiHandler;
 using ImGuiNET;
+using Parme.Core.Initializers;
+using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Initializers.Position
 {
-    public class RandomRegionPositionEditor : ImGuiElement
+    public class RandomRegionPositionEditor : SettingsEditorBase
     {
+        [SelfManagedProperty]
         public float MinXOffset
         {
             get => Get<float>();
             set => Set(value);
         }
 
+        [SelfManagedProperty]
         public float MinYOffset
         {
             get => Get<float>();
             set => Set(value);
         }
         
+        [SelfManagedProperty]
         public float MaxXOffset
         {
             get => Get<float>();
             set => Set(value);
         }
 
+        [SelfManagedProperty]
         public float MaxYOffset
         {
             get => Get<float>();
@@ -32,20 +38,37 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Position
         
         protected override void CustomRender()
         {
-            var min = new Vector2(MinXOffset, MinYOffset);
-            var max = new Vector2(MaxXOffset, MaxYOffset);
+            InputFloat(nameof(MinXOffset), "Min X");
+            InputFloat(nameof(MinYOffset), "Min Y");
+            ImGui.NewLine();
+            
+            InputFloat(nameof(MaxXOffset), "Max X");
+            InputFloat(nameof(MaxYOffset), "Max Y");
+        }
 
-            if (ImGui.InputFloat2("Minimum", ref min))
-            {
-                MinXOffset = min.X;
-                MinYOffset = min.Y;
-            }
+        protected override void OnNewSettingsLoaded()
+        {
+            var initializer = EmitterSettings.Initializers
+                .OfType<RandomRegionPositionInitializer>()
+                .First();
 
-            if (ImGui.InputFloat2("Maximum", ref max))
+            MinXOffset = initializer.MinXOffset;
+            MinYOffset = initializer.MinYOffset;
+            MaxXOffset = initializer.MaxXOffset;
+            MaxYOffset = initializer.MaxYOffset;
+        }
+
+        protected override void OnSelfManagedPropertyChanged(string propertyName)
+        {
+            var initializer = new RandomRegionPositionInitializer
             {
-                MaxXOffset = max.X;
-                MaxYOffset = max.Y;
-            }
+                MinXOffset = MinXOffset,
+                MinYOffset = MinYOffset,
+                MaxXOffset = MaxXOffset,
+                MaxYOffset = MaxYOffset,
+            };
+            
+            CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.Position, initializer));
         }
     }
 }

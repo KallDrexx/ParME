@@ -5,6 +5,7 @@ using Parme.Core.Triggers;
 using Parme.Editor.Ui.Elements.Editors;
 using Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier;
 using Parme.Editor.Ui.Elements.Editors.Initializers.ParticleCount;
+using Parme.Editor.Ui.Elements.Editors.Initializers.Position;
 using Parme.Editor.Ui.Elements.Editors.Triggers;
 
 namespace Parme.Editor.Ui
@@ -31,6 +32,8 @@ namespace Parme.Editor.Ui
                 nameof(StaticColorInitializer) => new StaticColorMultiplierEditor(),
                 nameof(RandomParticleCountInitializer) => new RandomParticleCountEditor(),
                 nameof(StaticParticleCountInitializer) => new StaticParticleCountEditor(),
+                nameof(StaticPositionInitializer) => new StaticPositionEditor(),
+                nameof(RandomRegionPositionInitializer) => new RandomRegionPositionEditor(),
                 _ => null
             };
         }
@@ -49,6 +52,9 @@ namespace Parme.Editor.Ui
                 
                 case InitializerType.ParticleCount:
                     return new ParticleCountEditor();
+                
+                case InitializerType.Position:
+                    return new PositionEditor();
                 
                 case InitializerType.Unspecified:
                 case null:
