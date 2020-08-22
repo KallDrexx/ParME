@@ -82,6 +82,8 @@ namespace Parme.Editor
 
         protected override void Update(GameTime gameTime)
         {
+            _commandHandler.UpdateTime((float) gameTime.ElapsedGameTime.TotalSeconds);
+            _uiController.Update();
             _inputHandler.Update();
             _emitter?.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
             

@@ -33,6 +33,11 @@ namespace Parme.Editor.Ui
             _emitterSettingsController = new EmitterSettingsController(imGuiManager, commandHandler);
         }
 
+        public void Update()
+        {
+            _emitterSettingsController.Update();
+        }
+
         public void ToggleImGuiDemoWindow()
         {
             _imguiDemoWindow.IsVisible = !_imguiDemoWindow.IsVisible;

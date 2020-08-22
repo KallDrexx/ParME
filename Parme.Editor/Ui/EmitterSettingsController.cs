@@ -18,6 +18,7 @@ namespace Parme.Editor.Ui
         private readonly Workbench _workbench;
         private readonly ActiveEditorWindow _activeEditorWindow;
         private bool _ignoreChangeNotifications;
+        private bool _emitterChanged;
 
         public EmitterSettingsController(ImGuiManager imGuiManager, SettingsCommandHandler commandHandler)
         {
@@ -30,11 +31,19 @@ namespace Parme.Editor.Ui
             imGuiManager.AddElement(_activeEditorWindow);
             
             _workbench.PropertyChanged += WorkbenchOnPropertyChanged;
-            _commandHandler.EmitterUpdated += (sender, settings) =>
+            _commandHandler.EmitterUpdated += (sender, settings) => _emitterChanged = true;
+        }
+
+        public void Update()
+        {
+            if (_emitterChanged)
             {
+                var settings = _commandHandler.GetCurrentSettings();
                 UpdateWorkbench(settings);
                 UpdateActiveEditor(settings);
-            };
+                
+                _emitterChanged = false;
+            }
         }
 
         public void ViewportResized(int width, int height)

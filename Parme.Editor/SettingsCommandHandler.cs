@@ -10,9 +10,12 @@ namespace Parme.Editor
 {
     public class SettingsCommandHandler
     {
+        private const float SecondsWithinDebounce = 0.25f;
+        
         private readonly List<ICommand> _commands = new List<ICommand>();
         private readonly Stack<ICommand> _redoStack = new Stack<ICommand>();
         private int _minimumStackSize;
+        private float _secondsSinceLastCommand;
 
         public event EventHandler<EmitterSettings> EmitterUpdated; 
         public bool CanUndo => _commands.Count > _minimumStackSize;
@@ -21,6 +24,11 @@ namespace Parme.Editor
         public SettingsCommandHandler()
         {
             NewStartingEmitter(new EmitterSettings());
+        }
+
+        public void UpdateTime(float timeSinceLastFrame)
+        {
+            _secondsSinceLastCommand += timeSinceLastFrame;
         }
 
         public void NewStartingEmitter(EmitterSettings settings)
@@ -44,6 +52,7 @@ namespace Parme.Editor
             }
 
             _minimumStackSize = _commands.Count;
+            _secondsSinceLastCommand = SecondsWithinDebounce * 2; // make sure we are out of debounce time
             
             EmitterUpdated?.Invoke(this, GetCurrentSettings());
         }
@@ -51,9 +60,20 @@ namespace Parme.Editor
         public void CommandPerformed(ICommand command)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
+
+            if (_secondsSinceLastCommand < SecondsWithinDebounce && command.GetType() == _commands.Last().GetType())
+            {
+                // This is a repeated command, usually caused by fast inputs (like a slider).  Therefore to prevent
+                // the undo stack being too bloated and not useful, replace the last command with the current one
+                _commands[^1] = command;
+            }
+            else
+            {
+                _commands.Add(command);
+            }
             
-            _commands.Add(command);
             _redoStack.Clear();
+            _secondsSinceLastCommand = 0;
             
             EmitterUpdated?.Invoke(this, GetCurrentSettings());
         }
