@@ -26,7 +26,7 @@ namespace Parme.Editor.Ui
         {
             _commandHandler = commandHandler;
             
-            _workbench = new Workbench();
+            _workbench = new Workbench(commandHandler);
             imGuiManager.AddElement(_workbench);
             
             _activeEditorWindow = new ActiveEditorWindow();

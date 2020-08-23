@@ -15,6 +15,8 @@ namespace Parme.Editor.Ui.Elements
     public class Workbench : ImGuiElement
     {
         private const int ChildWindowHeightSubtractionFactor = 80;
+
+        private readonly SettingsCommandHandler _commandHandler;
         
         public Vector2 Position { get; set; }
         public Vector2 Size { get; set; }
@@ -142,8 +144,9 @@ namespace Parme.Editor.Ui.Elements
             set => Set(value);
         }
 
-        public Workbench()
+        public Workbench(SettingsCommandHandler commandHandler)
         {
+            _commandHandler = commandHandler;
             Modifiers = new ObservableCollection<IParticleModifier>();
             TextureSections = new ObservableCollection<TextureSectionCoords>();
             
@@ -163,7 +166,25 @@ namespace Parme.Editor.Ui.Elements
                 {
                     BackgroundColor = color;
                 }
-                
+
+                if (_commandHandler.CanUndo)
+                {
+                    ImGui.SameLine(Size.X - 100);
+                    if (ImGui.Button("Undo"))
+                    {
+                        _commandHandler.Undo();
+                    }
+                }
+
+                if (_commandHandler.CanRedo)
+                {
+                    ImGui.SameLine(Size.X - 50);
+                    if (ImGui.Button("Redo"))
+                    {
+                        _commandHandler.Redo();
+                    }
+                }
+
                 ImGui.NewLine();
                 
                 ImGui.Text("Initializers"); 
