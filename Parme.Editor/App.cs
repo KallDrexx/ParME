@@ -82,6 +82,7 @@ namespace Parme.Editor
             _commandHandler.EmitterUpdated += (sender, emitterSettings) =>
             {
                 _emitterSettingsUpdated = true;
+                _secondsSinceLastSettingsChange = 0;
             };
 
             base.Initialize();
