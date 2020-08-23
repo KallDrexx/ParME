@@ -12,13 +12,15 @@ namespace Parme.Editor.Ui
 {
     public class EmitterSettingsController
     {
-        private const float WorkbenchHeight = 250f;
+        private const float WorkbenchHeight = 300f;
 
         private readonly SettingsCommandHandler _commandHandler;
         private readonly Workbench _workbench;
         private readonly ActiveEditorWindow _activeEditorWindow;
         private bool _ignoreChangeNotifications;
         private bool _emitterChanged;
+
+        public Vector3 BackgroundColor => _workbench.BackgroundColor;
 
         public EmitterSettingsController(ImGuiManager imGuiManager, SettingsCommandHandler commandHandler)
         {

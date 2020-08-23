@@ -52,6 +52,7 @@ namespace Parme.Editor.Ui.Elements.Editors
                     : null;
             }
             
+            ImGui.NewLine();
             _childDisplay?.Render();
         }
 

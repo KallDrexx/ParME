@@ -13,6 +13,7 @@ namespace Parme.Editor.Ui
 
         public bool AcceptingKeyboardInput => _imGuiManager.AcceptingKeyboardInput;
         public bool AcceptingMouseInput => _imGuiManager.AcceptingMouseInput;
+        public Vector3 BackgroundColor => _emitterSettingsController.BackgroundColor;
 
         public EditorUiController(ImGuiManager imGuiManager, SettingsCommandHandler commandHandler)
         {
@@ -40,7 +41,6 @@ namespace Parme.Editor.Ui
 
         public void NewEmitterSettingsLoaded(EmitterSettings settings)
         {
-            //_emitterSettingsManager.NewEmitterSettingsLoaded(settings);
             _emitterSettingsController.LoadNewSettings(settings);
         }
     }

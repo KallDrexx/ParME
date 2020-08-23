@@ -14,7 +14,7 @@ namespace Parme.Editor.Ui.Elements
 {
     public class Workbench : ImGuiElement
     {
-        private const int ChildWindowHeightModifier = 40;
+        private const int ChildWindowHeightSubtractionFactor = 80;
         
         public Vector2 Position { get; set; }
         public Vector2 Size { get; set; }
@@ -34,6 +34,12 @@ namespace Parme.Editor.Ui.Elements
         public IParticleTrigger Trigger
         {
             get => Get<IParticleTrigger>();
+            set => Set(value);
+        }
+
+        public Vector3 BackgroundColor
+        {
+            get => Get<Vector3>();
             set => Set(value);
         }
 
@@ -151,6 +157,15 @@ namespace Parme.Editor.Ui.Elements
             ImGui.SetNextWindowSize(Size);
             if (ImGui.Begin("Workbench", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDecoration))
             {
+                ImGui.SetNextItemWidth(200);
+                var color = BackgroundColor;
+                if (ImGui.ColorEdit3("Background Color", ref color))
+                {
+                    BackgroundColor = color;
+                }
+                
+                ImGui.NewLine();
+                
                 ImGui.Text("Initializers"); 
                 
                 ImGui.SameLine(Size.X / 2 + 25);
@@ -185,7 +200,7 @@ namespace Parme.Editor.Ui.Elements
                 ImGui.Text(text);
             }
             
-            ImGui.BeginChild("Initializers", new Vector2((Size.X / 2), Size.Y - ChildWindowHeightModifier), true);
+            ImGui.BeginChild("Initializers", new Vector2((Size.X / 2), Size.Y - ChildWindowHeightSubtractionFactor), true);
             
             ImGui.Columns(2, "initializercolumns", false);
             ImGui.SetColumnWidth(0, firstColumnWidth);
@@ -263,7 +278,7 @@ namespace Parme.Editor.Ui.Elements
 
         private void RenderModifiersSection()
         {
-            ImGui.BeginChild("Modifiers", new Vector2((Size.X / 2) - 30, Size.Y - ChildWindowHeightModifier), true);
+            ImGui.BeginChild("Modifiers", new Vector2((Size.X / 2) - 30, Size.Y - ChildWindowHeightSubtractionFactor), true);
 
             foreach (var modifier in Modifiers.Where(x => x != null))
             {

@@ -90,14 +90,13 @@ namespace Parme.Editor
 
         protected override void Draw(GameTime gameTime)
         {
-            // var backgroundColorVector = _uiController.BackgroundColor;
-            // var backgroundColor = new Color(backgroundColorVector.X, 
-            //     backgroundColorVector.Y, 
-            //     backgroundColorVector.Z);
+            var backgroundColorVector = _uiController.BackgroundColor;
+            var backgroundColor = new Color(backgroundColorVector.X, 
+                backgroundColorVector.Y, 
+                backgroundColorVector.Z);
             
-            // GraphicsDevice.Clear(backgroundColor);
-            GraphicsDevice.Clear(Color.Black);
-            
+            GraphicsDevice.Clear(backgroundColor);
+
             _emitter?.Render(_camera);
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
