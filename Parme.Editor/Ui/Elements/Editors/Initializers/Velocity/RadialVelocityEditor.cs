@@ -1,25 +1,30 @@
-using ImGuiHandler;
+using System.Linq;
 using ImGuiNET;
+using Parme.Core.Initializers;
+using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
 {
-    public class RadialVelocityEditor : ImGuiElement
+    public class RadialVelocityEditor : SettingsEditorBase
     {
+        [SelfManagedProperty]
         public float Magnitude
         {
             get => Get<float>();
             set => Set(value);
         }
         
-        public float MinDegrees
+        [SelfManagedProperty]
+        public int MinDegrees
         {
-            get => Get<float>();
+            get => Get<int>();
             set => Set(value);
         }
 
-        public float MaxDegrees
+        [SelfManagedProperty]
+        public int MaxDegrees
         {
-            get => Get<float>();
+            get => Get<int>();
             set => Set(value);
         }
 
@@ -28,16 +33,39 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
             InputFloat(nameof(Magnitude), "Magnitude");
 
             var min = MinDegrees;
-            if (ImGui.SliderFloat("Min Degrees", ref min, 0, 360))
+            if (ImGui.SliderInt("Min Degrees", ref min, 0, 360))
             {
                 MinDegrees = min;
             }
             
             var max = MaxDegrees;
-            if (ImGui.SliderFloat("Max Degrees", ref max, 0, 360))
+            if (ImGui.SliderInt("Max Degrees", ref max, 0, 360))
             {
                 MaxDegrees = max;
             }
+        }
+
+        protected override void OnNewSettingsLoaded()
+        {
+            var initializer = EmitterSettings.Initializers
+                .OfType<RadialVelocityInitializer>()
+                .First();
+
+            Magnitude = initializer.Magnitude;
+            MinDegrees = (int) initializer.MinDegrees;
+            MaxDegrees = (int) initializer.MaxDegrees;
+        }
+
+        protected override void OnSelfManagedPropertyChanged(string propertyName)
+        {
+            var initializer = new RadialVelocityInitializer
+            {
+                Magnitude = Magnitude,
+                MinDegrees = MinDegrees,
+                MaxDegrees = MaxDegrees,
+            };
+            
+            CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.Velocity, initializer));
         }
     }
 }

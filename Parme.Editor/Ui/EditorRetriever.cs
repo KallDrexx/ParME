@@ -6,6 +6,8 @@ using Parme.Editor.Ui.Elements.Editors;
 using Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier;
 using Parme.Editor.Ui.Elements.Editors.Initializers.ParticleCount;
 using Parme.Editor.Ui.Elements.Editors.Initializers.Position;
+using Parme.Editor.Ui.Elements.Editors.Initializers.Size;
+using Parme.Editor.Ui.Elements.Editors.Initializers.Velocity;
 using Parme.Editor.Ui.Elements.Editors.Triggers;
 
 namespace Parme.Editor.Ui
@@ -34,6 +36,10 @@ namespace Parme.Editor.Ui
                 nameof(StaticParticleCountInitializer) => new StaticParticleCountEditor(),
                 nameof(StaticPositionInitializer) => new StaticPositionEditor(),
                 nameof(RandomRegionPositionInitializer) => new RandomRegionPositionEditor(),
+                nameof(RandomSizeInitializer) => new RandomSizeEditor(),
+                nameof(StaticSizeInitializer) => new StaticSizeEditor(),
+                nameof(RandomRangeVelocityInitializer) => new RandomRangeVelocityEditor(),
+                nameof(RadialVelocityInitializer) => new RadialVelocityEditor(),
                 _ => null
             };
         }
@@ -56,6 +62,12 @@ namespace Parme.Editor.Ui
                 case InitializerType.Position:
                     return new PositionEditor();
                 
+                case InitializerType.Size:
+                    return new SizeEditor();
+                
+                case InitializerType.Velocity:
+                    return new VelocityEditor();
+
                 case InitializerType.Unspecified:
                 case null:
                     throw new ArgumentException("No initializer type specified");

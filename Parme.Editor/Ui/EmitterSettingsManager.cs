@@ -288,8 +288,8 @@ namespace Parme.Editor.Ui
                 case nameof(RadialVelocityInitializer):
                     _velocitySelector.ChildDisplay = _radialVelocityEditor;
                     _radialVelocityEditor.Magnitude = ((RadialVelocityInitializer) velocityInitializer).Magnitude;
-                    _radialVelocityEditor.MinDegrees = ((RadialVelocityInitializer) velocityInitializer).MinDegrees;
-                    _radialVelocityEditor.MaxDegrees = ((RadialVelocityInitializer) velocityInitializer).MaxDegrees;
+                    _radialVelocityEditor.MinDegrees = (int) ((RadialVelocityInitializer) velocityInitializer).MinDegrees;
+                    _radialVelocityEditor.MaxDegrees = (int) ((RadialVelocityInitializer) velocityInitializer).MaxDegrees;
                     break;
                 
                 default:

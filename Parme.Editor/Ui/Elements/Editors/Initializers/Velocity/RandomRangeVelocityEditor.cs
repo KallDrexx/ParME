@@ -1,29 +1,35 @@
+using System.Linq;
 using System.Numerics;
-using ImGuiHandler;
 using ImGuiNET;
+using Parme.Core.Initializers;
+using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
 {
-    public class RandomRangeVelocityEditor : ImGuiElement
+    public class RandomRangeVelocityEditor : SettingsEditorBase
     {
+        [SelfManagedProperty]
         public float MinXVelocity
         {
             get => Get<float>();
             set => Set(value);
         }
         
+        [SelfManagedProperty]
         public float MaxXVelocity
         {
             get => Get<float>();
             set => Set(value);
         }
 
+        [SelfManagedProperty]
         public float MinYVelocity
         {
             get => Get<float>();
             set => Set(value);
         }
 
+        [SelfManagedProperty]
         public float MaxYVelocity
         {
             get => Get<float>();
@@ -46,6 +52,31 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
                 MaxXVelocity = max.X;
                 MaxYVelocity = max.Y;
             }
+        }
+
+        protected override void OnNewSettingsLoaded()
+        {
+            var initializer = EmitterSettings.Initializers
+                .OfType<RandomRangeVelocityInitializer>()
+                .First();
+
+            MinXVelocity = initializer.MinXVelocity;
+            MinYVelocity = initializer.MinYVelocity;
+            MaxXVelocity = initializer.MaxXVelocity;
+            MaxYVelocity = initializer.MaxYVelocity;
+        }
+
+        protected override void OnSelfManagedPropertyChanged(string propertyName)
+        {
+            var initializer = new RandomRangeVelocityInitializer
+            {
+                MinXVelocity = MinXVelocity,
+                MinYVelocity = MinYVelocity,
+                MaxXVelocity = MaxXVelocity,
+                MaxYVelocity = MaxYVelocity,
+            };
+            
+            CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.Velocity, initializer));
         }
     }
 }
