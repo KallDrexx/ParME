@@ -74,8 +74,6 @@ namespace Parme.Editor
             UpdateEmitter(settings);
             
             _uiController.NewEmitterSettingsLoaded(settings);
-            _uiController.SettingsManager.EmitterSettingsChanged +=
-                (sender, emitterSettings) => UpdateEmitter(emitterSettings);
 
             base.Initialize();
         }
@@ -92,12 +90,13 @@ namespace Parme.Editor
 
         protected override void Draw(GameTime gameTime)
         {
-            var backgroundColorVector = _uiController.BackgroundColor;
-            var backgroundColor = new Color(backgroundColorVector.X, 
-                backgroundColorVector.Y, 
-                backgroundColorVector.Z);
+            // var backgroundColorVector = _uiController.BackgroundColor;
+            // var backgroundColor = new Color(backgroundColorVector.X, 
+            //     backgroundColorVector.Y, 
+            //     backgroundColorVector.Z);
             
-            GraphicsDevice.Clear(backgroundColor);
+            // GraphicsDevice.Clear(backgroundColor);
+            GraphicsDevice.Clear(Color.Black);
             
             _emitter?.Render(_camera);
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
