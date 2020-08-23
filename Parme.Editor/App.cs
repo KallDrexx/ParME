@@ -20,6 +20,8 @@ namespace Parme.Editor
 {
     public class App : Game
     {
+        private const float MinSecondsForRecompilingEmitter = 0.25f;
+        
         private readonly ParticleCamera _camera = new ParticleCamera();
         private readonly SettingsCommandHandler _commandHandler = new SettingsCommandHandler();
         private ITextureFileLoader _textureFileLoader;
@@ -27,6 +29,8 @@ namespace Parme.Editor
         private ImGuiManager _imGuiManager;
         private EditorUiController _uiController;
         private InputHandler _inputHandler;
+        private float _secondsSinceLastSettingsChange;
+        private bool _emitterSettingsUpdated;
 
         private Texture2D _testTexture;
         
@@ -49,7 +53,7 @@ namespace Parme.Editor
         {
             _textureFileLoader = new TextureFileLoader(GraphicsDevice);
             
-            _camera.Origin = Vector2.Zero;
+            _camera.Origin = new Vector2(-GraphicsDevice.Viewport.Width / 6f, -GraphicsDevice.Viewport.Height / 8f);
             _camera.PositiveYAxisPointsUp = true;
             _camera.PixelWidth = GraphicsDevice.Viewport.Width;
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
@@ -75,11 +79,28 @@ namespace Parme.Editor
             
             _uiController.NewEmitterSettingsLoaded(settings);
 
+            _commandHandler.EmitterUpdated += (sender, emitterSettings) =>
+            {
+                _emitterSettingsUpdated = true;
+                _secondsSinceLastSettingsChange = 0;
+            };
+
             base.Initialize();
         }
 
         protected override void Update(GameTime gameTime)
         {
+            _secondsSinceLastSettingsChange += (float) gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (_secondsSinceLastSettingsChange > MinSecondsForRecompilingEmitter && _emitterSettingsUpdated)
+            {
+                var settings = _commandHandler.GetCurrentSettings();
+                UpdateEmitter(settings);
+                
+                _emitterSettingsUpdated = false;
+                _secondsSinceLastSettingsChange = 0;
+            }
+            
             _commandHandler.UpdateTime((float) gameTime.ElapsedGameTime.TotalSeconds);
             _uiController.Update();
             _inputHandler.Update();
@@ -108,13 +129,13 @@ namespace Parme.Editor
             var trigger = new TimeElapsedTrigger{Frequency = 0.01f};
             var initializers = new IParticleInitializer[]
             {
-                new RandomParticleCountInitializer {MinimumToSpawn = 0, MaximumToSpawn = 2},
+                new RandomParticleCountInitializer {MinimumToSpawn = 0, MaximumToSpawn = 5},
                 new StaticColorInitializer
                 {
                     // Orange
                     RedMultiplier = 1.0f,
-                    GreenMultiplier = 1.0f, // 165f / 255f,
-                    BlueMultiplier = 1f, //0f,
+                    GreenMultiplier = 165f / 255f,
+                    BlueMultiplier = 0f,
                     AlphaMultiplier = 1f
                 },
 
@@ -165,8 +186,6 @@ namespace Parme.Editor
                     BlueMultiplierChangePerSecond = -1,
                     AlphaMultiplierChangePerSecond = -1,
                 },
-                
-                new AnimatingTextureModifier(), 
             };
 
             return new EmitterSettings
@@ -178,12 +197,10 @@ namespace Parme.Editor
                 TextureFileName = "SampleParticles.png",
                 TextureSections = new []
                 {
-                    new TextureSectionCoords(0, 64, 31, 96),
-                    new TextureSectionCoords(32, 64, 63, 96),
-                    new TextureSectionCoords(64, 64, 95, 96),
-                    new TextureSectionCoords(0, 96, 31, 127),
-                    new TextureSectionCoords(32, 96, 63, 127),
-                    new TextureSectionCoords(64, 96, 95, 127),
+                    new TextureSectionCoords(0, 0, 15, 15),
+                    new TextureSectionCoords(16, 0, 31, 15),
+                    new TextureSectionCoords(32, 0, 47, 15),
+                    new TextureSectionCoords(48, 0, 63, 15),
                 }
             };
         }
