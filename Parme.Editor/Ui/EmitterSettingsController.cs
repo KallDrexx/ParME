@@ -50,10 +50,10 @@ namespace Parme.Editor.Ui
 
         public void ViewportResized(int width, int height)
         {
-            _workbench.Position = new Vector2(0, height - WorkbenchHeight);
+            _workbench.Position = new Vector2(0, 20);
             _workbench.Size = new Vector2(width, WorkbenchHeight);
             
-            _activeEditorWindow.Position = new Vector2(0, 20);
+            _activeEditorWindow.Position = new Vector2(0, WorkbenchHeight + 20);
             _activeEditorWindow.Size = new Vector2(300, height - WorkbenchHeight - 20);
         }
 

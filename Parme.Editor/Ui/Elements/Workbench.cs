@@ -160,6 +160,18 @@ namespace Parme.Editor.Ui.Elements
             ImGui.SetNextWindowSize(Size);
             if (ImGui.Begin("Workbench", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDecoration))
             {
+                ImGui.Text("Initializers"); 
+                
+                ImGui.SameLine(Size.X / 2 + 25);
+                ImGui.Text("Modifiers");
+                
+                RenderInitializersSection();
+
+                ImGui.SameLine();
+                
+                RenderModifiersSection();
+                
+                ImGui.NewLine();
                 ImGui.SetNextItemWidth(200);
                 var color = BackgroundColor;
                 if (ImGui.ColorEdit3("Background Color", ref color))
@@ -184,19 +196,6 @@ namespace Parme.Editor.Ui.Elements
                         _commandHandler.Redo();
                     }
                 }
-
-                ImGui.NewLine();
-                
-                ImGui.Text("Initializers"); 
-                
-                ImGui.SameLine(Size.X / 2 + 25);
-                ImGui.Text("Modifiers");
-                
-                RenderInitializersSection();
-
-                ImGui.SameLine();
-                
-                RenderModifiersSection();
             }
             
             ImGui.End();
