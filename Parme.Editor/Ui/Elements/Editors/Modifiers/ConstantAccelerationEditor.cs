@@ -4,6 +4,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Modifiers
 {
+    [EditorForType(typeof(ConstantAccelerationModifier))]
     public class ConstantAccelerationEditor : SettingsEditorBase
     {
         [SelfManagedProperty]

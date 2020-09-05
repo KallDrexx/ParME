@@ -4,6 +4,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Initializers.ParticleCount
 {
+    [EditorForType(typeof(StaticParticleCountInitializer))]
     public class StaticParticleCountEditor : SettingsEditorBase
     {
         [SelfManagedProperty]

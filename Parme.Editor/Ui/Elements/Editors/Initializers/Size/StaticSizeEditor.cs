@@ -4,6 +4,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
 {
+    [EditorForType(typeof(StaticSizeInitializer))]
     public class StaticSizeEditor : SettingsEditorBase
     {
         [SelfManagedProperty]

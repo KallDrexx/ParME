@@ -1,7 +1,9 @@
 ﻿using ImGuiNET;
+using Parme.Core.Modifiers;
 
 namespace Parme.Editor.Ui.Elements.Editors.Modifiers
 {
+    [EditorForType(typeof(AnimatingTextureModifier))]
     public class AnimatingTextureEditor : SettingsEditorBase
     {
         protected override void CustomRender()

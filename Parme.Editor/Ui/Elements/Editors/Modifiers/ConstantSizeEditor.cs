@@ -4,6 +4,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Modifiers
 {
+    [EditorForType(typeof(ConstantSizeModifier))]
     public class ConstantSizeEditor : SettingsEditorBase
     {
         [SelfManagedProperty]
@@ -22,8 +23,8 @@ namespace Parme.Editor.Ui.Elements.Editors.Modifiers
         
         protected override void CustomRender()
         {
-            InputFloat(nameof(WidthChangePerSecond), "Width / Sec");
-            InputFloat(nameof(HeightChangePerSecond), "Height / Sec");
+            InputFloat(nameof(WidthChangePerSecond), "Width");
+            InputFloat(nameof(HeightChangePerSecond), "Height");
         }
 
         protected override void OnNewSettingsLoaded()

@@ -6,6 +6,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier
 {
+    [EditorForType(typeof(StaticColorInitializer))]
     public class StaticColorMultiplierEditor : SettingsEditorBase
     {
         [SelfManagedProperty]

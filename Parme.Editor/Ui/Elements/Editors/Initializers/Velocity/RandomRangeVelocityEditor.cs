@@ -6,6 +6,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
 {
+    [EditorForType(typeof(RandomRangeVelocityInitializer))]
     public class RandomRangeVelocityEditor : SettingsEditorBase
     {
         [SelfManagedProperty]

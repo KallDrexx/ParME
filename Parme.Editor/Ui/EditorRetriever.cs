@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
@@ -17,6 +20,8 @@ namespace Parme.Editor.Ui
 {
     public static class EditorRetriever
     {
+        private static readonly Dictionary<Type, Type> _typeToEditorMap = GetEditorTypeMap();
+
         public static SettingsEditorBase GetEditor(EditorItem item)
         {
             return item.ItemType switch
@@ -31,28 +36,17 @@ namespace Parme.Editor.Ui
 
         public static SettingsEditorBase GetEditor(IEditorObject editableObject)
         {
-            return editableObject?.GetType().Name switch
+            if (editableObject == null)
             {
-                nameof(OneShotTrigger) => new OneShotTriggerEditor(),
-                nameof(TimeElapsedTrigger) => new TimeElapsedTriggerEditor(),
-                nameof(StaticColorInitializer) => new StaticColorMultiplierEditor(),
-                nameof(RandomParticleCountInitializer) => new RandomParticleCountEditor(),
-                nameof(StaticParticleCountInitializer) => new StaticParticleCountEditor(),
-                nameof(StaticPositionInitializer) => new StaticPositionEditor(),
-                nameof(RandomRegionPositionInitializer) => new RandomRegionPositionEditor(),
-                nameof(RandomSizeInitializer) => new RandomSizeEditor(),
-                nameof(StaticSizeInitializer) => new StaticSizeEditor(),
-                nameof(RandomRangeVelocityInitializer) => new RandomRangeVelocityEditor(),
-                nameof(RadialVelocityInitializer) => new RadialVelocityEditor(),
-                nameof(SingleTextureInitializer) => new SingleTextureSectionEditor(),
-                nameof(RandomTextureInitializer) => new RandomTextureSectionEditor(),
-                nameof(AnimatingTextureModifier) => new AnimatingTextureEditor(),
-                nameof(ConstantAccelerationModifier) => new ConstantAccelerationEditor(),
-                nameof(ConstantColorMultiplierChangeModifier) => new ConstantColorMultiplierEditor(),
-                nameof(ConstantRotationModifier) => new ConstantRotationEditor(),
-                nameof(ConstantSizeModifier) => new ConstantSizeEditor(),
-                _ => null
-            };
+                return null;
+            }
+
+            if (_typeToEditorMap.TryGetValue(editableObject.GetType(), out var editorType))
+            {
+                return (SettingsEditorBase) Activator.CreateInstance(editorType);
+            }
+
+            return null;
         }
 
         private static SettingsEditorBase GetEditorForInitializer(EditorItem item)
@@ -96,6 +90,19 @@ namespace Parme.Editor.Ui
             return item.ModifierInstance != null
                 ? GetEditor(item.ModifierInstance)
                 : null;
+        }
+
+        private static Dictionary<Type, Type> GetEditorTypeMap()
+        {
+            return typeof(EditorRetriever)
+                .Assembly
+                .GetTypes()
+                .Where(x => !x.IsAbstract)
+                .Where(x => !x.IsInterface)
+                .Where(x => typeof(SettingsEditorBase).IsAssignableFrom(x))
+                .Select(x => (EditorType: x, Attribute: x.GetCustomAttribute<EditorForTypeAttribute>()))
+                .Where(x => x.Attribute != null)
+                .ToDictionary(x => x.Attribute.Type, x => x.EditorType);
         }
     }
 }

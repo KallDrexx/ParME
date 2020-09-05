@@ -4,6 +4,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Modifiers
 {
+    [EditorForType(typeof(ConstantRotationModifier))]
     public class ConstantRotationEditor : SettingsEditorBase
     {
         [SelfManagedProperty]
@@ -15,7 +16,7 @@ namespace Parme.Editor.Ui.Elements.Editors.Modifiers
         
         protected override void CustomRender()
         {
-            InputInt(nameof(DegreesPerSecond), "Degrees / Sec");
+            InputInt(nameof(DegreesPerSecond), "Degrees");
         }
 
         protected override void OnNewSettingsLoaded()

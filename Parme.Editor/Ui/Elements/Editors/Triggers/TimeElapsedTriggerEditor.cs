@@ -3,6 +3,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Triggers
 {
+    [EditorForType(typeof(TimeElapsedTrigger))]
     public class TimeElapsedTriggerEditor : SettingsEditorBase
     {
         [SelfManagedProperty]

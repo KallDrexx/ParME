@@ -4,6 +4,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Modifiers
 {
+    [EditorForType(typeof(ConstantColorMultiplierChangeModifier))]
     public class ConstantColorMultiplierEditor : SettingsEditorBase
     {
         [SelfManagedProperty]
@@ -36,10 +37,10 @@ namespace Parme.Editor.Ui.Elements.Editors.Modifiers
         
         protected override void CustomRender()
         {
-            InputFloat(nameof(RedChangePerSecond), "Red / Sec");
-            InputFloat(nameof(GreenChangePerSecond), "Green / Sec");
-            InputFloat(nameof(BlueChangePerSecond), "Blue / Sec");
-            InputFloat(nameof(AlphaChangePerSecond), "Alpha / Sec");
+            InputFloat(nameof(RedChangePerSecond), "Red");
+            InputFloat(nameof(GreenChangePerSecond), "Green");
+            InputFloat(nameof(BlueChangePerSecond), "Blue");
+            InputFloat(nameof(AlphaChangePerSecond), "Alpha");
         }
 
         protected override void OnNewSettingsLoaded()

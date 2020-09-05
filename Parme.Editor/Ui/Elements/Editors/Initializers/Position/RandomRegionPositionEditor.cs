@@ -1,11 +1,11 @@
 using System.Linq;
-using System.Numerics;
 using ImGuiNET;
 using Parme.Core.Initializers;
 using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Initializers.Position
 {
+    [EditorForType(typeof(RandomRegionPositionInitializer))]
     public class RandomRegionPositionEditor : SettingsEditorBase
     {
         [SelfManagedProperty]

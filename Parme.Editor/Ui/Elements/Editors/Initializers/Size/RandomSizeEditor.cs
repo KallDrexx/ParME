@@ -5,6 +5,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
 {
+    [EditorForType(typeof(RandomSizeInitializer))]
     public class RandomSizeEditor : SettingsEditorBase
     {
         [SelfManagedProperty]

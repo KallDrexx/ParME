@@ -4,6 +4,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Initializers.Position
 {
+    [EditorForType(typeof(StaticPositionInitializer))]
     public class StaticPositionEditor : SettingsEditorBase
     {
         [SelfManagedProperty]

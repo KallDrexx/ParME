@@ -5,6 +5,7 @@ using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
 {
+    [EditorForType(typeof(RadialVelocityInitializer))]
     public class RadialVelocityEditor : SettingsEditorBase
     {
         [SelfManagedProperty]
