@@ -1,6 +1,7 @@
 ﻿using System;
 using Parme.Core;
 using Parme.Core.Initializers;
+using Parme.Core.Modifiers;
 using Parme.Core.Triggers;
 using Parme.Editor.Ui.Elements.Editors;
 using Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier;
@@ -9,6 +10,7 @@ using Parme.Editor.Ui.Elements.Editors.Initializers.Position;
 using Parme.Editor.Ui.Elements.Editors.Initializers.Size;
 using Parme.Editor.Ui.Elements.Editors.Initializers.TextureSectionIndex;
 using Parme.Editor.Ui.Elements.Editors.Initializers.Velocity;
+using Parme.Editor.Ui.Elements.Editors.Modifiers;
 using Parme.Editor.Ui.Elements.Editors.Triggers;
 
 namespace Parme.Editor.Ui
@@ -22,6 +24,7 @@ namespace Parme.Editor.Ui
                 EditorItemType.Trigger => new TriggerEditor(),
                 EditorItemType.Lifetime => new ParticleLifetimeEditor(),
                 EditorItemType.Initializer => GetEditorForInitializer(item),
+                EditorItemType.Modifier => GetEditorForModifier(item),
                 _ => null
             };
         }
@@ -43,6 +46,11 @@ namespace Parme.Editor.Ui
                 nameof(RadialVelocityInitializer) => new RadialVelocityEditor(),
                 nameof(SingleTextureInitializer) => new SingleTextureSectionEditor(),
                 nameof(RandomTextureInitializer) => new RandomTextureSectionEditor(),
+                nameof(AnimatingTextureModifier) => new AnimatingTextureEditor(),
+                nameof(ConstantAccelerationModifier) => new ConstantAccelerationEditor(),
+                nameof(ConstantColorMultiplierChangeModifier) => new ConstantColorMultiplierEditor(),
+                nameof(ConstantRotationModifier) => new ConstantRotationEditor(),
+                nameof(ConstantSizeModifier) => new ConstantSizeEditor(),
                 _ => null
             };
         }
@@ -81,6 +89,13 @@ namespace Parme.Editor.Ui
                 default:
                     return null;
             }
+        }
+
+        private static SettingsEditorBase GetEditorForModifier(EditorItem item)
+        {
+            return item.ModifierInstance != null
+                ? GetEditor(item.ModifierInstance)
+                : null;
         }
     }
 }

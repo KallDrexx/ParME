@@ -238,6 +238,13 @@ namespace Parme.Editor.Ui.Elements
             Selectable(TextureSections.Count.ToString(), new EditorItem(EditorItemType.TextureSection, null));
 
             ImGui.NextColumn();
+            RightAlignText("Texture:");
+            
+            ImGui.NextColumn();
+            Selectable(EditorObjectNameAndValue(TextureSectionInitializer),
+                new EditorItem(EditorItemType.Initializer, InitializerType.TextureSectionIndex));
+            
+            ImGui.NextColumn();
             RightAlignText("Max Particle Lifetime:"); 
             
             ImGui.NextColumn();
@@ -257,13 +264,6 @@ namespace Parme.Editor.Ui.Elements
             Selectable(EditorObjectNameAndValue(Trigger), 
                 new EditorItem(EditorItemType.Trigger, null));
 
-            ImGui.NextColumn();
-            RightAlignText("Texture:");
-            
-            ImGui.NextColumn();
-            Selectable(EditorObjectNameAndValue(TextureSectionInitializer),
-                new EditorItem(EditorItemType.Initializer, InitializerType.TextureSectionIndex));
-            
             ImGui.NextColumn();
             RightAlignText("Color Multiplier:");
             
