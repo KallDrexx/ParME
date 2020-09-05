@@ -53,7 +53,7 @@ namespace Parme.Editor
         {
             _textureFileLoader = new TextureFileLoader(GraphicsDevice);
             
-            _camera.Origin = new Vector2(-GraphicsDevice.Viewport.Width / 6f, -GraphicsDevice.Viewport.Height / 8f);
+            _camera.Origin = new Vector2(-GraphicsDevice.Viewport.Width / 6f, GraphicsDevice.Viewport.Height / 4f);
             _camera.PositiveYAxisPointsUp = true;
             _camera.PixelWidth = GraphicsDevice.Viewport.Width;
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;

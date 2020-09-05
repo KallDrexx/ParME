@@ -7,6 +7,7 @@ using Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier;
 using Parme.Editor.Ui.Elements.Editors.Initializers.ParticleCount;
 using Parme.Editor.Ui.Elements.Editors.Initializers.Position;
 using Parme.Editor.Ui.Elements.Editors.Initializers.Size;
+using Parme.Editor.Ui.Elements.Editors.Initializers.TextureSectionIndex;
 using Parme.Editor.Ui.Elements.Editors.Initializers.Velocity;
 using Parme.Editor.Ui.Elements.Editors.Triggers;
 
@@ -40,6 +41,8 @@ namespace Parme.Editor.Ui
                 nameof(StaticSizeInitializer) => new StaticSizeEditor(),
                 nameof(RandomRangeVelocityInitializer) => new RandomRangeVelocityEditor(),
                 nameof(RadialVelocityInitializer) => new RadialVelocityEditor(),
+                nameof(SingleTextureInitializer) => new SingleTextureSectionEditor(),
+                nameof(RandomTextureInitializer) => new RandomTextureSectionEditor(),
                 _ => null
             };
         }
@@ -67,6 +70,9 @@ namespace Parme.Editor.Ui
                 
                 case InitializerType.Velocity:
                     return new VelocityEditor();
+                
+                case InitializerType.TextureSectionIndex:
+                    return new TextureSectionIndexEditor();
 
                 case InitializerType.Unspecified:
                 case null:
