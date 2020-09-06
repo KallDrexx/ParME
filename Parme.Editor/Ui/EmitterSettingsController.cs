@@ -27,10 +27,10 @@ namespace Parme.Editor.Ui
         {
             _commandHandler = commandHandler;
             
-            _workbench = new Workbench(commandHandler);
+            _workbench = new Workbench(commandHandler) {IsVisible = false};
             imGuiManager.AddElement(_workbench);
             
-            _activeEditorWindow = new ActiveEditorWindow();
+            _activeEditorWindow = new ActiveEditorWindow() {IsVisible = false};
             imGuiManager.AddElement(_activeEditorWindow);
             
             _workbench.PropertyChanged += WorkbenchOnPropertyChanged;
@@ -62,6 +62,9 @@ namespace Parme.Editor.Ui
 
         public void LoadNewSettings(EmitterSettings settings)
         {
+            _workbench.IsVisible = settings != null;
+            _activeEditorWindow.IsVisible = settings != null;
+            
             _commandHandler.NewStartingEmitter(settings);
 
             UpdateWorkbench(settings);

@@ -13,10 +13,10 @@ namespace Parme.Core
     {
         public float MaxParticleLifeTime { get; set; }
         public string TextureFileName { get; set; }
-        public IReadOnlyList<TextureSectionCoords> TextureSections { get; set; }
+        public IReadOnlyList<TextureSectionCoords> TextureSections { get; set; } = Array.Empty<TextureSectionCoords>();
         public IParticleTrigger Trigger { get; set; }
-        public IReadOnlyList<IParticleInitializer> Initializers { get; set; }
-        public IReadOnlyList<IParticleModifier> Modifiers { get; set; }
+        public IReadOnlyList<IParticleInitializer> Initializers { get; set; } = Array.Empty<IParticleInitializer>();
+        public IReadOnlyList<IParticleModifier> Modifiers { get; set; } = Array.Empty<IParticleModifier>();
 
         public static EmitterSettings FromJson(string json)
         {

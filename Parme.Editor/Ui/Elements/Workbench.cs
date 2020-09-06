@@ -330,7 +330,14 @@ namespace Parme.Editor.Ui.Elements
         private void Selectable(string text, EditorItem item)
         {
             var isSelected = item.Equals(SelectedItem);
-            ImGui.Selectable(text, ref isSelected);
+            
+            // While most emitter properties will have distinct selectable text, new emitters will all display 
+            // "<none>" because they have not had different initializers set up yet.  This causes an issue because
+            // all selectables will have the same identifier of "<none>" and therefore imgui can't properly figure out
+            // what's selectable.  To address this we have to give each selectable an explicit identifier, and for our
+            // purposes the editor item's hash code works for that since it's a struct with consistent hash codes.
+            var label = $"{text}##{item.GetHashCode()}";
+            ImGui.Selectable(label, ref isSelected);
 
             if (isSelected && !item.Equals(SelectedItem))
             {

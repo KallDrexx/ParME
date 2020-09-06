@@ -31,7 +31,7 @@ using Parme.CSharp;
         private readonly Random _random = new Random();
         {2}
 
-        public int MaxParticleLifeTime {{ get; set; }} = {3};
+        public float MaxParticleLifeTime {{ get; set; }} = {3}f;
         
         public string TextureFilePath {{ get; }} = {10};
         {11}        
@@ -121,7 +121,7 @@ using Parme.CSharp;
             var particleCountCode = GetParticleCountCode(settings);
             var textureSectionCode = GetTextureCoordinateMapCode(settings);
 
-            var triggerGenerator = GetCodeGenerator(settings.Trigger.GetType());
+            var triggerGenerator = GetCodeGenerator(settings.Trigger?.GetType());
             
             return string.Format(Template,
                 generateScriptCode ? string.Empty : $"namespace {namespaceName}{Environment.NewLine}{{{Environment.NewLine}",
@@ -130,7 +130,7 @@ using Parme.CSharp;
                 settings.MaxParticleLifeTime,
                 properties,
                 modifiers,
-                triggerGenerator.GenerateExecutionCode(settings.Trigger),
+                triggerGenerator?.GenerateExecutionCode(settings.Trigger),
                 particleCountCode,
                 initializers,
                 generateScriptCode 
@@ -266,6 +266,11 @@ using Parme.CSharp;
 
         private static IGenerateCode GetCodeGenerator(Type type)
         {
+            if (type == null)
+            {
+                return null;
+            }
+            
             if (!CodeGenerators.TryGetValue(type, out var codeGenerator))
             {
                 var message = $"No code generator exists for type {type.FullName}";

@@ -20,8 +20,11 @@ namespace Parme.MonoGame
             {
                 throw new ArgumentNullException(nameof(textureFileLoader));
             }
-            
-            _texture = textureFileLoader.LoadTexture2D(emitterLogic.TextureFilePath);
+
+            _texture = string.IsNullOrWhiteSpace(emitterLogic.TextureFilePath)
+                ? GetDefaultWhiteTexture(graphicsDevice)
+                : textureFileLoader.LoadTexture2D(emitterLogic.TextureFilePath);
+
             _spriteBatch = new SpriteBatch(graphicsDevice);
             _basicEffect = new BasicEffect(graphicsDevice);
         }
@@ -65,11 +68,19 @@ namespace Parme.MonoGame
                         (int) particle.Size.X,
                         (int) particle.Size.Y);
 
-                    ref var section = ref EmitterLogic.TextureSections[particle.TextureSectionIndex];
-                    var sourceRectangle = new Rectangle(section.LeftX, 
-                        section.TopY,
-                        section.RightX - section.LeftX,
-                        section.BottomY - section.TopY);
+                    Rectangle sourceRectangle;
+                    if (EmitterLogic.TextureSections.Length == 0)
+                    {
+                        sourceRectangle = new Rectangle(0, 0, 10, 10);
+                    }
+                    else
+                    {
+                        ref var section = ref EmitterLogic.TextureSections[particle.TextureSectionIndex];
+                        sourceRectangle = new Rectangle(section.LeftX, 
+                            section.TopY,
+                            section.RightX - section.LeftX,
+                            section.BottomY - section.TopY);
+                    }
 
                     var colorModifier = new Color(particle.RedMultiplier,
                         particle.GreenMultiplier,
@@ -88,6 +99,21 @@ namespace Parme.MonoGame
             }
             
             _spriteBatch.End();
+        }
+
+        private static Texture2D GetDefaultWhiteTexture(GraphicsDevice graphicsDevice)
+        {
+            const int size = 10;
+            var pixels = new Color[size * size];
+            for (var x = 0; x < pixels.Length; x++)
+            {
+                pixels[x] = Color.White;
+            }
+            
+            var texture = new Texture2D(graphicsDevice, size, size);
+            texture.SetData(pixels);
+
+            return texture;
         }
     }
 }

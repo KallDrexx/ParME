@@ -12,6 +12,7 @@ using Parme.Core.Modifiers;
 using Parme.Core.Triggers;
 using Parme.CSharp;
 using Parme.CSharp.CodeGen;
+using Parme.Editor.AppOperations;
 using Parme.Editor.Ui;
 using Parme.MonoGame;
 using Vector2 = System.Numerics.Vector2;
@@ -24,6 +25,7 @@ namespace Parme.Editor
         
         private readonly ParticleCamera _camera = new ParticleCamera();
         private readonly SettingsCommandHandler _commandHandler = new SettingsCommandHandler();
+        private readonly AppOperationQueue _appOperationQueue = new AppOperationQueue();
         private ITextureFileLoader _textureFileLoader;
         private MonoGameEmitter _emitter;
         private ImGuiManager _imGuiManager;
@@ -48,6 +50,17 @@ namespace Parme.Editor
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += WindowOnClientSizeChanged;
         }
+        
+        public void EmitterLoadedFromFile(EmitterSettings newEmitter, string filename)
+        {
+            UpdateEmitter(newEmitter);
+            _uiController.NewEmitterSettingsLoaded(newEmitter, filename);
+        }
+
+        public void ErrorMessageRaised(string error)
+        {
+            _uiController.DisplayErrorMessage(error);
+        }
 
         protected override void Initialize()
         {
@@ -59,7 +72,7 @@ namespace Parme.Editor
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
             
             _imGuiManager = new ImGuiManager(new MonoGameImGuiRenderer(this));
-            _uiController = new EditorUiController(_imGuiManager, _commandHandler);
+            _uiController = new EditorUiController(_imGuiManager, _commandHandler, _appOperationQueue);
             _inputHandler = new InputHandler(_uiController, _camera, _commandHandler);
 
             ImGui.GetIO().FontGlobalScale = 1.2f;
@@ -74,11 +87,6 @@ namespace Parme.Editor
             _testTexture = new Texture2D(GraphicsDevice, 10, 10);
             _testTexture.SetData(pixels);
 
-            var settings = GetInitialEmitterSettings();
-            UpdateEmitter(settings);
-            
-            _uiController.NewEmitterSettingsLoaded(settings);
-
             _commandHandler.EmitterUpdated += (sender, emitterSettings) =>
             {
                 _emitterSettingsUpdated = true;
@@ -92,11 +100,16 @@ namespace Parme.Editor
         {
             _secondsSinceLastSettingsChange += (float) gameTime.ElapsedGameTime.TotalSeconds;
 
+            while (_appOperationQueue.TryDequeue(out var appOperation))
+            {
+                appOperation.Run(this);
+            }
+            
             if (_secondsSinceLastSettingsChange > MinSecondsForRecompilingEmitter && _emitterSettingsUpdated)
             {
                 var settings = _commandHandler.GetCurrentSettings();
                 UpdateEmitter(settings);
-                
+
                 _emitterSettingsUpdated = false;
                 _secondsSinceLastSettingsChange = 0;
             }
