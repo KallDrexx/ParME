@@ -304,11 +304,13 @@ namespace Parme.Editor.Ui.Elements
             Selectable("<Add Modifier>", new EditorItem(EditorItemType.NewModifier, null));
             foreach (var modifier in Modifiers.Where(x => x != null))
             {
+                ImGui.PushID($"remove-{modifier.GetType()}");
                 if (ImGui.Button("-"))
                 {
                     ModifierRemovalRequested?.Invoke(this, modifier);
                 }
-                
+                ImGui.PopID();
+
                 ImGui.SameLine();
                 Selectable($"{EditorObjectNameAndValue(modifier)}",
                     new EditorItem(modifier));
