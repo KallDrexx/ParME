@@ -44,6 +44,7 @@ namespace Parme.Editor.Ui
             {
                 var settings = _commandHandler.GetCurrentSettings();
                 UpdateWorkbench(settings);
+                NewEditorItemSelected(_workbench.SelectedItem);
                 UpdateActiveEditor(settings);
                 
                 _emitterChanged = false;
@@ -74,6 +75,7 @@ namespace Parme.Editor.Ui
             {
                 case nameof(Workbench.SelectedItem):
                     NewEditorItemSelected(_workbench.SelectedItem);
+                    UpdateActiveEditor(_commandHandler.GetCurrentSettings());
                     break;
             }
         }
@@ -89,8 +91,6 @@ namespace Parme.Editor.Ui
                 if (editor != null)
                 {
                     _activeEditorWindow.Child = editor;
-
-                    UpdateActiveEditor(_commandHandler.GetCurrentSettings());
                 }
             }
         }
@@ -132,6 +132,16 @@ namespace Parme.Editor.Ui
             {
                 _workbench.Modifiers.Add(modifier);
             }
+            
+            // If the selected item is an item that no longer exists, make sure nothing is selected
+            if (_workbench.SelectedItem?.ModifierInstance != null)
+            {
+                var modifierType = _workbench.SelectedItem.Value.ModifierInstance.GetType();
+                if (settings.Modifiers?.Any(x => x.GetType() == modifierType) != true)
+                {
+                    _workbench.SelectedItem = null;
+                }
+            }
 
             _ignoreChangeNotifications = false;
         }
@@ -145,7 +155,7 @@ namespace Parme.Editor.Ui
             }
         }
 
-        private void WorkbenchOnModifierRemovalRequested(object? sender, IParticleModifier e)
+        private void WorkbenchOnModifierRemovalRequested(object sender, IParticleModifier e)
         {
             var command = new RemoveModifierCommand(e.GetType());
             _commandHandler.Execute(command);
