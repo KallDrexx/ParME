@@ -28,7 +28,7 @@ namespace Parme.Editor.Ui
         {
             return ItemType == other.ItemType && 
                    InitializerType == other.InitializerType && 
-                   Equals(ModifierInstance, other.ModifierInstance);
+                   ModifierInstance?.GetType() == other.ModifierInstance?.GetType();
         }
 
         public override bool Equals(object obj)
