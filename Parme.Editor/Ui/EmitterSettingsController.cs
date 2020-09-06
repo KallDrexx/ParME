@@ -6,6 +6,7 @@ using ImGuiHandler;
 using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
+using Parme.Editor.Commands;
 using Parme.Editor.Ui.Elements;
 
 namespace Parme.Editor.Ui
@@ -33,6 +34,7 @@ namespace Parme.Editor.Ui
             imGuiManager.AddElement(_activeEditorWindow);
             
             _workbench.PropertyChanged += WorkbenchOnPropertyChanged;
+            _workbench.ModifierRemovalRequested += WorkbenchOnModifierRemovalRequested;
             _commandHandler.EmitterUpdated += (sender, settings) => _emitterChanged = true;
         }
 
@@ -141,6 +143,12 @@ namespace Parme.Editor.Ui
                 _activeEditorWindow.Child.CommandHandler = _commandHandler; // Must be first
                 _activeEditorWindow.Child.EmitterSettings = settings;
             }
+        }
+
+        private void WorkbenchOnModifierRemovalRequested(object? sender, IParticleModifier e)
+        {
+            var command = new RemoveModifierCommand(e.GetType());
+            _commandHandler.Execute(command);
         }
     }
 }

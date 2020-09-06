@@ -19,7 +19,7 @@ namespace Parme.Editor.Ui
 
         public EditorItem(IParticleModifier modifierModifierInstance)
         {
-            ItemType = EditorItemType.Modifier;
+            ItemType = EditorItemType.ExistingModifier;
             InitializerType = null;
             ModifierInstance = modifierModifierInstance;
         }

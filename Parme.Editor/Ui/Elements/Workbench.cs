@@ -17,6 +17,7 @@ namespace Parme.Editor.Ui.Elements
         private const int ChildWindowHeightSubtractionFactor = 80;
 
         private readonly SettingsCommandHandler _commandHandler;
+        public event EventHandler<IParticleModifier> ModifierRemovalRequested; 
         
         public Vector2 Position { get; set; }
         public Vector2 Size { get; set; }
@@ -300,8 +301,15 @@ namespace Parme.Editor.Ui.Elements
         {
             ImGui.BeginChild("Modifiers", new Vector2((Size.X / 2) - 30, Size.Y - ChildWindowHeightSubtractionFactor), true);
 
+            Selectable("<Add Modifier>", new EditorItem(EditorItemType.NewModifier, null));
             foreach (var modifier in Modifiers.Where(x => x != null))
             {
+                if (ImGui.Button("-"))
+                {
+                    ModifierRemovalRequested?.Invoke(this, modifier);
+                }
+                
+                ImGui.SameLine();
                 Selectable($"{EditorObjectNameAndValue(modifier)}",
                     new EditorItem(modifier));
             }

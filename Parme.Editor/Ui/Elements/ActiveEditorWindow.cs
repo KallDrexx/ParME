@@ -73,9 +73,14 @@ namespace Parme.Editor.Ui.Elements
                         ImGui.Text("Particle Lifetime");
                         break;
                     
-                    case EditorItemType.Modifier:
+                    case EditorItemType.ExistingModifier:
                         ImGui.Text("Modifier");
                         ImGui.Text($"Type: {ItemBeingEdited.Value.ModifierInstance.EditorShortName}");
+                        break;
+                    
+                    case EditorItemType.NewModifier:
+                        ImGui.Text("Modifier");
+                        ImGui.Text($"Type: New");
                         break;
                     
                     case EditorItemType.Trigger:

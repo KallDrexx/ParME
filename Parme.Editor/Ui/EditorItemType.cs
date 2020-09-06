@@ -8,6 +8,7 @@
         Lifetime,
         Trigger,
         Initializer,
-        Modifier
+        ExistingModifier,
+        NewModifier,
     }
 }
