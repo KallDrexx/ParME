@@ -36,7 +36,7 @@ namespace Parme.Editor.Ui.Elements
                     NewMenuItemClicked?.Invoke(this, EventArgs.Empty);
                 }
 
-                if (ImGui.MenuItem("Open", false))
+                if (ImGui.MenuItem("Open"))
                 {
                     OpenMenuItemClicked?.Invoke(this, EventArgs.Empty);
                 }

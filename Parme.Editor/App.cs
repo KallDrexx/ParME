@@ -22,6 +22,7 @@ namespace Parme.Editor
     public class App : Game
     {
         private const float MinSecondsForRecompilingEmitter = 0.25f;
+        public const string DefaultExtension = ".emitter";
         
         private readonly ParticleCamera _camera = new ParticleCamera();
         private readonly SettingsCommandHandler _commandHandler = new SettingsCommandHandler();

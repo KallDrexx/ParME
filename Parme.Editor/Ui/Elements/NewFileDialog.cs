@@ -63,8 +63,8 @@ namespace Parme.Editor.Ui.Elements
                     var dialog = new SaveFileDialog
                     {
                         AddExtension = true,
-                        DefaultExt = ".emitter",
-                        Filter = "Particle Emitter Definition|*.emitter",
+                        DefaultExt = App.DefaultExtension,
+                        Filter = $"Particle Emitter Definition|*{App.DefaultExtension}",
                         OverwritePrompt = true,
                     };
                     

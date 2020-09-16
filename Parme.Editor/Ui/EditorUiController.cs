@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Numerics;
+using System.Windows.Forms;
 using ImGuiHandler;
 using Parme.Core;
 using Parme.Editor.AppOperations;
@@ -16,6 +17,7 @@ namespace Parme.Editor.Ui
         private readonly AppToolbar _appToolbar;
         private readonly NewFileDialog _newFileDialog;
         private readonly AppOperationQueue _appOperationQueue;
+        private readonly MessagePopup _messagePopup;
 
         public bool AcceptingKeyboardInput => _imGuiManager.AcceptingKeyboardInput;
         public bool AcceptingMouseInput => _imGuiManager.AcceptingMouseInput;
@@ -37,6 +39,9 @@ namespace Parme.Editor.Ui
             _newFileDialog = new NewFileDialog();
             _newFileDialog.CreateButtonClicked += NewFileDialogOnCreateButtonClicked;
             _imGuiManager.AddElement(_newFileDialog);
+            
+            _messagePopup = new MessagePopup();
+            _imGuiManager.AddElement(_messagePopup);
             
             _emitterSettingsController = new EmitterSettingsController(imGuiManager, commandHandler);
             _appToolbar.NewMenuItemClicked += AppToolbarOnNewMenuItemClicked;
@@ -72,6 +77,10 @@ namespace Parme.Editor.Ui
             {
                 _newFileDialog.ErrorMessage = error;
             }
+            else
+            {
+                _messagePopup.Display(error);
+            }
         }
 
         private void AppToolbarOnNewMenuItemClicked(object sender, EventArgs e)
@@ -91,9 +100,19 @@ namespace Parme.Editor.Ui
             _appOperationQueue.Enqueue(new NewEmitterRequested(_newFileDialog.NewFileName, _newFileDialog.SelectedTemplate));
         }
 
-        private void AppToolbarOnOpenMenuItemClicked(object? sender, EventArgs e)
+        private void AppToolbarOnOpenMenuItemClicked(object sender, EventArgs e)
         {
-            
+            var dialog = new OpenFileDialog
+            {
+                DefaultExt = App.DefaultExtension,
+                Filter = $"Particle Emitter Definition|*{App.DefaultExtension}",
+            };
+
+            var result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                _appOperationQueue.Enqueue(new OpenEmitterRequested(dialog.FileName));
+            }
         }
     }
 }
