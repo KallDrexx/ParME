@@ -18,10 +18,17 @@ namespace Parme.Editor.Ui
         private readonly NewFileDialog _newFileDialog;
         private readonly AppOperationQueue _appOperationQueue;
         private readonly MessagePopup _messagePopup;
+        private string _currentFileName;
+        private EmitterSettings _currentEmitter;
 
         public bool AcceptingKeyboardInput => _imGuiManager.AcceptingKeyboardInput;
         public bool AcceptingMouseInput => _imGuiManager.AcceptingMouseInput;
         public Vector3 BackgroundColor => _emitterSettingsController.BackgroundColor;
+
+        public bool UnsavedChangesPresent
+        {
+            set => _appToolbar.UnsavedChangesPresent = value;
+        }
 
         public EditorUiController(ImGuiManager imGuiManager, 
             SettingsCommandHandler commandHandler, 
@@ -46,6 +53,7 @@ namespace Parme.Editor.Ui
             _emitterSettingsController = new EmitterSettingsController(imGuiManager, commandHandler);
             _appToolbar.NewMenuItemClicked += AppToolbarOnNewMenuItemClicked;
             _appToolbar.OpenMenuItemClicked += AppToolbarOnOpenMenuItemClicked;
+            _appToolbar.SaveMenuItemClicked += AppToolbarOnSaveMenuItemClicked;
         }
 
         public void Update()
@@ -65,15 +73,26 @@ namespace Parme.Editor.Ui
 
         public void NewEmitterSettingsLoaded(EmitterSettings settings, string filename = null)
         {
-            _emitterSettingsController.LoadNewSettings(settings);
-            _newFileDialog.ClosePopup();
-            _appToolbar.CurrentlyOpenFileName = filename;
-            _appToolbar.UnsavedChangesPresent = false;
+            if (settings != null)
+            {
+                _currentEmitter = settings;
+            
+                _emitterSettingsController.LoadNewSettings(settings);
+                _newFileDialog.ClosePopup();
+                _appToolbar.UnsavedChangesPresent = false;
+            }
+
+            if (filename != null)
+            {
+                _currentFileName = filename;
+                _appToolbar.CurrentlyOpenFileName = filename;
+            }
         }
 
-        public void EmitterSettingsChanged(bool markChangeAsUnsaved)
+        public void EmitterSettingsChanged(EmitterSettings settings)
         {
-            _appToolbar.UnsavedChangesPresent = markChangeAsUnsaved;
+            _currentEmitter = settings;
+            UnsavedChangesPresent = true;
         }
 
         public void DisplayErrorMessage(string error)
@@ -119,6 +138,32 @@ namespace Parme.Editor.Ui
             {
                 _appOperationQueue.Enqueue(new OpenEmitterRequested(dialog.FileName));
             }
+        }
+
+        private void AppToolbarOnSaveMenuItemClicked(object sender, bool selectFileName)
+        {
+            var filename = _currentFileName;
+            if (selectFileName)
+            {
+                var dialog = new SaveFileDialog
+                {
+                    AddExtension = true,
+                    DefaultExt = App.DefaultExtension,
+                    Filter = $"Particle Emitter Definition|*{App.DefaultExtension}",
+                    OverwritePrompt = true,
+                    FileName = Path.GetFileName(_currentFileName),
+                    InitialDirectory = Path.GetDirectoryName(_currentFileName),
+                };
+
+                if (dialog.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                filename = dialog.FileName;
+            }
+            
+            _appOperationQueue.Enqueue(new SaveEmitterRequested(filename, _currentEmitter));
         }
     }
 }

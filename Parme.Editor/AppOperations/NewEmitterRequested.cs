@@ -18,7 +18,7 @@ namespace Parme.Editor.AppOperations
             Template = template;
         }
         
-        public void Run(App app)
+        public AppState Run()
         {
             var emitter = GetEmitterForTemplate(Template);
             var emitterJson = emitter.ToJson();
@@ -29,13 +29,18 @@ namespace Parme.Editor.AppOperations
             }
             catch (IOException exception)
             {
-                var message = $"Could not create file '{FileName}': {exception.Message}";
-                app.ErrorMessageRaised(message);
-                
-                return;
+                return new AppState
+                {
+                    NewErrorMessage = $"Could not create file '{FileName}': {exception.Message}",
+                };
             }
             
-            app.EmitterLoadedFromFile(emitter, FileName);
+            return new AppState
+            {
+                UpdatedSettings = emitter,
+                UpdatedFileName = FileName,
+                ResetUnsavedChangesMarker = true,
+            };
         }
 
         private static EmitterSettings GetEmitterForTemplate(NewEmitterTemplate template)

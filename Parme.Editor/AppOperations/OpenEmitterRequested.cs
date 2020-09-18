@@ -13,7 +13,7 @@ namespace Parme.Editor.AppOperations
             FileName = fileName;
         }
         
-        public void Run(App app)
+        public AppState Run()
         {
             string json;
             try
@@ -22,9 +22,10 @@ namespace Parme.Editor.AppOperations
             }
             catch (Exception exception)
             {
-                app.ErrorMessageRaised($"Failed to load file '{FileName}': {exception.Message}");
-                
-                return;
+                return new AppState
+                {
+                    NewErrorMessage = $"Failed to load file '{FileName}': {exception.Message}",
+                };
             }
 
             EmitterSettings emitter;
@@ -34,13 +35,18 @@ namespace Parme.Editor.AppOperations
             }
             catch (Exception exception)
             {
-                var message = $"File '{FileName}' did not contain valid emitter details: {exception.Message}";
-                app.ErrorMessageRaised(message);
-
-                return;
+                return new AppState
+                {
+                    NewErrorMessage = $"File '{FileName}' did not contain valid emitter details: {exception.Message}",
+                };
             }
-            
-            app.EmitterLoadedFromFile(emitter, FileName);
+
+            return new AppState
+            {
+                UpdatedSettings = emitter,
+                UpdatedFileName = FileName,
+                ResetUnsavedChangesMarker = true,
+            };
         }
     }
 }

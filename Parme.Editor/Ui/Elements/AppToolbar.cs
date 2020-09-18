@@ -7,7 +7,8 @@ namespace Parme.Editor.Ui.Elements
     public class AppToolbar : ImGuiElement
     {
         public event EventHandler NewMenuItemClicked;
-        public event EventHandler OpenMenuItemClicked; 
+        public event EventHandler OpenMenuItemClicked;
+        public event EventHandler<bool> SaveMenuItemClicked; 
         
         public string CurrentlyOpenFileName { get; set; }
         public bool UnsavedChangesPresent { get; set; }
@@ -47,9 +48,17 @@ namespace Parme.Editor.Ui.Elements
                 {
                     OpenMenuItemClicked?.Invoke(this, EventArgs.Empty);
                 }
-                
-                ImGui.MenuItem("Save", false);
-                ImGui.MenuItem("Save As", false);
+
+                var canSave = !string.IsNullOrWhiteSpace(CurrentlyOpenFileName);
+                if (ImGui.MenuItem("Save", canSave))
+                {
+                    SaveMenuItemClicked?.Invoke(this, false);
+                }
+
+                if (ImGui.MenuItem("Save As", canSave))
+                {
+                    SaveMenuItemClicked?.Invoke(this, true);
+                }
                 
                 ImGui.Separator();
                 

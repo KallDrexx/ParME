@@ -34,7 +34,7 @@ namespace Parme.Editor
         private InputHandler _inputHandler;
         private float _secondsSinceLastSettingsChange;
         private bool _emitterSettingsUpdated;
-        private bool _markNextChangeAsUnsaved;
+        private bool _hasUnsavedChanges;
 
         private Texture2D _testTexture;
         
@@ -51,18 +51,6 @@ namespace Parme.Editor
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += WindowOnClientSizeChanged;
-        }
-        
-        public void EmitterLoadedFromFile(EmitterSettings newEmitter, string filename)
-        {
-            _markNextChangeAsUnsaved = false;
-            UpdateEmitter(newEmitter);
-            _uiController.NewEmitterSettingsLoaded(newEmitter, filename);
-        }
-
-        public void ErrorMessageRaised(string error)
-        {
-            _uiController.DisplayErrorMessage(error);
         }
 
         protected override void Initialize()
@@ -103,22 +91,37 @@ namespace Parme.Editor
         {
             _secondsSinceLastSettingsChange += (float) gameTime.ElapsedGameTime.TotalSeconds;
 
+            var unsavedChangesResetThisFrame = false;
             while (_appOperationQueue.TryDequeue(out var appOperation))
             {
-                appOperation.Run(this);
+                var appState = appOperation.Run();
+                if (appState != null)
+                {
+                    if (appState.ResetUnsavedChangesMarker)
+                    {
+                        unsavedChangesResetThisFrame = true;
+                    }
+                    
+                    UpdatedAppState(appState);
+                }
             }
             
             if (_secondsSinceLastSettingsChange > MinSecondsForRecompilingEmitter && _emitterSettingsUpdated)
             {
                 var settings = _commandHandler.GetCurrentSettings();
                 UpdateEmitter(settings);
-                _uiController.EmitterSettingsChanged(_markNextChangeAsUnsaved);
+                _uiController.EmitterSettingsChanged(settings);
 
                 _emitterSettingsUpdated = false;
                 _secondsSinceLastSettingsChange = 0;
-                _markNextChangeAsUnsaved = true;
+
+                if (!unsavedChangesResetThisFrame)
+                {
+                    _hasUnsavedChanges = true;
+                }
             }
-            
+
+            _uiController.UnsavedChangesPresent = _hasUnsavedChanges;
             _commandHandler.UpdateTime((float) gameTime.ElapsedGameTime.TotalSeconds);
             _uiController.Update();
             _inputHandler.Update();
@@ -142,85 +145,33 @@ namespace Parme.Editor
             base.Draw(gameTime);
         }
 
-        private static EmitterSettings GetInitialEmitterSettings()
+        private void UpdatedAppState(AppState appState)
         {
-            var trigger = new TimeElapsedTrigger{Frequency = 0.01f};
-            var initializers = new IParticleInitializer[]
+            if (appState == null)
             {
-                new RandomParticleCountInitializer {MinimumToSpawn = 0, MaximumToSpawn = 5},
-                new StaticColorInitializer
-                {
-                    // Orange
-                    RedMultiplier = 1.0f,
-                    GreenMultiplier = 165f / 255f,
-                    BlueMultiplier = 0f,
-                    AlphaMultiplier = 1f
-                },
+                throw new ArgumentNullException(nameof(appState));
+            }
 
-                new RandomRangeVelocityInitializer
-                {
-                    MinXVelocity = 0,
-                    MaxXVelocity = 0,
-                    MinYVelocity = 2,
-                    MaxYVelocity = 5,
-                },
-
-                new RandomRegionPositionInitializer
-                {
-                    MinXOffset = -50,
-                    MaxXOffset = 50,
-                    MinYOffset = -50,
-                    MaxYOffset = -50,
-                },
-
-                new StaticSizeInitializer
-                {
-                    Width = 50,
-                    Height = 50,
-                },
-                
-                new RandomTextureInitializer(), 
-            };
-
-            var modifiers = new IParticleModifier[]
+            if (!string.IsNullOrWhiteSpace(appState.NewErrorMessage))
             {
-                new ConstantRotationModifier {DegreesPerSecond = 100f},
-                new ConstantAccelerationModifier
-                {
-                    XAcceleration = -5,
-                    YAcceleration = 5,
-                },
+                _uiController.DisplayErrorMessage(appState.NewErrorMessage);
+            }
 
-                new ConstantSizeModifier
-                {
-                    WidthChangePerSecond = -10,
-                    HeightChangePerSecond = -10,
-                },
-
-                new ConstantColorMultiplierChangeModifier
-                {
-                    RedMultiplierChangePerSecond = -1,
-                    GreenMultiplierChangePerSecond = -1,
-                    BlueMultiplierChangePerSecond = -1,
-                    AlphaMultiplierChangePerSecond = -1,
-                },
-            };
-
-            return new EmitterSettings
+            if (appState.UpdatedSettings != null)
             {
-                Trigger = trigger,
-                Initializers = initializers,
-                Modifiers = modifiers,
-                MaxParticleLifeTime = 1f,
-                TextureFileName = "SampleParticles.png",
-                TextureSections = new []
-                {
-                    new TextureSectionCoords(0, 0, 15, 15),
-                    new TextureSectionCoords(16, 0, 31, 15),
-                    new TextureSectionCoords(32, 0, 47, 15),
-                    new TextureSectionCoords(48, 0, 63, 15),
-                }
-            };
+                UpdateEmitter(appState.UpdatedSettings);
+                _uiController.NewEmitterSettingsLoaded(appState.UpdatedSettings, appState.UpdatedFileName);
+                _uiController.UnsavedChangesPresent = false;
+            } 
+            else if (!string.IsNullOrWhiteSpace(appState.UpdatedFileName))
+            {
+                _uiController.NewEmitterSettingsLoaded(null, appState.UpdatedFileName);
+            }
+
+            if (appState.ResetUnsavedChangesMarker)
+            {
+                _hasUnsavedChanges = false;
+            }
         }
 
         private void UpdateEmitter(EmitterSettings settings)
