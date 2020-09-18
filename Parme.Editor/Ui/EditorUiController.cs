@@ -68,6 +68,12 @@ namespace Parme.Editor.Ui
             _emitterSettingsController.LoadNewSettings(settings);
             _newFileDialog.ClosePopup();
             _appToolbar.CurrentlyOpenFileName = filename;
+            _appToolbar.UnsavedChangesPresent = false;
+        }
+
+        public void EmitterSettingsChanged(bool markChangeAsUnsaved)
+        {
+            _appToolbar.UnsavedChangesPresent = markChangeAsUnsaved;
         }
 
         public void DisplayErrorMessage(string error)

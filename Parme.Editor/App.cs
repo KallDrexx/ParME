@@ -34,6 +34,7 @@ namespace Parme.Editor
         private InputHandler _inputHandler;
         private float _secondsSinceLastSettingsChange;
         private bool _emitterSettingsUpdated;
+        private bool _markNextChangeAsUnsaved;
 
         private Texture2D _testTexture;
         
@@ -54,6 +55,7 @@ namespace Parme.Editor
         
         public void EmitterLoadedFromFile(EmitterSettings newEmitter, string filename)
         {
+            _markNextChangeAsUnsaved = false;
             UpdateEmitter(newEmitter);
             _uiController.NewEmitterSettingsLoaded(newEmitter, filename);
         }
@@ -110,9 +112,11 @@ namespace Parme.Editor
             {
                 var settings = _commandHandler.GetCurrentSettings();
                 UpdateEmitter(settings);
+                _uiController.EmitterSettingsChanged(_markNextChangeAsUnsaved);
 
                 _emitterSettingsUpdated = false;
                 _secondsSinceLastSettingsChange = 0;
+                _markNextChangeAsUnsaved = true;
             }
             
             _commandHandler.UpdateTime((float) gameTime.ElapsedGameTime.TotalSeconds);

@@ -10,6 +10,7 @@ namespace Parme.Editor.Ui.Elements
         public event EventHandler OpenMenuItemClicked; 
         
         public string CurrentlyOpenFileName { get; set; }
+        public bool UnsavedChangesPresent { get; set; }
         
         protected override void CustomRender()
         {
@@ -21,6 +22,12 @@ namespace Parme.Editor.Ui.Elements
                 {
                     ImGui.SameLine();
                     ImGui.Text($" - {CurrentlyOpenFileName}");
+
+                    if (UnsavedChangesPresent)
+                    {
+                        ImGui.SameLine();
+                        ImGui.Text("*");
+                    }
                 }
 
                 ImGui.EndMainMenuBar();
