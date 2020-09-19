@@ -53,8 +53,6 @@ namespace Parme.Editor
 
             _minimumStackSize = _commands.Count;
             _secondsSinceLastCommand = SecondsWithinDebounce * 2; // make sure we are out of debounce time
-            
-            EmitterUpdated?.Invoke(this, GetCurrentSettings());
         }
 
         public void Execute(ICommand command)
