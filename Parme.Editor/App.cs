@@ -60,9 +60,16 @@ namespace Parme.Editor
             _camera.PositiveYAxisPointsUp = true;
             _camera.PixelWidth = GraphicsDevice.Viewport.Width;
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
+
+            var monoGameImGuiRenderer = new MonoGameImGuiRenderer(this);
+            _imGuiManager = new ImGuiManager(monoGameImGuiRenderer);
+            _uiController = new EditorUiController(_imGuiManager, 
+                _commandHandler, 
+                _appOperationQueue, 
+                _applicationState, 
+                _textureFileLoader, 
+                monoGameImGuiRenderer);
             
-            _imGuiManager = new ImGuiManager(new MonoGameImGuiRenderer(this));
-            _uiController = new EditorUiController(_imGuiManager, _commandHandler, _appOperationQueue, _applicationState);
             _inputHandler = new InputHandler(_uiController, _camera, _commandHandler);
 
             ImGui.GetIO().FontGlobalScale = 1.2f;

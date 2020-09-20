@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Numerics;
 using System.Windows.Forms;
 using ImGuiNET;
 using Parme.Editor.AppOperations;
@@ -10,6 +11,7 @@ namespace Parme.Editor.Ui.Elements.Editors
     public class TextureFileEditor : SettingsEditorBase
     {
         private string _currentFileName;
+        private IntPtr? _imguiTextureId;
 
         [SelfManagedProperty]
         private string SelectedFileName
@@ -17,7 +19,15 @@ namespace Parme.Editor.Ui.Elements.Editors
             get => Get<string>();
             set => Set(value);
         }
-        
+
+        public override void Dispose()
+        {
+            if (_imguiTextureId != null)
+            {
+                MonoGameImGuiRenderer.UnbindTexture(_imguiTextureId.Value);
+            }
+        }
+
         protected override void CustomRender()
         {
             var display = !string.IsNullOrWhiteSpace(_currentFileName)
@@ -30,11 +40,24 @@ namespace Parme.Editor.Ui.Elements.Editors
             {
                 HandleSelectFile();
             }
+            
+            ImGui.NewLine();
+
+            if (_imguiTextureId != null)
+            {
+                ImGui.Image(_imguiTextureId.Value, new Vector2(250, 250));
+            }
         }
 
         protected override void OnNewSettingsLoaded()
         {
             _currentFileName = EmitterSettings.TextureFileName;
+
+            if (!string.IsNullOrWhiteSpace(_currentFileName))
+            {
+                var texture = TextureFileLoader.LoadTexture2D(_currentFileName);
+                _imguiTextureId = MonoGameImGuiRenderer.BindTexture(texture);
+            }
         }
 
         protected override void OnSelfManagedPropertyChanged(string propertyName)

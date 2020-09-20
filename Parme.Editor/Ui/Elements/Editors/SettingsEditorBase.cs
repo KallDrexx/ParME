@@ -1,21 +1,30 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using ImGuiHandler;
+using ImGuiHandler.MonoGame;
 using Parme.Core;
 using Parme.Editor.AppOperations;
+using Parme.MonoGame;
 
 namespace Parme.Editor.Ui.Elements.Editors
 {
-    public abstract class SettingsEditorBase : ImGuiElement
+    public abstract class SettingsEditorBase : ImGuiElement, IDisposable
     {
         public SettingsCommandHandler CommandHandler { get; set; }
         public AppOperationQueue AppOperationQueue { get; set; }
         public ApplicationState ApplicationState { get; set; }
+        public ITextureFileLoader TextureFileLoader { get; set; }
+        public MonoGameImGuiRenderer MonoGameImGuiRenderer { get; set; }
         
         public EmitterSettings EmitterSettings
         {
             get => Get<EmitterSettings>();
             set => Set(value);
+        }
+
+        public virtual void Dispose()
+        {
         }
 
         protected SettingsEditorBase()

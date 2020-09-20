@@ -3,12 +3,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using ImGuiHandler;
+using ImGuiHandler.MonoGame;
 using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
 using Parme.Editor.AppOperations;
 using Parme.Editor.Commands;
 using Parme.Editor.Ui.Elements;
+using Parme.MonoGame;
 
 namespace Parme.Editor.Ui
 {
@@ -21,6 +23,8 @@ namespace Parme.Editor.Ui
         private readonly Workbench _workbench;
         private readonly ActiveEditorWindow _activeEditorWindow;
         private readonly ApplicationState _applicationState;
+        private readonly ITextureFileLoader _textureFileLoader;
+        private readonly MonoGameImGuiRenderer _monoGameImGuiRenderer;
         private bool _ignoreChangeNotifications;
         private float _lastEmitterChangedAt = -1;
 
@@ -29,11 +33,15 @@ namespace Parme.Editor.Ui
         public EmitterSettingsController(ImGuiManager imGuiManager, 
             SettingsCommandHandler commandHandler, 
             ApplicationState applicationState, 
-            AppOperationQueue appOperationQueue)
+            AppOperationQueue appOperationQueue, 
+            ITextureFileLoader textureFileLoader, 
+            MonoGameImGuiRenderer monoGameImGuiRenderer)
         {
             _commandHandler = commandHandler;
             _applicationState = applicationState;
             _appOperationQueue = appOperationQueue;
+            _textureFileLoader = textureFileLoader;
+            _monoGameImGuiRenderer = monoGameImGuiRenderer;
 
             _workbench = new Workbench(commandHandler) {IsVisible = false};
             imGuiManager.AddElement(_workbench);
@@ -93,6 +101,8 @@ namespace Parme.Editor.Ui
         private void NewEditorItemSelected(EditorItem? item)
         {
             _activeEditorWindow.ItemBeingEdited = item;
+            
+            _activeEditorWindow.Child?.Dispose();
             _activeEditorWindow.Child = null;
 
             if (item != null)
@@ -163,6 +173,8 @@ namespace Parme.Editor.Ui
                 _activeEditorWindow.Child.CommandHandler = _commandHandler; // Must be first
                 _activeEditorWindow.Child.AppOperationQueue = _appOperationQueue;
                 _activeEditorWindow.Child.ApplicationState = _applicationState;
+                _activeEditorWindow.Child.TextureFileLoader = _textureFileLoader;
+                _activeEditorWindow.Child.MonoGameImGuiRenderer = _monoGameImGuiRenderer;
                 _activeEditorWindow.Child.EmitterSettings = settings;
             }
         }

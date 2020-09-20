@@ -3,8 +3,10 @@ using System.IO;
 using System.Numerics;
 using System.Windows.Forms;
 using ImGuiHandler;
+using ImGuiHandler.MonoGame;
 using Parme.Editor.AppOperations;
 using Parme.Editor.Ui.Elements;
+using Parme.MonoGame;
 
 namespace Parme.Editor.Ui
 {
@@ -26,7 +28,9 @@ namespace Parme.Editor.Ui
         public EditorUiController(ImGuiManager imGuiManager, 
             SettingsCommandHandler commandHandler, 
             AppOperationQueue appOperationQueue, 
-            ApplicationState applicationState)
+            ApplicationState applicationState, 
+            ITextureFileLoader textureFileLoader,
+            MonoGameImGuiRenderer monoGameImGuiRenderer)
         {
             _imGuiManager = imGuiManager;
             _appOperationQueue = appOperationQueue;
@@ -47,7 +51,13 @@ namespace Parme.Editor.Ui
             _messagePopup.ModalClosed += MessagePopupOnModalClosed;
             _imGuiManager.AddElement(_messagePopup);
             
-            _emitterSettingsController = new EmitterSettingsController(imGuiManager, commandHandler, applicationState, appOperationQueue);
+            _emitterSettingsController = new EmitterSettingsController(imGuiManager, 
+                commandHandler, 
+                applicationState, 
+                appOperationQueue, 
+                textureFileLoader,
+                monoGameImGuiRenderer);
+            
             _appToolbar.NewMenuItemClicked += AppToolbarOnNewMenuItemClicked;
             _appToolbar.OpenMenuItemClicked += AppToolbarOnOpenMenuItemClicked;
             _appToolbar.SaveMenuItemClicked += AppToolbarOnSaveMenuItemClicked;
