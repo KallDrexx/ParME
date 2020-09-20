@@ -20,6 +20,7 @@ namespace Parme.Editor.Ui
         private readonly ActiveEditorWindow _activeEditorWindow;
         private readonly ApplicationState _applicationState;
         private bool _ignoreChangeNotifications;
+        private float _lastEmitterChangedAt = -1;
 
         public Vector3 BackgroundColor => _workbench.BackgroundColor;
 
@@ -46,10 +47,15 @@ namespace Parme.Editor.Ui
             {
                 _workbench.IsVisible = true;
                 _activeEditorWindow.IsVisible = true;
-                
-                UpdateWorkbench(_applicationState.ActiveEmitter);
-                NewEditorItemSelected(_workbench.SelectedItem);
-                UpdateActiveEditor(_applicationState.ActiveEmitter);
+
+                if (_lastEmitterChangedAt < _applicationState.TimeLastEmitterUpdated)
+                {
+                    UpdateWorkbench(_applicationState.ActiveEmitter);
+                    NewEditorItemSelected(_workbench.SelectedItem);
+                    UpdateActiveEditor(_applicationState.ActiveEmitter);
+
+                    _lastEmitterChangedAt = _applicationState.TimeLastEmitterUpdated;
+                }
             }
             else
             {
