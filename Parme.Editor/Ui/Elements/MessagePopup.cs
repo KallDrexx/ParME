@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using ImGuiHandler;
 using ImGuiNET;
 
@@ -11,6 +12,8 @@ namespace Parme.Editor.Ui.Elements
         private bool _openRequested;
         private bool _isOpen;
         private string _message;
+
+        public event EventHandler ModalClosed;
 
         public void Display(string message)
         {
@@ -29,7 +32,8 @@ namespace Parme.Editor.Ui.Elements
                 _isOpen = true;
                 _openRequested = false;
             }
-            
+
+            var wasOpen = _isOpen;
             ImGui.SetNextWindowSize(new Vector2(700, 500));
             if (ImGui.BeginPopupModal(PopupLabel, ref _isOpen, ImGuiWindowFlags.Modal))
             {
@@ -45,6 +49,11 @@ namespace Parme.Editor.Ui.Elements
                 }
                 
                 ImGui.EndPopup();
+            }
+
+            if (wasOpen && !_isOpen)
+            {
+                ModalClosed?.Invoke(this, EventArgs.Empty);
             }
         }
     }

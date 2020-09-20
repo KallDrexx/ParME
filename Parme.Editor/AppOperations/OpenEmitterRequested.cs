@@ -13,7 +13,7 @@ namespace Parme.Editor.AppOperations
             FileName = fileName;
         }
         
-        public AppState Run()
+        public AppOperationResult Run()
         {
             string json;
             try
@@ -22,7 +22,7 @@ namespace Parme.Editor.AppOperations
             }
             catch (Exception exception)
             {
-                return new AppState
+                return new AppOperationResult
                 {
                     NewErrorMessage = $"Failed to load file '{FileName}': {exception.Message}",
                 };
@@ -35,13 +35,13 @@ namespace Parme.Editor.AppOperations
             }
             catch (Exception exception)
             {
-                return new AppState
+                return new AppOperationResult
                 {
                     NewErrorMessage = $"File '{FileName}' did not contain valid emitter details: {exception.Message}",
                 };
             }
 
-            return new AppState
+            return new AppOperationResult
             {
                 UpdatedSettings = emitter,
                 UpdatedFileName = FileName,

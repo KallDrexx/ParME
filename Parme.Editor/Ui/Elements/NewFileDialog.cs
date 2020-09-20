@@ -15,6 +15,7 @@ namespace Parme.Editor.Ui.Elements
         private bool _isOpen;
 
         public event EventHandler CreateButtonClicked;
+        public event EventHandler ModalClosed;
 
         [HasTextBuffer(256)]
         public string NewFileName
@@ -48,7 +49,8 @@ namespace Parme.Editor.Ui.Elements
                 _openRequested = false;
                 _isOpen = true;
             }
-            
+
+            var wasOpen = _isOpen;
             if (ImGui.BeginPopupModal(PopupLabel, ref _isOpen, ImGuiWindowFlags.AlwaysAutoResize))
             {
                 ImGui.Text("File Name:");
@@ -93,6 +95,11 @@ namespace Parme.Editor.Ui.Elements
                 }
             
                 ImGui.EndPopup();
+            }
+
+            if (wasOpen && !_isOpen)
+            {
+                ModalClosed?.Invoke(this, EventArgs.Empty);
             }
         }
     }

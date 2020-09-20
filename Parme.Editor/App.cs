@@ -7,9 +7,6 @@ using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Parme.Core;
-using Parme.Core.Initializers;
-using Parme.Core.Modifiers;
-using Parme.Core.Triggers;
 using Parme.CSharp;
 using Parme.CSharp.CodeGen;
 using Parme.Editor.AppOperations;
@@ -25,21 +22,23 @@ namespace Parme.Editor
         public const string DefaultExtension = ".emitter";
         
         private readonly ParticleCamera _camera = new ParticleCamera();
-        private readonly SettingsCommandHandler _commandHandler = new SettingsCommandHandler();
-        private readonly AppOperationQueue _appOperationQueue = new AppOperationQueue();
+        private readonly ApplicationState _applicationState = new ApplicationState();
+        private readonly AppOperationQueue _appOperationQueue;
+        private readonly SettingsCommandHandler _commandHandler;
         private ITextureFileLoader _textureFileLoader;
         private MonoGameEmitter _emitter;
         private ImGuiManager _imGuiManager;
         private EditorUiController _uiController;
         private InputHandler _inputHandler;
-        private float _secondsSinceLastSettingsChange;
-        private bool _emitterSettingsUpdated;
-        private bool _hasUnsavedChanges;
+        private float _lastProcessedEmitterChangeTime;
 
         private Texture2D _testTexture;
         
         public App()
         {
+            _appOperationQueue = new AppOperationQueue();
+            _commandHandler = new SettingsCommandHandler(_appOperationQueue);
+            
             // ReSharper disable once ObjectCreationAsStatement
             new GraphicsDeviceManager(this)
             {
@@ -63,7 +62,7 @@ namespace Parme.Editor
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
             
             _imGuiManager = new ImGuiManager(new MonoGameImGuiRenderer(this));
-            _uiController = new EditorUiController(_imGuiManager, _commandHandler, _appOperationQueue);
+            _uiController = new EditorUiController(_imGuiManager, _commandHandler, _appOperationQueue, _applicationState);
             _inputHandler = new InputHandler(_uiController, _camera, _commandHandler);
 
             ImGui.GetIO().FontGlobalScale = 1.2f;
@@ -78,50 +77,35 @@ namespace Parme.Editor
             _testTexture = new Texture2D(GraphicsDevice, 10, 10);
             _testTexture.SetData(pixels);
 
-            _commandHandler.EmitterUpdated += (sender, emitterSettings) =>
-            {
-                _emitterSettingsUpdated = true;
-                _secondsSinceLastSettingsChange = 0;
-            };
-
             base.Initialize();
         }
 
         protected override void Update(GameTime gameTime)
         {
-            _secondsSinceLastSettingsChange += (float) gameTime.ElapsedGameTime.TotalSeconds;
+            _applicationState.UpdateTotalTime((float) gameTime.TotalGameTime.TotalSeconds);
 
-            var unsavedChangesResetThisFrame = false;
             while (_appOperationQueue.TryDequeue(out var appOperation))
             {
-                var appState = appOperation.Run();
-                if (appState != null)
+                var operationResult = appOperation.Run();
+                _applicationState.Apply(operationResult);
+            }
+
+            // Only update the emitter if it's been updated since the last time we have processed it
+            // and we have waited the debounce period
+            if (Math.Abs(_lastProcessedEmitterChangeTime - _applicationState.TimeLastEmitterUpdated) > 0.0001f &&
+                gameTime.TotalGameTime.TotalSeconds - _applicationState.TimeLastEmitterUpdated > MinSecondsForRecompilingEmitter)
+            {
+                var settings = _applicationState.ActiveEmitter;
+                if (_applicationState.EmitterUpdatedFromFileLoad)
                 {
-                    if (appState.ResetUnsavedChangesMarker)
-                    {
-                        unsavedChangesResetThisFrame = true;
-                    }
-                    
-                    UpdatedAppState(appState);
+                    _commandHandler.NewStartingEmitter(settings);
                 }
+                
+                UpdateEmitter(settings);
+                
+                _lastProcessedEmitterChangeTime = _applicationState.TimeLastEmitterUpdated;
             }
             
-            if (_secondsSinceLastSettingsChange > MinSecondsForRecompilingEmitter && _emitterSettingsUpdated)
-            {
-                var settings = _commandHandler.GetCurrentSettings();
-                UpdateEmitter(settings);
-                _uiController.EmitterSettingsChanged(settings);
-
-                _emitterSettingsUpdated = false;
-                _secondsSinceLastSettingsChange = 0;
-
-                if (!unsavedChangesResetThisFrame)
-                {
-                    _hasUnsavedChanges = true;
-                }
-            }
-
-            _uiController.UnsavedChangesPresent = _hasUnsavedChanges;
             _commandHandler.UpdateTime((float) gameTime.ElapsedGameTime.TotalSeconds);
             _uiController.Update();
             _inputHandler.Update();
@@ -143,35 +127,6 @@ namespace Parme.Editor
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
             base.Draw(gameTime);
-        }
-
-        private void UpdatedAppState(AppState appState)
-        {
-            if (appState == null)
-            {
-                throw new ArgumentNullException(nameof(appState));
-            }
-
-            if (!string.IsNullOrWhiteSpace(appState.NewErrorMessage))
-            {
-                _uiController.DisplayErrorMessage(appState.NewErrorMessage);
-            }
-
-            if (appState.UpdatedSettings != null)
-            {
-                UpdateEmitter(appState.UpdatedSettings);
-                _uiController.NewEmitterSettingsLoaded(appState.UpdatedSettings, appState.UpdatedFileName);
-                _uiController.UnsavedChangesPresent = false;
-            } 
-            else if (!string.IsNullOrWhiteSpace(appState.UpdatedFileName))
-            {
-                _uiController.NewEmitterSettingsLoaded(null, appState.UpdatedFileName);
-            }
-
-            if (appState.ResetUnsavedChangesMarker)
-            {
-                _hasUnsavedChanges = false;
-            }
         }
 
         private void UpdateEmitter(EmitterSettings settings)

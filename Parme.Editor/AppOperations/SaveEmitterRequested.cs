@@ -15,7 +15,7 @@ namespace Parme.Editor.AppOperations
             EmitterSettings = emitterSettings;
         }
 
-        public AppState Run()
+        public AppOperationResult Run()
         {
             if (string.IsNullOrWhiteSpace(FileName))
             {
@@ -25,7 +25,7 @@ namespace Parme.Editor.AppOperations
             if (EmitterSettings == null)
             {
                 // Nothing to save
-                return new AppState();
+                return new AppOperationResult();
             }
 
             var backupFileName = FileName + ".bak";
@@ -47,13 +47,13 @@ namespace Parme.Editor.AppOperations
             }
             catch (Exception exception)
             {
-                return new AppState
+                return new AppOperationResult
                 {
                     NewErrorMessage = $"Failed to save emitter: {exception.Message}",
                 };
             }
 
-            return new AppState
+            return new AppOperationResult
             {
                 ResetUnsavedChangesMarker = true,
                 UpdatedFileName = FileName,

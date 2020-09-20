@@ -4,6 +4,7 @@ using System.Linq;
 using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
+using Parme.Editor.AppOperations;
 using Parme.Editor.Commands;
 
 namespace Parme.Editor
@@ -14,15 +15,16 @@ namespace Parme.Editor
         
         private readonly List<ICommand> _commands = new List<ICommand>();
         private readonly Stack<ICommand> _redoStack = new Stack<ICommand>();
+        private readonly AppOperationQueue _appOperationQueue;
         private int _minimumStackSize;
         private float _secondsSinceLastCommand;
-
-        public event EventHandler<EmitterSettings> EmitterUpdated; 
+        
         public bool CanUndo => _commands.Count > _minimumStackSize;
         public bool CanRedo => _redoStack.Count > 0;
 
-        public SettingsCommandHandler()
+        public SettingsCommandHandler(AppOperationQueue appOperationQueue)
         {
+            _appOperationQueue = appOperationQueue;
             NewStartingEmitter(new EmitterSettings());
         }
 
@@ -73,7 +75,7 @@ namespace Parme.Editor
             _redoStack.Clear();
             _secondsSinceLastCommand = 0;
             
-            EmitterUpdated?.Invoke(this, GetCurrentSettings());
+            RaiseUpdatedEmitterNotification();
         }
 
         public void Undo()
@@ -83,7 +85,7 @@ namespace Parme.Editor
                 _redoStack.Push(_commands.Last());
                 _commands.RemoveAt(_commands.Count - 1);
                 
-                EmitterUpdated?.Invoke(this, GetCurrentSettings());
+                RaiseUpdatedEmitterNotification();
             }
         }
 
@@ -93,7 +95,7 @@ namespace Parme.Editor
             {
                 _commands.Add(_redoStack.Pop());
                 
-                EmitterUpdated?.Invoke(this, GetCurrentSettings());
+                RaiseUpdatedEmitterNotification();
             }
         }
 
@@ -106,6 +108,11 @@ namespace Parme.Editor
             }
 
             return settings;
+        }
+
+        private void RaiseUpdatedEmitterNotification()
+        {
+            _appOperationQueue.Enqueue(new EmitterUpdatedNotification(GetCurrentSettings()));
         }
     }
 }

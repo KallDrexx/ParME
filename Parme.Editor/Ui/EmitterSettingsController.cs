@@ -18,15 +18,18 @@ namespace Parme.Editor.Ui
         private readonly SettingsCommandHandler _commandHandler;
         private readonly Workbench _workbench;
         private readonly ActiveEditorWindow _activeEditorWindow;
+        private readonly ApplicationState _applicationState;
         private bool _ignoreChangeNotifications;
-        private bool _emitterChanged;
 
         public Vector3 BackgroundColor => _workbench.BackgroundColor;
 
-        public EmitterSettingsController(ImGuiManager imGuiManager, SettingsCommandHandler commandHandler)
+        public EmitterSettingsController(ImGuiManager imGuiManager, 
+            SettingsCommandHandler commandHandler, 
+            ApplicationState applicationState)
         {
             _commandHandler = commandHandler;
-            
+            _applicationState = applicationState;
+
             _workbench = new Workbench(commandHandler) {IsVisible = false};
             imGuiManager.AddElement(_workbench);
             
@@ -35,19 +38,23 @@ namespace Parme.Editor.Ui
             
             _workbench.PropertyChanged += WorkbenchOnPropertyChanged;
             _workbench.ModifierRemovalRequested += WorkbenchOnModifierRemovalRequested;
-            _commandHandler.EmitterUpdated += (sender, settings) => _emitterChanged = true;
         }
 
         public void Update()
         {
-            if (_emitterChanged)
+            if (_applicationState.ActiveEmitter != null)
             {
-                var settings = _commandHandler.GetCurrentSettings();
-                UpdateWorkbench(settings);
-                NewEditorItemSelected(_workbench.SelectedItem);
-                UpdateActiveEditor(settings);
+                _workbench.IsVisible = true;
+                _activeEditorWindow.IsVisible = true;
                 
-                _emitterChanged = false;
+                UpdateWorkbench(_applicationState.ActiveEmitter);
+                NewEditorItemSelected(_workbench.SelectedItem);
+                UpdateActiveEditor(_applicationState.ActiveEmitter);
+            }
+            else
+            {
+                _workbench.IsVisible = false;
+                _activeEditorWindow.IsVisible = false;
             }
         }
 
@@ -58,16 +65,6 @@ namespace Parme.Editor.Ui
             
             _activeEditorWindow.Position = new Vector2(0, WorkbenchHeight + 20);
             _activeEditorWindow.Size = new Vector2(300, height - WorkbenchHeight - 20);
-        }
-
-        public void LoadNewSettings(EmitterSettings settings)
-        {
-            _workbench.IsVisible = settings != null;
-            _activeEditorWindow.IsVisible = settings != null;
-            
-            _commandHandler.NewStartingEmitter(settings);
-
-            UpdateWorkbench(settings);
         }
 
         private void WorkbenchOnPropertyChanged(object sender, PropertyChangedEventArgs e)
