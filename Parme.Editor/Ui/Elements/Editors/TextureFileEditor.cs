@@ -100,6 +100,7 @@ namespace Parme.Editor.Ui.Elements.Editors
         {
             var dialog = new OpenFileDialog
             {
+                InitialDirectory = Path.GetDirectoryName(ApplicationState.ActiveFileName),
                 DefaultExt = ".png",
                 Filter = "Texture File|*.png"
             };
