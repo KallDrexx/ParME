@@ -6,6 +6,7 @@ using ImGuiHandler;
 using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
+using Parme.Editor.AppOperations;
 using Parme.Editor.Commands;
 using Parme.Editor.Ui.Elements;
 
@@ -16,6 +17,7 @@ namespace Parme.Editor.Ui
         private const float WorkbenchHeight = 300f;
 
         private readonly SettingsCommandHandler _commandHandler;
+        private readonly AppOperationQueue _appOperationQueue;
         private readonly Workbench _workbench;
         private readonly ActiveEditorWindow _activeEditorWindow;
         private readonly ApplicationState _applicationState;
@@ -26,10 +28,12 @@ namespace Parme.Editor.Ui
 
         public EmitterSettingsController(ImGuiManager imGuiManager, 
             SettingsCommandHandler commandHandler, 
-            ApplicationState applicationState)
+            ApplicationState applicationState, 
+            AppOperationQueue appOperationQueue)
         {
             _commandHandler = commandHandler;
             _applicationState = applicationState;
+            _appOperationQueue = appOperationQueue;
 
             _workbench = new Workbench(commandHandler) {IsVisible = false};
             imGuiManager.AddElement(_workbench);
@@ -157,6 +161,8 @@ namespace Parme.Editor.Ui
             if (_activeEditorWindow.Child != null)
             {
                 _activeEditorWindow.Child.CommandHandler = _commandHandler; // Must be first
+                _activeEditorWindow.Child.AppOperationQueue = _appOperationQueue;
+                _activeEditorWindow.Child.ApplicationState = _applicationState;
                 _activeEditorWindow.Child.EmitterSettings = settings;
             }
         }

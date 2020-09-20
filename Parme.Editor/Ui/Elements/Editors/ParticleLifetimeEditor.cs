@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Parme.Editor.Commands;
+﻿using Parme.Editor.Commands;
 
 namespace Parme.Editor.Ui.Elements.Editors
 {

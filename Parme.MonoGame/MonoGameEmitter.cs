@@ -71,7 +71,7 @@ namespace Parme.MonoGame
                     Rectangle sourceRectangle;
                     if (EmitterLogic.TextureSections.Length == 0)
                     {
-                        sourceRectangle = new Rectangle(0, 0, 10, 10);
+                        sourceRectangle = new Rectangle(0, 0, _texture.Width, _texture.Height);
                     }
                     else
                     {

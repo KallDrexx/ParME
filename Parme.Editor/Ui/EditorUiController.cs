@@ -47,7 +47,7 @@ namespace Parme.Editor.Ui
             _messagePopup.ModalClosed += MessagePopupOnModalClosed;
             _imGuiManager.AddElement(_messagePopup);
             
-            _emitterSettingsController = new EmitterSettingsController(imGuiManager, commandHandler, applicationState);
+            _emitterSettingsController = new EmitterSettingsController(imGuiManager, commandHandler, applicationState, appOperationQueue);
             _appToolbar.NewMenuItemClicked += AppToolbarOnNewMenuItemClicked;
             _appToolbar.OpenMenuItemClicked += AppToolbarOnOpenMenuItemClicked;
             _appToolbar.SaveMenuItemClicked += AppToolbarOnSaveMenuItemClicked;

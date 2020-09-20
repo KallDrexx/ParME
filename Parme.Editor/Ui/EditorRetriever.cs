@@ -17,7 +17,7 @@ namespace Parme.Editor.Ui
 {
     public static class EditorRetriever
     {
-        private static readonly Dictionary<Type, Type> _typeToEditorMap = GetEditorTypeMap();
+        private static readonly Dictionary<Type, Type> TypeToEditorMap = GetEditorTypeMap();
 
         public static SettingsEditorBase GetEditor(EditorItem item)
         {
@@ -28,6 +28,7 @@ namespace Parme.Editor.Ui
                 EditorItemType.Initializer => GetEditorForInitializer(item),
                 EditorItemType.ExistingModifier => GetEditorForModifier(item),
                 EditorItemType.NewModifier => new AddModifierEditor(),
+                EditorItemType.TextureFileName => new TextureFileEditor(),
                 _ => null
             };
         }
@@ -39,7 +40,7 @@ namespace Parme.Editor.Ui
                 return null;
             }
 
-            if (_typeToEditorMap.TryGetValue(editableObject.GetType(), out var editorType))
+            if (TypeToEditorMap.TryGetValue(editableObject.GetType(), out var editorType))
             {
                 return (SettingsEditorBase) Activator.CreateInstance(editorType);
             }

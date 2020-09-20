@@ -2,12 +2,15 @@
 using System.Reflection;
 using ImGuiHandler;
 using Parme.Core;
+using Parme.Editor.AppOperations;
 
 namespace Parme.Editor.Ui.Elements.Editors
 {
     public abstract class SettingsEditorBase : ImGuiElement
     {
         public SettingsCommandHandler CommandHandler { get; set; }
+        public AppOperationQueue AppOperationQueue { get; set; }
+        public ApplicationState ApplicationState { get; set; }
         
         public EmitterSettings EmitterSettings
         {
@@ -17,7 +20,8 @@ namespace Parme.Editor.Ui.Elements.Editors
 
         protected SettingsEditorBase()
         {
-            var selfManagedProperties = GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            var selfManagedProperties = GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic)
                 .Select(x => (Property: x, Attribute: x.GetCustomAttribute<SelfManagedPropertyAttribute>()))
                 .Where(x => x.Attribute != null)
                 .Select(x => x.Property.Name)

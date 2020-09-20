@@ -54,7 +54,7 @@ namespace Parme.Editor
 
         protected override void Initialize()
         {
-            _textureFileLoader = new TextureFileLoader(GraphicsDevice);
+            _textureFileLoader = new TextureFileLoader(GraphicsDevice, _applicationState);
             
             _camera.Origin = new Vector2(-GraphicsDevice.Viewport.Width / 6f, GraphicsDevice.Viewport.Height / 4f);
             _camera.PositiveYAxisPointsUp = true;
