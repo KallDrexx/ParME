@@ -29,6 +29,7 @@ namespace Parme.Editor.Ui
                 EditorItemType.ExistingModifier => GetEditorForModifier(item),
                 EditorItemType.NewModifier => new AddModifierEditor(),
                 EditorItemType.TextureFileName => new TextureFileEditor(),
+                EditorItemType.TextureSection => new TextureSectionDisplayEditor(),
                 _ => null
             };
         }
