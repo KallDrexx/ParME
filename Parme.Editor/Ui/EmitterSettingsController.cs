@@ -100,17 +100,20 @@ namespace Parme.Editor.Ui
 
         private void NewEditorItemSelected(EditorItem? item)
         {
-            _activeEditorWindow.ItemBeingEdited = item;
-            
-            _activeEditorWindow.Child?.Dispose();
-            _activeEditorWindow.Child = null;
-
-            if (item != null)
+            if (!item.Equals(_activeEditorWindow.ItemBeingEdited))
             {
-                var editor = EditorRetriever.GetEditor(item.Value);
-                if (editor != null)
+                _activeEditorWindow.ItemBeingEdited = item;
+
+                _activeEditorWindow.Child?.Dispose();
+                _activeEditorWindow.Child = null;
+
+                if (item != null)
                 {
-                    _activeEditorWindow.Child = editor;
+                    var editor = EditorRetriever.GetEditor(item.Value);
+                    if (editor != null)
+                    {
+                        _activeEditorWindow.Child = editor;
+                    }
                 }
             }
         }
