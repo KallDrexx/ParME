@@ -21,6 +21,8 @@ namespace Parme.Editor
         
         public bool CanUndo => _commands.Count > _minimumStackSize;
         public bool CanRedo => _redoStack.Count > 0;
+        public ICommand PreviousCommand => _commands.LastOrDefault();
+        public ICommand NextCommand => _redoStack.Any() ? _redoStack.Peek() : null;
 
         public SettingsCommandHandler(AppOperationQueue appOperationQueue)
         {

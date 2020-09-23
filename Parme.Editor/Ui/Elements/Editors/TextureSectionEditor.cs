@@ -82,6 +82,26 @@ namespace Parme.Editor.Ui.Elements.Editors
         {
             ImGui.Text("Sections:");
             
+            if (CommandHandler.CanUndo &&
+                CommandHandler.PreviousCommand.GetType() == typeof(UpdateTextureSectionsCommand))
+            {
+                ImGui.SameLine(ImGui.GetWindowWidth() - 120);
+                if (ImGui.Button("Undo"))
+                {
+                    CommandHandler.Undo();
+                }
+            }
+            
+            if (CommandHandler.CanRedo &&
+                CommandHandler.NextCommand.GetType() == typeof(UpdateTextureSectionsCommand))
+            {
+                ImGui.SameLine(ImGui.GetColumnWidth() - 40);
+                if (ImGui.Button("Redo"))
+                {
+                    CommandHandler.Redo();
+                }
+            }
+            
             var sectionWindowSize = new Vector2(popupSize.X - 20, 100);
             ImGui.BeginChild("sections", sectionWindowSize, true);
 
