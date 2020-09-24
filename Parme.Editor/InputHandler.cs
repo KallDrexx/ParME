@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Parme.CSharp;
+using Parme.Editor.AppOperations;
 using Parme.Editor.Ui;
 
 namespace Parme.Editor
@@ -10,15 +11,23 @@ namespace Parme.Editor
         private readonly EditorUiController _uiController;
         private readonly ParticleCamera _camera;
         private readonly SettingsCommandHandler _commandHandler;
+        private readonly AppOperationQueue _appOperationQueue;
+        private readonly ApplicationState _applicationState;
         
         private KeyboardState _previousKeyState, _currentKeyState;
         private MouseState _previousMouseState, _currentMouseState;
 
-        public InputHandler(EditorUiController uiController, ParticleCamera camera, SettingsCommandHandler commandHandler)
+        public InputHandler(EditorUiController uiController, 
+            ParticleCamera camera, 
+            SettingsCommandHandler commandHandler, 
+            AppOperationQueue appOperationQueue, 
+            ApplicationState applicationState)
         {
             _uiController = uiController;
             _camera = camera;
             _commandHandler = commandHandler;
+            _appOperationQueue = appOperationQueue;
+            _applicationState = applicationState;
         }
         
         /// <summary>
@@ -52,6 +61,14 @@ namespace Parme.Editor
                 if (_currentKeyState.IsKeyDown(Keys.LeftControl) && HasBeenPressed(Keys.Y))
                 {
                     _commandHandler.Redo();
+                }
+
+                if ((_currentKeyState.IsKeyDown(Keys.LeftControl) || _currentKeyState.IsKeyDown(Keys.RightControl)) &&
+                    HasBeenPressed(Keys.S) &&
+                    !string.IsNullOrWhiteSpace(_applicationState.ActiveFileName))
+                {
+                    var operation = new SaveEmitterRequested(_applicationState.ActiveFileName, _applicationState.ActiveEmitter);
+                    _appOperationQueue.Enqueue(operation);
                 }
             }
         }

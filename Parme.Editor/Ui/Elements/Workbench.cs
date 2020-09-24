@@ -233,13 +233,13 @@ namespace Parme.Editor.Ui.Elements
             Selectable(fileName, new EditorItem(EditorItemType.TextureFileName, null));
             
             ImGui.NextColumn();
-            RightAlignText("Texture Sections Defined:");
+            RightAlignText("Texture Sections:");
             
             ImGui.NextColumn();
             Selectable(TextureSections.Count.ToString(), new EditorItem(EditorItemType.TextureSection, null));
 
             ImGui.NextColumn();
-            RightAlignText("Texture:");
+            RightAlignText("Initial Texture:");
             
             ImGui.NextColumn();
             Selectable(EditorObjectNameAndValue(TextureSectionInitializer),

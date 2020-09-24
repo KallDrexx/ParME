@@ -70,7 +70,7 @@ namespace Parme.Editor
                 _textureFileLoader, 
                 monoGameImGuiRenderer);
             
-            _inputHandler = new InputHandler(_uiController, _camera, _commandHandler);
+            _inputHandler = new InputHandler(_uiController, _camera, _commandHandler, _appOperationQueue, _applicationState);
 
             ImGui.GetIO().FontGlobalScale = 1.2f;
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
