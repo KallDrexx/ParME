@@ -39,13 +39,13 @@ namespace Parme.Frb.Example.Screens
                 SomeCircleInstance.X -= TimeManager.SecondDifference * movementSpeed;
             }
 
-            EmitterDrawableBatchInstance.X = SomeCircleInstance.X;
-            EmitterDrawableBatchInstance.Y = SomeCircleInstance.Y;
-            EmitterDrawableBatchInstance.Z = SomeCircleInstance.Z;
+            // EmitterDrawableBatchInstance.X = SomeCircleInstance.X;
+            // EmitterDrawableBatchInstance.Y = SomeCircleInstance.Y;
+            // EmitterDrawableBatchInstance.Z = SomeCircleInstance.Z;
 
             if (InputManager.Keyboard.KeyReleased(Keys.Enter))
             {
-                EmitterDrawableBatchInstance.IsEmitting = !EmitterDrawableBatchInstance.IsEmitting;
+                // EmitterDrawableBatchInstance.IsEmitting = !EmitterDrawableBatchInstance.IsEmitting;
             }
         }
 

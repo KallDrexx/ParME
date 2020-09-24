@@ -64,7 +64,8 @@
     </Compile>
     <Compile Include="GlobalContent.Generated.cs" />
     <Compile Include="GlueControl\GlueControlManager.Generated.cs" />
-    <Compile Include="Particles\FireExample.generated.cs" />
+    <Compile Include="Particles\FireNoTextureEmitterLogic.generated.cs" />
+    <Compile Include="Particles\testEmitterLogic.generated.cs" />
     <Compile Include="Performance\IEntityFactory.Generated.cs" />
     <Compile Include="Performance\PoolList.Generated.cs" />
     <Compile Include="Program.cs" />
@@ -181,6 +182,14 @@
     <Content Include="Content\shader.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="content\globalcontent\firenotexture.emitter">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>FireNoTexture</Name>
+    </None>
+    <None Include="content\globalcontent\sampleparticles.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>SampleParticles</Name>
+    </None>
     <None Include="Libraries\DesktopGl\Debug\FlatRedBall.Forms.dll" />
     <None Include="Libraries\DesktopGl\Debug\GumCoreXnaPc.dll" />
     <None Include="Libraries\DesktopGl\Debug\StateInterpolation.dll" />
@@ -259,6 +268,9 @@
       <Project>{088d4aba-2570-4b5e-b805-d974a65e9af3}</Project>
       <Name>Parme.Frb</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Particles" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />-->

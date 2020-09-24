@@ -34,31 +34,6 @@
           <GenerateTimedEmit>true</GenerateTimedEmit>
           <IndependentOfCamera>true</IndependentOfCamera>
         </NamedObjectSave>
-        <NamedObjectSave>
-          <CustomProperty>
-            <Type>bool</Type>
-            <Member>IsEmitting</Member>
-            <ValueAsBool>true</ValueAsBool>
-          </CustomProperty>
-          <Properties>
-            <PropertySave>
-              <Name>AssociateWithFactory</Name>
-              <ValueAsBool>true</ValueAsBool>
-            </PropertySave>
-            <PropertySave>
-              <Name>SourceType</Name>
-              <ValueAsObject xsi:type="SourceType">FlatRedBallType</ValueAsObject>
-            </PropertySave>
-          </Properties>
-          <SourceType>FlatRedBallType</SourceType>
-          <SourceFile />
-          <SourceName />
-          <SourceClassType>EmitterDrawableBatch</SourceClassType>
-          <InstanceName>EmitterDrawableBatchInstance</InstanceName>
-          <AttachToContainer>true</AttachToContainer>
-          <GenerateTimedEmit>true</GenerateTimedEmit>
-          <IndependentOfCamera>true</IndependentOfCamera>
-        </NamedObjectSave>
       </NamedObjects>
     </ScreenSave>
   </Screens>
@@ -133,11 +108,47 @@
           <GenerateTimedEmit>true</GenerateTimedEmit>
           <IndependentOfCamera>true</IndependentOfCamera>
         </NamedObjectSave>
+        <NamedObjectSave>
+          <Properties>
+            <PropertySave>
+              <Name>AssociateWithFactory</Name>
+              <ValueAsBool>true</ValueAsBool>
+            </PropertySave>
+            <PropertySave>
+              <Name>SourceType</Name>
+              <ValueAsObject xsi:type="SourceType">FlatRedBallType</ValueAsObject>
+            </PropertySave>
+          </Properties>
+          <SourceType>FlatRedBallType</SourceType>
+          <SourceFile />
+          <SourceName />
+          <SourceClassType>EmitterDrawableBatch</SourceClassType>
+          <InstanceName>EmitterDrawableBatchInstance</InstanceName>
+          <AttachToContainer>true</AttachToContainer>
+          <GenerateTimedEmit>true</GenerateTimedEmit>
+          <IndependentOfCamera>true</IndependentOfCamera>
+        </NamedObjectSave>
       </NamedObjects>
       <Is2D>true</Is2D>
     </EntitySave>
   </Entities>
-  <GlobalFiles />
+  <GlobalFiles>
+    <ReferencedFileSave>
+      <Name>GlobalContent/SampleParticles.png</Name>
+      <IsSharedStatic>true</IsSharedStatic>
+      <DestroyOnUnload>false</DestroyOnUnload>
+      <HasPublicProperty>true</HasPublicProperty>
+      <ProjectsToExcludeFrom />
+    </ReferencedFileSave>
+    <ReferencedFileSave>
+      <Name>GlobalContent/FireNoTexture.emitter</Name>
+      <IsSharedStatic>true</IsSharedStatic>
+      <DestroyOnUnload>false</DestroyOnUnload>
+      <HasPublicProperty>true</HasPublicProperty>
+      <LoadedAtRuntime>false</LoadedAtRuntime>
+      <ProjectsToExcludeFrom />
+    </ReferencedFileSave>
+  </GlobalFiles>
   <GlobalContentSettingsSave>
     <LoadAsynchronously>false</LoadAsynchronously>
     <RecordLockContention>false</RecordLockContention>

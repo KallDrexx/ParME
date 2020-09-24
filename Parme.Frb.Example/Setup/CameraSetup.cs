@@ -58,6 +58,8 @@
                 else
                 {
                     cameraToReset.UsePixelCoordinates3D(0);
+                    var zoom = cameraToReset.DestinationRectangle.Height / (float)Data.ResolutionHeight;
+                    cameraToReset.Z /= zoom; 
                 }
                 if (Data.AspectRatio != null)
                 {

@@ -14,7 +14,7 @@ namespace Parme.Frb.GluePlugin
                 {
                     QualifiedType = "Parme.Frb.EmitterDrawableBatch",
                 },
-                Extension = "parme",
+                Extension = "emitter",
                 CanBeObject = true,
                 CustomLoadFunc = CustomLoad,
                 AddToManagersFunc = AddToManagers,
@@ -25,6 +25,7 @@ namespace Parme.Frb.GluePlugin
                     {
                         Name = "IsEmitting",
                         Type = "bool",
+                        
                         DefaultValue = "true",
                     }
                 }
@@ -43,6 +44,11 @@ namespace Parme.Frb.GluePlugin
 
         private static string CustomLoad(IElement arg1, NamedObjectSave arg2, ReferencedFileSave arg3, string arg4)
         {
+            if (arg2 == null)
+            {
+                return null;
+            }
+            
             return $"{arg2.FieldName} = new EmitterDrawableBatch(new FireExample());";
         }
     }

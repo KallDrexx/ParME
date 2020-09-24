@@ -7,7 +7,8 @@ namespace Parme.Frb.GluePlugin
     {
         public IEnumerable<AssetTypeInfo> GetDrawableBatchAssetTypes()
         {
-            yield return EmitterDrawableBatchAssetTypeInfo.GetAti("ParME Emitter");
+            //yield return EmitterDrawableBatchAssetTypeInfo.GetAti("ParME Emitter");
+            yield break;
         }
     }
 }

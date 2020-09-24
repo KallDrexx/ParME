@@ -16,7 +16,6 @@ namespace Parme.Frb.Example.Screens
         #endif
         
         private Parme.Frb.Example.Entities.SomeCircle SomeCircleInstance;
-        private Parme.Frb.EmitterDrawableBatch EmitterDrawableBatchInstance;
         public GameScreen () 
         	: base ("GameScreen")
         {
@@ -26,7 +25,6 @@ namespace Parme.Frb.Example.Screens
             LoadStaticContent(ContentManagerName);
             SomeCircleInstance = new Parme.Frb.Example.Entities.SomeCircle(ContentManagerName, false);
             SomeCircleInstance.Name = "SomeCircleInstance";
-            EmitterDrawableBatchInstance = new EmitterDrawableBatch(new FireExample());
             
             
             PostInitialize();
@@ -39,7 +37,6 @@ namespace Parme.Frb.Example.Screens
         public override void AddToManagers () 
         {
             SomeCircleInstance.AddToManagers(mLayer);
-            FlatRedBall.SpriteManager.AddDrawableBatch(EmitterDrawableBatchInstance);
             base.AddToManagers();
             AddToManagersBottomUp();
             CustomInitialize();
@@ -76,7 +73,6 @@ namespace Parme.Frb.Example.Screens
         {
             bool oldShapeManagerSuppressAdd = FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue;
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = true;
-            EmitterDrawableBatchInstance.IsEmitting = true;
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
         }
         public virtual void AddToManagersBottomUp () 
@@ -94,7 +90,6 @@ namespace Parme.Frb.Example.Screens
             {
                 SomeCircleInstance.AssignCustomVariables(true);
             }
-            EmitterDrawableBatchInstance.IsEmitting = true;
         }
         public virtual void ConvertToManuallyUpdated () 
         {
