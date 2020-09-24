@@ -20,8 +20,6 @@ namespace Parme.Frb.Example.Entities
         /// </summary>
         private void CustomInitialize()
         {
-
-
         }
 
         private void CustomActivity()

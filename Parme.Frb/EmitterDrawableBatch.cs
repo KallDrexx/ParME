@@ -27,6 +27,7 @@ namespace Parme.Frb
         {
             var textureFileLoader = new FrbTextureFileLoader();
             _emitter = new MonoGameEmitter(emitterLogic, FlatRedBallServices.GraphicsDevice, textureFileLoader);
+            IsEmitting = true;
         }
         
         public void Draw(Camera camera)

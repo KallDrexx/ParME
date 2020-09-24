@@ -141,7 +141,7 @@
       <ProjectsToExcludeFrom />
     </ReferencedFileSave>
     <ReferencedFileSave>
-      <Name>GlobalContent/FireNoTexture.emitter</Name>
+      <Name>GlobalContent/Fire.emitter</Name>
       <IsSharedStatic>true</IsSharedStatic>
       <DestroyOnUnload>false</DestroyOnUnload>
       <HasPublicProperty>true</HasPublicProperty>

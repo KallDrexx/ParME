@@ -64,7 +64,7 @@ namespace Parme.Frb.Example.Entities
             LoadStaticContent(ContentManagerName);
             mCircleInstance = new FlatRedBall.Math.Geometry.Circle();
             mCircleInstance.Name = "mCircleInstance";
-            EmitterDrawableBatchInstance = new EmitterDrawableBatch(new FireNoTextureEmitterLogic());
+            EmitterDrawableBatchInstance = new EmitterDrawableBatch(new FireEmitterLogic());
             
             PostInitialize();
             if (addToManagers)

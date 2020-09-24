@@ -64,8 +64,7 @@
     </Compile>
     <Compile Include="GlobalContent.Generated.cs" />
     <Compile Include="GlueControl\GlueControlManager.Generated.cs" />
-    <Compile Include="Particles\FireNoTextureEmitterLogic.generated.cs" />
-    <Compile Include="Particles\testEmitterLogic.generated.cs" />
+    <Compile Include="Particles\FireEmitterLogic.generated.cs" />
     <Compile Include="Performance\IEntityFactory.Generated.cs" />
     <Compile Include="Performance\PoolList.Generated.cs" />
     <Compile Include="Program.cs" />
@@ -182,9 +181,9 @@
     <Content Include="Content\shader.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="content\globalcontent\firenotexture.emitter">
+    <None Include="content\globalcontent\fire.emitter">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Name>FireNoTexture</Name>
+      <Name>Fire</Name>
     </None>
     <None Include="content\globalcontent\sampleparticles.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

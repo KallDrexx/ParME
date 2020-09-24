@@ -7,19 +7,26 @@ using Parme.CSharp;
 namespace Parme.Frb.Example
 {
 
-    public class FireNoTextureEmitterLogic : IEmitterLogic
+    public class FireEmitterLogic : IEmitterLogic
     {
         private readonly Random _random = new Random();
         private float _timeSinceLastTrigger;
 
         public float MaxParticleLifeTime { get; set; } = 1f;
         
-        public string TextureFilePath { get; } = @"";
+        public string TextureFilePath { get; } = @"Content\GlobalContent\SampleParticles.png";
         public TextureSectionCoords[] TextureSections { get; } = new TextureSectionCoords[] {
+            new TextureSectionCoords(0, 0, 16, 16),
+            new TextureSectionCoords(16, 0, 32, 16),
+            new TextureSectionCoords(32, 0, 48, 16),
+            new TextureSectionCoords(48, 0, 64, 16),
         };
         
         
         public float TimeElapsedTriggerFrequency { get; set; } = 0.01f; 
+
+        public int RandomParticleCountMinToSpawn { get; set; } = 0;
+        public int RandomParticleCountMaxToSpawn { get; set; } = 5;
 
         public float StaticColorRedMultiplier { get; set; } = 1f;
         public float StaticColorGreenMultiplier { get; set; } = 0.64705884f;
@@ -31,16 +38,13 @@ namespace Parme.Frb.Example
         public float RandomRangeVelocityMinY { get; set; } = 2f;
         public float RandomRangeVelocityMaxY { get; set; } = 5f; 
 
-        public int StaticSizeWidth { get; set; } = 50;
-        public int StaticSizeHeight { get; set; } = 50;
-
-        public float RandomRegionPositionMinXOffset { get; set; } = -200f;
-        public float RandomRegionPositionMaxXOffset { get; set; } = 200f;
+        public float RandomRegionPositionMinXOffset { get; set; } = -25f;
+        public float RandomRegionPositionMaxXOffset { get; set; } = 25f;
         public float RandomRegionPositionMinYOffset { get; set; } = 20f;
         public float RandomRegionPositionMaxYOffset { get; set; } = -20f;
 
-        public int RandomParticleCountMinToSpawn { get; set; } = 0;
-        public int RandomParticleCountMaxToSpawn { get; set; } = 2;
+        public int StaticSizeWidth { get; set; } = 50;
+        public int StaticSizeHeight { get; set; } = 50;
 
         public float ConstantRotationRadiansPerSecond { get; set; } = 1.7453292519943295f;
 
@@ -53,7 +57,7 @@ namespace Parme.Frb.Example
         public float ConstantColorRedMultiplierChangePerSecond { get; set; } = -1f;
         public float ConstantColorGreenMultiplierChangePerSecond { get; set; } = -1f;
         public float ConstantColorBlueMultiplierChangePerSecond { get; set; } = -1f;
-        public float ConstantColorAlphaMultiplierChangePerSecond { get; set; } = -0.5f;
+        public float ConstantColorAlphaMultiplierChangePerSecond { get; set; } = -1f;
 
         
         public void Update(ParticleBuffer particleBuffer, float timeSinceLastFrame, Emitter parent)
@@ -148,9 +152,6 @@ namespace Parme.Frb.Example
                         particle.Velocity = new Vector2((float) x, (float) y);
                     }
                     {
-                        particle.Size = new Vector2(StaticSizeWidth, StaticSizeHeight);
-                    }
-                    {
                         
                         var x = RandomRegionPositionMaxXOffset - _random.NextDouble() * (RandomRegionPositionMaxXOffset - RandomRegionPositionMinXOffset);
                         var y = RandomRegionPositionMaxYOffset - _random.NextDouble() * (RandomRegionPositionMaxYOffset - RandomRegionPositionMinYOffset);
@@ -158,7 +159,10 @@ namespace Parme.Frb.Example
                     }
                     {
                         
-                        particle.TextureSectionIndex = 0;
+                        particle.TextureSectionIndex = (byte) _random.Next(0, TextureSections.Length);
+                    }
+                    {
+                        particle.Size = new Vector2(StaticSizeWidth, StaticSizeHeight);
                     }
 
 
