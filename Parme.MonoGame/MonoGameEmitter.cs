@@ -92,7 +92,7 @@ namespace Parme.MonoGame
                         sourceRectangle,
                         colorModifier,
                         particle.RotationInRadians,
-                        Vector2.Zero,
+                        new Vector2(sourceRectangle.Width / 2f, sourceRectangle.Height / 2f), 
                         SpriteEffects.None,
                         0f);
                 }
