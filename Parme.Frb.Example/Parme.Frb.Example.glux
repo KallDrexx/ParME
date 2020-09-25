@@ -109,6 +109,21 @@
           <IndependentOfCamera>true</IndependentOfCamera>
         </NamedObjectSave>
         <NamedObjectSave>
+          <CustomProperty>
+            <Type>string</Type>
+            <Member>Emitter Type</Member>
+            <ValueAsString>FireEmitterLogic</ValueAsString>
+          </CustomProperty>
+          <CustomProperty>
+            <Type>float</Type>
+            <Member>X</Member>
+            <ValueAsFloat>-50</ValueAsFloat>
+          </CustomProperty>
+          <CustomProperty>
+            <Type>float</Type>
+            <Member>Y</Member>
+            <ValueAsFloat>-50</ValueAsFloat>
+          </CustomProperty>
           <Properties>
             <PropertySave>
               <Name>AssociateWithFactory</Name>
@@ -120,13 +135,11 @@
             </PropertySave>
           </Properties>
           <SourceType>FlatRedBallType</SourceType>
-          <SourceFile />
-          <SourceName />
-          <SourceClassType>EmitterDrawableBatch</SourceClassType>
-          <InstanceName>EmitterDrawableBatchInstance</InstanceName>
+          <SourceClassType>Parme.Frb.EmitterDrawableBatch</SourceClassType>
+          <InstanceName>ParmeParticleEmitterInstance</InstanceName>
           <AttachToContainer>true</AttachToContainer>
           <GenerateTimedEmit>true</GenerateTimedEmit>
-          <IndependentOfCamera>true</IndependentOfCamera>
+          <IndependentOfCamera>false</IndependentOfCamera>
         </NamedObjectSave>
       </NamedObjects>
       <Is2D>true</Is2D>

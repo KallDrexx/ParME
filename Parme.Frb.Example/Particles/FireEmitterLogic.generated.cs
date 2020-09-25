@@ -43,8 +43,8 @@ namespace Parme.Frb.Example
         public float RandomRegionPositionMinYOffset { get; set; } = 20f;
         public float RandomRegionPositionMaxYOffset { get; set; } = -20f;
 
-        public int StaticSizeWidth { get; set; } = 50;
-        public int StaticSizeHeight { get; set; } = 50;
+        public int StaticSizeWidth { get; set; } = 100;
+        public int StaticSizeHeight { get; set; } = 100;
 
         public float ConstantRotationRadiansPerSecond { get; set; } = 1.7453292519943295f;
 

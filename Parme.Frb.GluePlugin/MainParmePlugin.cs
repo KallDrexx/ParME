@@ -19,7 +19,7 @@ namespace Parme.Frb.GluePlugin
     [Export(typeof(PluginBase))]
     public class MainParmePlugin : PluginBase
     {
-        private readonly Dictionary<string, AssetTypeInfo> _emitterNameToAssetTypeInfoMap = new Dictionary<string, AssetTypeInfo>();
+        private readonly AssetTypeInfoManager _assetTypeInfoManager = new AssetTypeInfoManager();
         
         public override string FriendlyName => "ParME GluePlugin";
         public override Version Version => new Version(0, 0, 0, 1);
@@ -31,8 +31,10 @@ namespace Parme.Frb.GluePlugin
             FillWithReferencedFiles += CustomFillWithReferencedFiles;
             ReactToUnloadedGlux += GluxUnloaded;
             ReactToFileChangeHandler += FileChangeHandler;
+            ReactToNewFileHandler += NewFileHandler;
             
-            AvailableAssetTypes.Self.AddAssetType(ParmeAssetTypeInfos.EmitterFileAti);
+            AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.LogicAssetTypeInfo);
+            AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.FileAssetTypeInfo);
         }
 
         private static string GenerateEmitterLogic(EmitterSettings settings, string className)
@@ -42,7 +44,7 @@ namespace Parme.Frb.GluePlugin
                 className,
                 false);
         }
-        
+
         private static string GetLogicClassName(string filename)
         {
             var name = Path.GetFileNameWithoutExtension(filename) + "EmitterLogic";
@@ -74,6 +76,11 @@ namespace Parme.Frb.GluePlugin
             File.WriteAllText(codeGenFilePath.FullPath, code);
             
             emitter.TextureFileName = prevTextureFileName;
+        }
+
+        private void NewFileHandler(ReferencedFileSave newfile)
+        {
+            
         }
 
         private void FileChangeHandler(string filename)
@@ -121,20 +128,12 @@ namespace Parme.Frb.GluePlugin
         private void FileRemoved(IElement element, ReferencedFileSave removedFile)
         {
             var name = GetLogicClassName(removedFile.Name);
-            if (_emitterNameToAssetTypeInfoMap.TryGetValue(name, out var ati))
-            {
-                AvailableAssetTypes.Self.RemoveAssetType(ati);
-            }
+            _assetTypeInfoManager.EmitterLogicTypes.Remove(name);
         }
 
         private void GluxUnloaded()
         {
-            foreach (var (_, ati) in _emitterNameToAssetTypeInfoMap)
-            {
-                AvailableAssetTypes.Self.RemoveAssetType(ati);
-            }
-            
-            _emitterNameToAssetTypeInfoMap.Clear();
+            _assetTypeInfoManager.EmitterLogicTypes.Clear();
         }
 
         private void GluxLoaded()
@@ -151,30 +150,8 @@ namespace Parme.Frb.GluePlugin
                 
                 var emitter = EmitterSettings.FromJson(json);
                 GenerateAndSave(emitter, name, emitterFile.Name);
-
-                var ati = new AssetTypeInfo
-                {
-                    CanBeObject = true,
-                    QualifiedRuntimeTypeName = new PlatformSpecificType
-                    {
-                        QualifiedType = "Parme.Frb.EmitterDrawableBatch",
-                    },
-                    FriendlyName = $"EmitterDrawableBatch ({name})",
-                    ConstructorFunc = (element, save, arg3) => $"{save.FieldName} = new EmitterDrawableBatch(new {name}());",
-                    AddToManagersFunc = (element, save, arg3, arg4) => $"FlatRedBall.SpriteManager.AddDrawableBatch({save.FieldName});",
-                    VariableDefinitions =
-                    {
-                        new VariableDefinition
-                        {
-                            Name = "IsEmitting",
-                            Type = "bool",
-                            DefaultValue = "true",
-                        }
-                    }
-                };
                 
-                AvailableAssetTypes.Self.AddAssetType(ati);
-                _emitterNameToAssetTypeInfoMap.Add(name, ati);
+                _assetTypeInfoManager.EmitterLogicTypes.Add(name);
             }
         }
     }

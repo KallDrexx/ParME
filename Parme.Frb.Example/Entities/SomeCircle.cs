@@ -20,11 +20,11 @@ namespace Parme.Frb.Example.Entities
         /// </summary>
         private void CustomInitialize()
         {
+            //ParmeParticleEmitterInstance.IsEmitting = true;
         }
 
         private void CustomActivity()
         {
-
 
         }
 

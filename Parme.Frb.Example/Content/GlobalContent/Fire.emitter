@@ -75,9 +75,9 @@
     },
     {
       "EditorShortName": "Static",
-      "EditorShortValue": "(50, 50)",
-      "Width": 50,
-      "Height": 50,
+      "EditorShortValue": "(100, 100)",
+      "Width": 100,
+      "Height": 100,
       "$ParmeType": "StaticSizeInitializer"
     }
   ],

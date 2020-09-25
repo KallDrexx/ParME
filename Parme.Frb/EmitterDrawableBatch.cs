@@ -1,7 +1,5 @@
 using FlatRedBall;
 using FlatRedBall.Graphics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Parme.CSharp;
 using Parme.MonoGame;
 
@@ -9,13 +7,45 @@ namespace Parme.Frb
 {
     public class EmitterDrawableBatch : IDrawableBatch
     {
-        private readonly Emitter _emitter;
+        private readonly ITextureFileLoader _textureFileLoader = new FrbTextureFileLoader();
         private readonly ParticleCamera _particleCamera = new ParticleCamera{PositiveYAxisPointsUp = true};
+        private bool _isEmitting;
+        private Emitter _emitter;
+        private IEmitterLogic _emitterLogic;
+        
+        public PositionedObject Parent { get; set; }
+
+        public IEmitterLogic EmitterLogic
+        {
+            get => _emitterLogic;
+            set
+            {
+                if (_emitter != null)
+                {
+                    _emitter.IsEmittingNewParticles = false;
+                    _emitter.KillAllParticles();
+                    _emitter = null;
+                }
+
+                _emitterLogic = value;
+                if (value != null)
+                {
+                    _emitter = new MonoGameEmitter(value, FlatRedBallServices.GraphicsDevice, _textureFileLoader)
+                    {
+                        IsEmittingNewParticles = _isEmitting,
+                    };
+                }
+            }
+        }
 
         public bool IsEmitting
         {
-            get => _emitter.IsEmittingNewParticles;
-            set => _emitter.IsEmittingNewParticles = value;
+            get => _isEmitting;
+            set
+            {
+                _isEmitting = value;
+                _emitter.IsEmittingNewParticles = value;
+            }
         }
         
         public float X { get; set; }
@@ -23,11 +53,9 @@ namespace Parme.Frb
         public float Z { get; set; }
         public bool UpdateEveryFrame => true;
 
-        public EmitterDrawableBatch(IEmitterLogic emitterLogic)
+        public EmitterDrawableBatch()
         {
-            var textureFileLoader = new FrbTextureFileLoader();
-            _emitter = new MonoGameEmitter(emitterLogic, FlatRedBallServices.GraphicsDevice, textureFileLoader);
-            IsEmitting = true;
+            _isEmitting = true;
         }
         
         public void Draw(Camera camera)
@@ -43,7 +71,10 @@ namespace Parme.Frb
 
         public void Update()
         {
-            _emitter.WorldCoordinates = new System.Numerics.Vector2(X, Y);
+            _emitter.WorldCoordinates = Parent != null
+                ? new System.Numerics.Vector2(X + Parent.X, Y + Parent.Y)
+                : new System.Numerics.Vector2(X, Y);
+            
             _emitter.Update(TimeManager.SecondDifference);
         }
 
@@ -54,19 +85,5 @@ namespace Parme.Frb
         }
 
         public void KillAllParticles() => _emitter.KillAllParticles();
-
-        private static Texture2D GetWhiteTexture()
-        {
-            var pixels = new Color[10*10];
-            for (var x = 0; x < pixels.Length; x++)
-            {
-                pixels[x] = Color.White;
-            }
-            
-            var texture = new Texture2D(FlatRedBallServices.GraphicsDevice, 10, 10);
-            texture.SetData(pixels);
-
-            return texture;
-        }
     }
 }

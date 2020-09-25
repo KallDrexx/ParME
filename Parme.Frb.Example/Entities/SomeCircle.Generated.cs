@@ -35,7 +35,7 @@ namespace Parme.Frb.Example.Entities
                 mCircleInstance = value;
             }
         }
-        private Parme.Frb.EmitterDrawableBatch EmitterDrawableBatchInstance;
+        private Parme.Frb.EmitterDrawableBatch ParmeParticleEmitterInstance;
         private FlatRedBall.Math.Geometry.ShapeCollection mGeneratedCollision;
         public FlatRedBall.Math.Geometry.ShapeCollection Collision
         {
@@ -64,7 +64,10 @@ namespace Parme.Frb.Example.Entities
             LoadStaticContent(ContentManagerName);
             mCircleInstance = new FlatRedBall.Math.Geometry.Circle();
             mCircleInstance.Name = "mCircleInstance";
-            EmitterDrawableBatchInstance = new EmitterDrawableBatch(new FireEmitterLogic());
+            ParmeParticleEmitterInstance = new EmitterDrawableBatch();
+            ParmeParticleEmitterInstance.EmitterLogic = new FireEmitterLogic();
+            ParmeParticleEmitterInstance.Parent = this;
+
             
             PostInitialize();
             if (addToManagers)
@@ -77,14 +80,14 @@ namespace Parme.Frb.Example.Entities
             LayerProvidedByContainer = layerToAddTo;
             FlatRedBall.SpriteManager.AddPositionedObject(this);
             FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(mCircleInstance, LayerProvidedByContainer);
-            FlatRedBall.SpriteManager.AddDrawableBatch(EmitterDrawableBatchInstance);
+            FlatRedBall.SpriteManager.AddDrawableBatch(ParmeParticleEmitterInstance);
         }
         public virtual void AddToManagers (FlatRedBall.Graphics.Layer layerToAddTo) 
         {
             LayerProvidedByContainer = layerToAddTo;
             FlatRedBall.SpriteManager.AddPositionedObject(this);
             FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(mCircleInstance, LayerProvidedByContainer);
-            FlatRedBall.SpriteManager.AddDrawableBatch(EmitterDrawableBatchInstance);
+            FlatRedBall.SpriteManager.AddDrawableBatch(ParmeParticleEmitterInstance);
             AddToManagersBottomUp(layerToAddTo);
             CustomInitialize();
         }
@@ -114,6 +117,8 @@ namespace Parme.Frb.Example.Entities
                 mCircleInstance.AttachTo(this, false);
             }
             CircleInstance.Radius = 16f;
+            ParmeParticleEmitterInstance.X = -50f;
+            ParmeParticleEmitterInstance.Y = -50f;
             mGeneratedCollision = new FlatRedBall.Math.Geometry.ShapeCollection();
             Collision.Circles.AddOneWay(mCircleInstance);
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
@@ -137,6 +142,8 @@ namespace Parme.Frb.Example.Entities
             {
             }
             CircleInstance.Radius = 16f;
+            ParmeParticleEmitterInstance.X = -50f;
+            ParmeParticleEmitterInstance.Y = -50f;
         }
         public virtual void ConvertToManuallyUpdated () 
         {
