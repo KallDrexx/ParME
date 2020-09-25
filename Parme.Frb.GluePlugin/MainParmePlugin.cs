@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using FlatRedBall.Glue;
 using FlatRedBall.Glue.Elements;
 using FlatRedBall.Glue.Errors;
 using FlatRedBall.Glue.Plugins;
 using FlatRedBall.Glue.Plugins.ExportedImplementations;
 using FlatRedBall.Glue.Plugins.Interfaces;
+using FlatRedBall.Glue.SaveClasses;
 using FlatRedBall.IO;
 using Parme.Core;
-using Parme.CSharp;
 using Parme.CSharp.CodeGen;
 
 namespace Parme.Frb.GluePlugin
@@ -18,22 +19,95 @@ namespace Parme.Frb.GluePlugin
     [Export(typeof(PluginBase))]
     public class MainParmePlugin : PluginBase
     {
+        private readonly Dictionary<string, AssetTypeInfo> _emitterNameToAssetTypeInfoMap = new Dictionary<string, AssetTypeInfo>();
+        
         public override string FriendlyName => "ParME GluePlugin";
         public override Version Version => new Version(0, 0, 0, 1);
         
         public override void StartUp()
         {
             ReactToLoadedGlux += GluxLoaded;
+            ReactToFileRemoved += FileRemoved;
             FillWithReferencedFiles += CustomFillWithReferencedFiles;
+            ReactToUnloadedGlux += GluxUnloaded;
+            ReactToFileChangeHandler += FileChangeHandler;
             
-            foreach (var assetTypeInfo in new AssetTypeManager().GetDrawableBatchAssetTypes())
-            {
-                AvailableAssetTypes.Self.AddAssetType(assetTypeInfo);
-            }
+            AvailableAssetTypes.Self.AddAssetType(ParmeAssetTypeInfos.EmitterFileAti);
         }
 
-        private GeneralResponse CustomFillWithReferencedFiles(FilePath arg1, List<FilePath> arg2)
+        private static string GenerateEmitterLogic(EmitterSettings settings, string className)
         {
+            return EmitterLogicClassGenerator.Generate(settings,
+                GlueState.Self.ProjectNamespace,
+                className,
+                false);
+        }
+        
+        private static string GetLogicClassName(string filename)
+        {
+            var name = Path.GetFileNameWithoutExtension(filename) + "EmitterLogic";
+            if (char.IsLower(name[0]))
+            {
+                name = char.ToUpper(name[0]) + name.Substring(1);
+            }
+            
+            return name.Replace("-", "")
+                .Replace(" ", "");
+        }
+
+        private static void GenerateAndSave(EmitterSettings emitter, string logicClassName, string filename)
+        {
+            var prevTextureFileName = emitter.TextureFileName;
+            if (!string.IsNullOrWhiteSpace(emitter.TextureFileName))
+            {
+                var projectPath = GlueState.Self.CurrentGlueProjectDirectory;
+                var absolutePath = ProjectManager.MakeAbsolute(filename);
+                var relativePath = FileManager.MakeRelative(absolutePath, projectPath);
+                var directory = Path.GetDirectoryName(relativePath);
+                emitter.TextureFileName = Path.Combine(directory, emitter.TextureFileName);
+            }
+            
+            var code = GenerateEmitterLogic(emitter, logicClassName);
+            var codeGenFilePath =
+                new FilePath(Path.Combine(GlueState.Self.CurrentGlueProjectDirectory, "Particles", $"{logicClassName}.generated.cs"));
+            GlueCommands.Self.ProjectCommands.CreateAndAddCodeFile(codeGenFilePath);
+            File.WriteAllText(codeGenFilePath.FullPath, code);
+            
+            emitter.TextureFileName = prevTextureFileName;
+        }
+
+        private void FileChangeHandler(string filename)
+        {
+            if (Path.GetExtension(filename) != ".emitter")
+            {
+                return;
+            }
+            
+            var className = GetLogicClassName(filename);
+            var json = File.ReadAllText(filename);
+            var emitter = EmitterSettings.FromJson(json);
+            GenerateAndSave(emitter, className, filename);
+        }
+
+        private GeneralResponse CustomFillWithReferencedFiles(FilePath currentFile, List<FilePath> referencedFiles)
+        {
+            if (currentFile.Extension != "emitter")
+            {
+                return GeneralResponse.SuccessfulResponse;
+            }
+            
+            // Add an association of the emitter with the texture it's referencing
+            var json = File.ReadAllText(currentFile.FullPath);
+            var emitter = EmitterSettings.FromJson(json);
+            if (!string.IsNullOrWhiteSpace(emitter.TextureFileName))
+            {
+                var texturePath = Path.IsPathRooted(emitter.TextureFileName)
+                    ? emitter.TextureFileName
+                    : Path.Combine(Path.GetDirectoryName(currentFile.FullPath), emitter.TextureFileName);
+                
+                referencedFiles.Add(new FilePath(texturePath));
+            }
+            
             // see if arg1 is a .emitter, then load that emitter, find pngs and add them to arg2
             // arg1 has full path, get directory of arg1 for emitter
             return GeneralResponse.SuccessfulResponse;
@@ -44,22 +118,27 @@ namespace Parme.Frb.GluePlugin
             return true;
         }
 
-        private static string GenerateEmitterLogic(EmitterSettings settings, string className)
+        private void FileRemoved(IElement element, ReferencedFileSave removedFile)
         {
-            return EmitterLogicClassGenerator.Generate(settings,
-                GlueState.Self.ProjectNamespace,
-                className,
-                false);
+            var name = GetLogicClassName(removedFile.Name);
+            if (_emitterNameToAssetTypeInfoMap.TryGetValue(name, out var ati))
+            {
+                AvailableAssetTypes.Self.RemoveAssetType(ati);
+            }
+        }
+
+        private void GluxUnloaded()
+        {
+            foreach (var (_, ati) in _emitterNameToAssetTypeInfoMap)
+            {
+                AvailableAssetTypes.Self.RemoveAssetType(ati);
+            }
+            
+            _emitterNameToAssetTypeInfoMap.Clear();
         }
 
         private void GluxLoaded()
         {
-            // Search through all files for *.emitter
-            // Generate code for each one for IEmitterLogic class
-            // Create new ATI each one that (without emitter extension) and CanBeObject = true
-            //     + runtime qualified type
-            //     + custom load function
-
             var emitterFiles = ObjectFinder.Self
                 .GetAllReferencedFiles()
                 .Where(x => Path.GetExtension(x.Name).Equals(".emitter", StringComparison.OrdinalIgnoreCase))
@@ -67,27 +146,12 @@ namespace Parme.Frb.GluePlugin
             
             foreach (var emitterFile in emitterFiles)
             {
-                var name = Path.GetFileNameWithoutExtension(emitterFile.Name) + "EmitterLogic";
-                name = name.Replace("-", "")
-                    .Replace(" ", "");
-                
+                var name = GetLogicClassName(emitterFile.Name);
                 var json = File.ReadAllText(GlueCommands.Self.GetAbsoluteFileName(emitterFile));
                 
                 var emitter = EmitterSettings.FromJson(json);
-                if (!string.IsNullOrWhiteSpace(emitter.TextureFileName))
-                {
-                    var projectPath = GlueState.Self.CurrentGlueProjectDirectory;
-                    var absolutePath = GlueCommands.Self.GetAbsoluteFileName(emitterFile);
-                    var relativePath = FileManager.MakeRelative(absolutePath, projectPath);
-                    var directory = Path.GetDirectoryName(relativePath);
-                    emitter.TextureFileName = Path.Combine(directory, emitter.TextureFileName);
-                }
+                GenerateAndSave(emitter, name, emitterFile.Name);
 
-                var code = GenerateEmitterLogic(emitter, name);
-                var codeGenFilePath = new FilePath(Path.Combine(GlueState.Self.CurrentGlueProjectDirectory, "Particles", $"{name}.generated.cs"));
-                GlueCommands.Self.ProjectCommands.CreateAndAddCodeFile(codeGenFilePath);
-                File.WriteAllText(codeGenFilePath.FullPath, code);
-                
                 var ati = new AssetTypeInfo
                 {
                     CanBeObject = true,
@@ -110,6 +174,7 @@ namespace Parme.Frb.GluePlugin
                 };
                 
                 AvailableAssetTypes.Self.AddAssetType(ati);
+                _emitterNameToAssetTypeInfoMap.Add(name, ati);
             }
         }
     }
