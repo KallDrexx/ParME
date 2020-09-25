@@ -46,6 +46,14 @@ namespace Parme.Editor
 
         private void HandleKeyboardInput()
         {
+            if ((_currentKeyState.IsKeyDown(Keys.LeftControl) || _currentKeyState.IsKeyDown(Keys.RightControl)) &&
+                HasBeenPressed(Keys.S) &&
+                !string.IsNullOrWhiteSpace(_applicationState.ActiveFileName))
+            {
+                var operation = new SaveEmitterRequested(_applicationState.ActiveFileName, _applicationState.ActiveEmitter);
+                _appOperationQueue.Enqueue(operation);
+            }
+            
             if (!_uiController.AcceptingKeyboardInput)
             {
                 if (HasBeenPressed(Keys.F12))
@@ -61,14 +69,6 @@ namespace Parme.Editor
                 if (_currentKeyState.IsKeyDown(Keys.LeftControl) && HasBeenPressed(Keys.Y))
                 {
                     _commandHandler.Redo();
-                }
-
-                if ((_currentKeyState.IsKeyDown(Keys.LeftControl) || _currentKeyState.IsKeyDown(Keys.RightControl)) &&
-                    HasBeenPressed(Keys.S) &&
-                    !string.IsNullOrWhiteSpace(_applicationState.ActiveFileName))
-                {
-                    var operation = new SaveEmitterRequested(_applicationState.ActiveFileName, _applicationState.ActiveEmitter);
-                    _appOperationQueue.Enqueue(operation);
                 }
             }
         }
