@@ -91,7 +91,18 @@ namespace Parme.Frb.GluePlugin
 
         private void NewFileHandler(ReferencedFileSave newfile)
         {
+            if (Path.GetExtension(newfile.Name) != ".emitter")
+            {
+                return;
+            }
             
+            var name = GetLogicClassName(newfile.Name);
+            var json = File.ReadAllText(GlueCommands.Self.GetAbsoluteFileName(newfile));
+                
+            var emitter = EmitterSettings.FromJson(json);
+            GenerateAndSave(emitter, name, newfile.Name);
+                
+            _assetTypeInfoManager.EmitterLogicTypes.Add(name);
         }
 
         private void FileChangeHandler(string filename)
@@ -156,13 +167,7 @@ namespace Parme.Frb.GluePlugin
             
             foreach (var emitterFile in emitterFiles)
             {
-                var name = GetLogicClassName(emitterFile.Name);
-                var json = File.ReadAllText(GlueCommands.Self.GetAbsoluteFileName(emitterFile));
-                
-                var emitter = EmitterSettings.FromJson(json);
-                GenerateAndSave(emitter, name, emitterFile.Name);
-                
-                _assetTypeInfoManager.EmitterLogicTypes.Add(name);
+                NewFileHandler(emitterFile);
             }
         }
     }

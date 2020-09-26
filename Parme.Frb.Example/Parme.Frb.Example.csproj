@@ -67,6 +67,7 @@
     <Compile Include="Particles\ExceptionEmitterLogic.generated.cs" />
     <Compile Include="Particles\FireEmitterLogic.generated.cs" />
     <Compile Include="Particles\purpleEmitterLogic.generated.cs" />
+    <Compile Include="Particles\SomethingEmitterLogic.generated.cs" />
     <Compile Include="Particles\testEmitterLogic.generated.cs" />
     <Compile Include="Performance\IEntityFactory.Generated.cs" />
     <Compile Include="Performance\PoolList.Generated.cs" />
@@ -199,6 +200,10 @@
     <None Include="content\globalcontent\sampleparticles2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Name>sampleparticles2</Name>
+    </None>
+    <None Include="content\globalcontent\something.emitter">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>something</Name>
     </None>
     <None Include="content\globalcontent\test.emitter">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
