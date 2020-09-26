@@ -87,6 +87,8 @@ namespace Parme.Editor
                         ? _camera.Origin - new System.Numerics.Vector2(positionChange.X, -positionChange.Y)
                         : _camera.Origin - new System.Numerics.Vector2(positionChange.X, positionChange.Y);
                 }
+                
+                
             }
         }
         

@@ -14,6 +14,9 @@ namespace Parme.Editor.Ui.Elements
 {
     public class Workbench : ImGuiElement
     {
+        /// <summary>
+        /// Affects how much of the window size should be reserved for controls below the initializer/modifier section
+        /// </summary>
         private const int ChildWindowHeightSubtractionFactor = 80;
 
         private readonly SettingsCommandHandler _commandHandler;
@@ -43,6 +46,12 @@ namespace Parme.Editor.Ui.Elements
         public Vector3 BackgroundColor
         {
             get => Get<Vector3>();
+            set => Set(value);
+        }
+
+        public Vector2 EmitterVelocity
+        {
+            get => Get<Vector2>();
             set => Set(value);
         }
 
@@ -172,12 +181,19 @@ namespace Parme.Editor.Ui.Elements
                 
                 RenderModifiersSection();
                 
-                ImGui.NewLine();
+                //ImGui.NewLine();
                 ImGui.SetNextItemWidth(200);
                 var color = BackgroundColor;
                 if (ImGui.ColorEdit3("Background Color", ref color))
                 {
                     BackgroundColor = color;
+                }
+                
+                ImGui.SetNextItemWidth(200);
+                var velocity = EmitterVelocity;
+                if (ImGui.InputFloat2("Emitter Velocity", ref velocity))
+                {
+                    EmitterVelocity = velocity;
                 }
 
                 if (_commandHandler.CanUndo)

@@ -24,6 +24,7 @@ namespace Parme.Editor.Ui
         public bool AcceptingKeyboardInput => _imGuiManager.AcceptingKeyboardInput;
         public bool AcceptingMouseInput => _imGuiManager.AcceptingMouseInput;
         public Vector3 BackgroundColor => _emitterSettingsController.BackgroundColor;
+        public Vector2 EmitterVelocity => _emitterSettingsController.EmitterVelocity;
 
         public EditorUiController(ImGuiManager imGuiManager, 
             SettingsCommandHandler commandHandler, 

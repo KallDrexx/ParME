@@ -17,6 +17,7 @@ namespace Parme.Editor.Ui
     public class EmitterSettingsController
     {
         private const float WorkbenchHeight = 300f;
+        private const float MenuBarSize = 20f;
 
         private readonly SettingsCommandHandler _commandHandler;
         private readonly AppOperationQueue _appOperationQueue;
@@ -29,6 +30,7 @@ namespace Parme.Editor.Ui
         private float _lastEmitterChangedAt = -1;
 
         public Vector3 BackgroundColor => _workbench.BackgroundColor;
+        public Vector2 EmitterVelocity => _workbench.EmitterVelocity;
 
         public EmitterSettingsController(ImGuiManager imGuiManager, 
             SettingsCommandHandler commandHandler, 
@@ -78,11 +80,11 @@ namespace Parme.Editor.Ui
 
         public void ViewportResized(int width, int height)
         {
-            _workbench.Position = new Vector2(0, 20);
+            _workbench.Position = new Vector2(0, MenuBarSize);
             _workbench.Size = new Vector2(width, WorkbenchHeight);
             
-            _activeEditorWindow.Position = new Vector2(0, WorkbenchHeight + 20);
-            _activeEditorWindow.Size = new Vector2(300, height - WorkbenchHeight - 20);
+            _activeEditorWindow.Position = new Vector2(0, WorkbenchHeight + MenuBarSize);
+            _activeEditorWindow.Size = new Vector2(300, height - WorkbenchHeight - MenuBarSize);
         }
 
         private void WorkbenchOnPropertyChanged(object sender, PropertyChangedEventArgs e)

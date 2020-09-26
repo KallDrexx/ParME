@@ -56,10 +56,7 @@ namespace Parme.Editor
         {
             _textureFileLoader = new TextureFileLoader(GraphicsDevice, _applicationState);
             
-            _camera.Origin = new Vector2(-GraphicsDevice.Viewport.Width / 6f, GraphicsDevice.Viewport.Height / 4f);
-            _camera.PositiveYAxisPointsUp = true;
-            _camera.PixelWidth = GraphicsDevice.Viewport.Width;
-            _camera.PixelHeight = GraphicsDevice.Viewport.Height;
+            ResetCamera();
 
             var monoGameImGuiRenderer = new MonoGameImGuiRenderer(this);
             _imGuiManager = new ImGuiManager(monoGameImGuiRenderer);
@@ -118,6 +115,19 @@ namespace Parme.Editor
             _inputHandler.Update();
             _emitter?.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
             
+            if (_emitter != null)
+            {
+                if (_uiController.EmitterVelocity != Vector2.Zero)
+                {
+                    // Apply velocity to the emitter, but make sure the camera retains it's distance from the emitter
+                    // to keep it in the same spot of the viewport.
+                    var distance = _emitter.WorldCoordinates - _camera.Origin;
+                    _emitter.WorldCoordinates += _uiController.EmitterVelocity * (float) gameTime.ElapsedGameTime.TotalSeconds;
+                    _camera.Origin = _emitter.WorldCoordinates - distance;
+                }
+            }
+            
+            
             base.Update(gameTime);
         }
 
@@ -154,17 +164,23 @@ namespace Parme.Editor
                 
                 var logicClass = CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions).GetAwaiter().GetResult();
 
-                _emitter = new MonoGameEmitter(logicClass, GraphicsDevice, _textureFileLoader)
-                {
-                    //WorldCoordinates = new System.Numerics.Vector2(400, -200)
-                };
+                _emitter = new MonoGameEmitter(logicClass, GraphicsDevice, _textureFileLoader);
                 _emitter.Start();
+                ResetCamera();
             }
         }
 
         private void WindowOnClientSizeChanged(object sender, EventArgs e)
         {
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            _camera.PixelWidth = GraphicsDevice.Viewport.Width;
+            _camera.PixelHeight = GraphicsDevice.Viewport.Height;
+        }
+
+        private void ResetCamera()
+        {
+            _camera.Origin = new Vector2(-GraphicsDevice.Viewport.Width / 6f, GraphicsDevice.Viewport.Height / 4f);
+            _camera.PositiveYAxisPointsUp = true;
             _camera.PixelWidth = GraphicsDevice.Viewport.Width;
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
         }
