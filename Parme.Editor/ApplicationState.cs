@@ -1,4 +1,7 @@
-﻿using Parme.Core;
+﻿using System;
+using System.Diagnostics;
+using System.Reflection;
+using Parme.Core;
 using Parme.Editor.AppOperations;
 
 namespace Parme.Editor
@@ -7,12 +10,20 @@ namespace Parme.Editor
     {
         private float _currentTime;
         
+        public Version Version { get; }
         public string ActiveFileName { get; private set; }
         public EmitterSettings ActiveEmitter { get; private set; }
         public string ErrorMessage { get; private set; }
         public float TimeLastEmitterUpdated { get; private set; }
         public bool EmitterUpdatedFromFileLoad { get; private set; }
         public bool HasUnsavedChanges { get; private set; }
+
+        public ApplicationState()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            Version = new Version(fileVersionInfo.ProductVersion);
+        }
 
         public void UpdateTotalTime(float totalTime)
         {

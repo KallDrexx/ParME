@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using FlatRedBall.Glue;
 using FlatRedBall.Glue.Elements;
 using FlatRedBall.Glue.Errors;
@@ -22,7 +24,16 @@ namespace Parme.Frb.GluePlugin
         private readonly AssetTypeInfoManager _assetTypeInfoManager = new AssetTypeInfoManager();
         
         public override string FriendlyName => "ParME GluePlugin";
-        public override Version Version => new Version(0, 0, 0, 1);
+
+        public override Version Version
+        {
+            get
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+                return new Version(fileVersionInfo.ProductVersion);
+            }
+        }
         
         public override void StartUp()
         {

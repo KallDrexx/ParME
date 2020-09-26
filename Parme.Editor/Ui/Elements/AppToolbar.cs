@@ -12,6 +12,7 @@ namespace Parme.Editor.Ui.Elements
         
         public string CurrentlyOpenFileName { get; set; }
         public bool UnsavedChangesPresent { get; set; }
+        public Version AppVersion { get; set; }
         
         protected override void CustomRender()
         {
@@ -30,6 +31,11 @@ namespace Parme.Editor.Ui.Elements
                         ImGui.Text("*");
                     }
                 }
+
+                var versionString = $"v{AppVersion}";
+                var width = ImGui.CalcTextSize(versionString) * ImGui.GetIO().FontGlobalScale;
+                ImGui.SameLine(ImGui.GetWindowWidth() - width.X);
+                ImGui.Text(versionString);
 
                 ImGui.EndMainMenuBar();
             }

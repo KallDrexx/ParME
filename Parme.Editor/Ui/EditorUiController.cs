@@ -69,6 +69,7 @@ namespace Parme.Editor.Ui
 
             _appToolbar.CurrentlyOpenFileName = _applicationState.ActiveFileName;
             _appToolbar.UnsavedChangesPresent = _applicationState.HasUnsavedChanges;
+            _appToolbar.AppVersion = _applicationState.Version;
 
             if (!string.IsNullOrWhiteSpace(_applicationState.ErrorMessage))
             {
