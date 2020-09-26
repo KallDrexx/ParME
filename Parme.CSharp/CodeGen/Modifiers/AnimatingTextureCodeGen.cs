@@ -1,7 +1,7 @@
 ﻿using System;
 using Parme.Core.Modifiers;
 
-namespace Parme.CSharp.CodeGen.Initializers
+namespace Parme.CSharp.CodeGen.Modifiers
 {
     public class AnimatingTextureCodeGen : IGenerateCode
     {
