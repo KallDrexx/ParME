@@ -21,7 +21,7 @@ namespace Parme.CSharp.CodeGen.Initializers
         {
             return @"
                         particle.TextureSectionIndex = (byte) ((particle.TimeAlive / MaxParticleLifeTime) * 
-                                                               (TextureSections.Length / MaxParticleLifeTime));
+                                                               TextureSections.Length);
 ";
         }
     }
