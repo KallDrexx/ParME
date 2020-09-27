@@ -39,20 +39,12 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
 
         protected override void CustomRender()
         {
-            var min = new Vector2(MinXVelocity, MinYVelocity);
-            var max = new Vector2(MaxXVelocity, MaxYVelocity);
-
-            if (ImGui.InputFloat2("Minimum", ref min))
-            {
-                MinXVelocity = min.X;
-                MinYVelocity = min.Y;
-            }
-
-            if (ImGui.InputFloat2("Maximum", ref max))
-            {
-                MaxXVelocity = max.X;
-                MaxYVelocity = max.Y;
-            }
+            InputFloat(nameof(MinXVelocity), "Min X");
+            InputFloat(nameof(MinYVelocity), "Min Y");
+            
+            ImGui.NewLine();
+            InputFloat(nameof(MaxXVelocity), "Max X");
+            InputFloat(nameof(MaxYVelocity), "Max Y");
         }
 
         protected override void OnNewSettingsLoaded()
