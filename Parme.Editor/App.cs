@@ -25,7 +25,7 @@ namespace Parme.Editor
         private readonly ApplicationState _applicationState = new ApplicationState();
         private readonly AppOperationQueue _appOperationQueue;
         private readonly SettingsCommandHandler _commandHandler;
-        private ITextureFileLoader _textureFileLoader;
+        private TextureFileLoader _textureFileLoader;
         private MonoGameEmitter _emitter;
         private ImGuiManager _imGuiManager;
         private EditorUiController _uiController;
@@ -87,6 +87,12 @@ namespace Parme.Editor
         protected override void Update(GameTime gameTime)
         {
             _applicationState.UpdateTotalTime((float) gameTime.TotalGameTime.TotalSeconds);
+            
+            if (_textureFileLoader.CachedTextureHasPendingUpdate())
+            {
+                var operationResult = new EmitterUpdatedNotification(_commandHandler.GetCurrentSettings()).Run();
+                _applicationState.Apply(operationResult);
+            }
 
             while (_appOperationQueue.TryDequeue(out var appOperation))
             {
