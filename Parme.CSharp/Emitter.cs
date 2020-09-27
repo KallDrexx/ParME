@@ -8,8 +8,8 @@ namespace Parme.CSharp
         protected readonly ParticleBuffer ParticleBuffer;
         
         public Vector2 WorldCoordinates { get; set; }
-        public float ScaleFactor { get; set; } = 1f;
         public bool IsEmittingNewParticles { get; set; }
+        public Vector2 FullTextureSize { get; protected set; }
 
         protected Emitter(IEmitterLogic emitterLogic)
         {

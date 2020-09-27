@@ -27,12 +27,13 @@ namespace Parme.MonoGame
 
             _spriteBatch = new SpriteBatch(graphicsDevice);
             _basicEffect = new BasicEffect(graphicsDevice);
+            FullTextureSize = new System.Numerics.Vector2(_texture.Width, _texture.Height);
         }
 
         public override void Render(ParticleCamera camera)
         {
-            var totalHorizontalZoomFactor = camera.HorizontalZoomFactor * ScaleFactor;
-            var totalVerticalZoomFactor = camera.VerticalZoomFactor * ScaleFactor;
+            var totalHorizontalZoomFactor = camera.HorizontalZoomFactor;
+            var totalVerticalZoomFactor = camera.VerticalZoomFactor;
             
             _basicEffect.TextureEnabled = true;
             _basicEffect.LightingEnabled = false;

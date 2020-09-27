@@ -8,6 +8,9 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
     [EditorForType(typeof(RandomSizeInitializer))]
     public class RandomSizeEditor : SettingsEditorBase
     {
+        private readonly string[] _axisLabels = new[] {"X", "Y"};
+        private int _selectedAxisLabelIndex;
+        
         [SelfManagedProperty]
         public int MinWidth
         {
@@ -36,15 +39,56 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
             set => Set(value);
         }
 
+        [SelfManagedProperty]
+        public bool PreserveAspectRatio
+        {
+            get => Get<bool>();
+            set => Set(value);
+        }
+
+        [SelfManagedProperty]
+        public RandomSizeInitializer.Axis? RandomizedAxis
+        {
+            get => Get<RandomSizeInitializer.Axis?>();
+            set => Set(value);
+        }
+
         protected override void CustomRender()
         {
-            InputInt(nameof(MinWidth), "Min Width");
-            InputInt(nameof(MinHeight), "Min Height");
+            if (!PreserveAspectRatio)
+            {
+                InputInt(nameof(MinWidth), "Min Width");
+                InputInt(nameof(MinHeight), "Min Height");
+            
+                ImGui.NewLine();
+            
+                InputInt(nameof(MaxWidth), "Max Width");
+                InputInt(nameof(MaxHeight), "Max Height");
+            }
+            else
+            {
+                if (RandomizedAxis == RandomSizeInitializer.Axis.Y)
+                {
+                    InputInt(nameof(MinHeight), "Min Height");
+                    InputInt(nameof(MaxHeight), "Max Height");
+                }
+                else
+                {
+                    InputInt(nameof(MinWidth), "Min Width");
+                    InputInt(nameof(MaxWidth), "Max Width");
+                }
+                
+                ImGui.NewLine();
+                if (ImGui.Combo("Axis To Randomize", ref _selectedAxisLabelIndex, _axisLabels, _axisLabels.Length))
+                {
+                    RandomizedAxis = _selectedAxisLabelIndex == 1
+                        ? RandomSizeInitializer.Axis.Y
+                        : RandomSizeInitializer.Axis.X;
+                }
+            }
             
             ImGui.NewLine();
-            
-            InputInt(nameof(MaxWidth), "Max Width");
-            InputInt(nameof(MaxHeight), "Max Height");
+            Checkbox(nameof(PreserveAspectRatio), "Preserve Aspect Ratio");
         }
 
         protected override void OnNewSettingsLoaded()
@@ -57,6 +101,10 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
             MinHeight = initializer.MinHeight;
             MaxWidth = initializer.MaxWidth;
             MaxHeight = initializer.MaxHeight;
+            PreserveAspectRatio = initializer.PreserveAspectRatio;
+            RandomizedAxis = initializer.RandomizedAxis;
+
+            _selectedAxisLabelIndex = RandomizedAxis == RandomSizeInitializer.Axis.Y ? 1 : 0;
         }
 
         protected override void OnSelfManagedPropertyChanged(string propertyName)
@@ -67,6 +115,8 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
                 MinHeight = MinHeight,
                 MaxWidth = MaxWidth,
                 MaxHeight = MaxHeight,
+                RandomizedAxis = RandomizedAxis,
+                PreserveAspectRatio = PreserveAspectRatio,
             };
             
             CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.Size, initializer));

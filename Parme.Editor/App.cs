@@ -72,16 +72,7 @@ namespace Parme.Editor
 
             ImGui.GetIO().FontGlobalScale = 1.2f;
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-
-            var pixels = new Color[10*10];
-            for (var x = 0; x < pixels.Length; x++)
-            {
-                pixels[x] = Color.White;
-            }
             
-            _testTexture = new Texture2D(GraphicsDevice, 10, 10);
-            _testTexture.SetData(pixels);
-
             base.Initialize();
         }
 
