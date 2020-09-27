@@ -68,6 +68,7 @@ namespace Parme.Editor
                 monoGameImGuiRenderer);
             
             _inputHandler = new InputHandler(_uiController, _camera, _commandHandler, _appOperationQueue, _applicationState);
+            _inputHandler.ResetCameraAndEmitterRequested += (sender, args) => ResetCamera(true);
 
             ImGui.GetIO().FontGlobalScale = 1.2f;
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
@@ -183,12 +184,19 @@ namespace Parme.Editor
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
         }
 
-        private void ResetCamera()
+        private void ResetCamera(bool resetEmitterPosition = false)
         {
             _camera.Origin = new Vector2(-GraphicsDevice.Viewport.Width / 6f, GraphicsDevice.Viewport.Height / 4f);
             _camera.PositiveYAxisPointsUp = true;
             _camera.PixelWidth = GraphicsDevice.Viewport.Width;
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
+            _camera.VerticalZoomFactor = 1f;
+            _camera.HorizontalZoomFactor = 1f;
+
+            if (resetEmitterPosition && _emitter != null)
+            {
+                _emitter.WorldCoordinates = Vector2.Zero;
+            }
         }
     }
 }

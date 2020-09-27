@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Parme.CSharp;
 using Parme.Editor.AppOperations;
@@ -16,6 +17,8 @@ namespace Parme.Editor
         
         private KeyboardState _previousKeyState, _currentKeyState;
         private MouseState _previousMouseState, _currentMouseState;
+
+        public event EventHandler ResetCameraAndEmitterRequested;
 
         public InputHandler(EditorUiController uiController, 
             ParticleCamera camera, 
@@ -70,6 +73,11 @@ namespace Parme.Editor
                 {
                     _commandHandler.Redo();
                 }
+
+                if (HasBeenPressed(Keys.Back))
+                {
+                    ResetCameraAndEmitterRequested?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -78,10 +86,14 @@ namespace Parme.Editor
             if (!_uiController.AcceptingMouseInput)
             {
                 // Only react to mouse actions if the UI doesn't have focus
-                var positionChange = _currentMouseState.Position - _previousMouseState.Position;
+                var pixelChange = _currentMouseState.Position - _previousMouseState.Position;
+                var positionChange = new Vector2(
+                    pixelChange.X / _camera.HorizontalZoomFactor,
+                    pixelChange.Y / _camera.VerticalZoomFactor);
+                
                 if (_previousMouseState.LeftButton == ButtonState.Pressed && 
                     _currentMouseState.LeftButton == ButtonState.Pressed && 
-                    positionChange != Point.Zero)
+                    positionChange != Vector2.Zero)
                 {
                     _camera.Origin = _camera.PositiveYAxisPointsUp
                         ? _camera.Origin - new System.Numerics.Vector2(positionChange.X, -positionChange.Y)

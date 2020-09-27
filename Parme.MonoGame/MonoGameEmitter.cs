@@ -42,8 +42,8 @@ namespace Parme.MonoGame
             _basicEffect.Projection = Matrix.CreateOrthographic(camera.PixelWidth, -camera.PixelHeight, -1, 1);
             _basicEffect.View =
                 Matrix.CreateTranslation(
-                    -camera.Origin.X / totalHorizontalZoomFactor, 
-                    camera.Origin.Y / totalVerticalZoomFactor,
+                    -camera.Origin.X, 
+                    camera.Origin.Y,
                     0) *
                 Matrix.CreateScale(totalHorizontalZoomFactor, totalVerticalZoomFactor, 1);
 
