@@ -49,6 +49,21 @@ namespace Parme.CSharp
                 particle.IsAlive = false;
             }
         }
+
+        public int CalculateLiveParticleCount()
+        {
+            int count = 0;
+            var particles = ParticleBuffer.Particles;
+            for (var x = 0; x < particles.Length; x++)
+            {
+                if (particles[x].IsAlive)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
         
         // ReSharper disable once UnusedMemberInSuper.Global
         public abstract void Render(ParticleCamera camera);

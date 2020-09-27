@@ -35,7 +35,7 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
             get => Get<int>();
             set => Set(value);
         }
-        
+
         protected override void CustomRender()
         {
             InputInt(nameof(MinWidth), "Min Width");

@@ -13,6 +13,7 @@ namespace Parme.Editor.Ui.Elements
         public string CurrentlyOpenFileName { get; set; }
         public bool UnsavedChangesPresent { get; set; }
         public Version AppVersion { get; set; }
+        public int ParticleCount { get; set; }
         
         protected override void CustomRender()
         {
@@ -30,6 +31,9 @@ namespace Parme.Editor.Ui.Elements
                         ImGui.SameLine();
                         ImGui.Text("*");
                     }
+                    
+                    ImGui.SameLine();
+                    ImGui.Text($" ({ParticleCount} Particles)");
                 }
 
                 var versionString = $"v{AppVersion}";

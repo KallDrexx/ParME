@@ -111,9 +111,10 @@ namespace Parme.Editor
             }
             
             _commandHandler.UpdateTime((float) gameTime.ElapsedGameTime.TotalSeconds);
-            _uiController.Update();
             _inputHandler.Update();
             _emitter?.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
+            _applicationState.ParticleCount = _emitter?.CalculateLiveParticleCount() ?? 0;
+            _uiController.Update();
             
             if (_emitter != null)
             {
@@ -126,7 +127,6 @@ namespace Parme.Editor
                     _camera.Origin = _emitter.WorldCoordinates - distance;
                 }
             }
-            
             
             base.Update(gameTime);
         }

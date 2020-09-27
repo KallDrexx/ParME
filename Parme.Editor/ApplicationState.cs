@@ -17,6 +17,7 @@ namespace Parme.Editor
         public float TimeLastEmitterUpdated { get; private set; }
         public bool EmitterUpdatedFromFileLoad { get; private set; }
         public bool HasUnsavedChanges { get; private set; }
+        public int ParticleCount { get; set; }
 
         public ApplicationState()
         {
