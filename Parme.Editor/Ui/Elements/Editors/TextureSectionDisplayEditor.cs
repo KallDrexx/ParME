@@ -44,9 +44,9 @@ namespace Parme.Editor.Ui.Elements.Editors
                 }
                 
                 ImGui.Columns(1);
+                
+                _textureSectionEditor.Render();
             }
-
-            _textureSectionEditor.Render();
         }
 
         protected override void OnNewSettingsLoaded()
@@ -60,12 +60,17 @@ namespace Parme.Editor.Ui.Elements.Editors
                 _imguiTextureId = MonoGameImGuiRenderer.BindTexture(_texture);
             }
 
-            _textureSectionEditor.ApplicationState = ApplicationState;
-            _textureSectionEditor.CommandHandler = CommandHandler;
-            _textureSectionEditor.MonoGameImGuiRenderer = MonoGameImGuiRenderer;
-            _textureSectionEditor.AppOperationQueue = AppOperationQueue;
-            _textureSectionEditor.TextureFileLoader = TextureFileLoader;
-            _textureSectionEditor.EmitterSettings = EmitterSettings;
+            if (_texture != null)
+            {
+                // Since we have no texture, there's no point to the section editor existing, so don't bother
+                // doing anything until we actually have a texture loaded
+                _textureSectionEditor.ApplicationState = ApplicationState;
+                _textureSectionEditor.CommandHandler = CommandHandler;
+                _textureSectionEditor.MonoGameImGuiRenderer = MonoGameImGuiRenderer;
+                _textureSectionEditor.AppOperationQueue = AppOperationQueue;
+                _textureSectionEditor.TextureFileLoader = TextureFileLoader;
+                _textureSectionEditor.EmitterSettings = EmitterSettings;
+            }
         }
 
         protected override void OnSelfManagedPropertyChanged(string propertyName)
