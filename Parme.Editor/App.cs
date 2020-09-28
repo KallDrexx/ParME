@@ -32,8 +32,6 @@ namespace Parme.Editor
         private InputHandler _inputHandler;
         private float _lastProcessedEmitterChangeTime;
 
-        private Texture2D _testTexture;
-        
         public App()
         {
             _appOperationQueue = new AppOperationQueue();

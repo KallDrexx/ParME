@@ -77,8 +77,8 @@ namespace Parme.Editor.AppOperations
                 {
                     MinXVelocity = 0,
                     MaxXVelocity = 0,
-                    MinYVelocity = 2,
-                    MaxYVelocity = 5,
+                    MinYVelocity = 200,
+                    MaxYVelocity = 500,
                 },
 
                 new RandomRegionPositionInitializer
@@ -101,8 +101,8 @@ namespace Parme.Editor.AppOperations
                 new ConstantRotationModifier {DegreesPerSecond = 100f},
                 new ConstantAccelerationModifier
                 {
-                    XAcceleration = -5,
-                    YAcceleration = 5,
+                    XAcceleration = -250,
+                    YAcceleration = 0,
                 },
 
                 new ConstantSizeModifier
