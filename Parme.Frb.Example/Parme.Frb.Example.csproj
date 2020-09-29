@@ -64,6 +64,7 @@
     </Compile>
     <Compile Include="GlobalContent.Generated.cs" />
     <Compile Include="GlueControl\GlueControlManager.Generated.cs" />
+    <Compile Include="Particles\FireEmitterLogic.generated.cs" />
     <Compile Include="Performance\IEntityFactory.Generated.cs" />
     <Compile Include="Performance\PoolList.Generated.cs" />
     <Compile Include="Program.cs" />
@@ -183,26 +184,6 @@
     <None Include="content\globalcontent\fire.emitter">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Name>Fire</Name>
-    </None>
-    <None Include="content\globalcontent\purple.emitter">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Name>purple</Name>
-    </None>
-    <None Include="content\globalcontent\sampleparticles.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Name>SampleParticles</Name>
-    </None>
-    <None Include="content\globalcontent\sampleparticles2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Name>sampleparticles2</Name>
-    </None>
-    <None Include="content\globalcontent\something.emitter">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Name>something</Name>
-    </None>
-    <None Include="content\globalcontent\test.emitter">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Name>test</Name>
     </None>
     <None Include="Libraries\DesktopGl\Debug\FlatRedBall.Forms.dll" />
     <None Include="Libraries\DesktopGl\Debug\GumCoreXnaPc.dll" />

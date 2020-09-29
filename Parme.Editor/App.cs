@@ -206,7 +206,7 @@ namespace Parme.Editor
 
                 _emitter = new MonoGameEmitter(logicClass, _particlePool, GraphicsDevice, _textureFileLoader);
                 _emitterRenderGroup.AddEmitter(_emitter);
-                _emitter.Start();
+                _emitter.IsEmittingNewParticles = true;
                 ResetCamera();
             }
         }

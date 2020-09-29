@@ -80,6 +80,27 @@
           <Name>Z</Name>
           <Type>float</Type>
         </CustomVariable>
+        <CustomVariable>
+          <Properties>
+            <PropertySave>
+              <Name>Type</Name>
+              <ValueAsString>bool</ValueAsString>
+            </PropertySave>
+            <PropertySave>
+              <Name>OverridingPropertyType</Name>
+              <ValueAsString>bool</ValueAsString>
+            </PropertySave>
+            <PropertySave>
+              <Name>TypeConverter</Name>
+              <ValueAsString>&lt;default&gt;</ValueAsString>
+            </PropertySave>
+          </Properties>
+          <Name>ParmeParticleEmitterInstanceIsEmitting</Name>
+          <Type>bool</Type>
+          <DefaultValue xsi:type="xsd:boolean">true</DefaultValue>
+          <SourceObject>ParmeParticleEmitterInstance</SourceObject>
+          <SourceObjectProperty>IsEmitting</SourceObjectProperty>
+        </CustomVariable>
       </CustomVariables>
       <ImplementsIDrawableBatch>false</ImplementsIDrawableBatch>
       <Name>Entities\SomeCircle</Name>
@@ -111,18 +132,12 @@
         <NamedObjectSave>
           <CustomProperty>
             <Type>string</Type>
-            <Member>Emitter Type</Member>
+            <Member>Behavior</Member>
             <ValueAsString>FireEmitterLogic</ValueAsString>
           </CustomProperty>
           <CustomProperty>
-            <Type>float</Type>
-            <Member>X</Member>
-            <ValueAsFloat>-50</ValueAsFloat>
-          </CustomProperty>
-          <CustomProperty>
-            <Type>float</Type>
-            <Member>Y</Member>
-            <ValueAsFloat>-50</ValueAsFloat>
+            <Type>bool</Type>
+            <Member>IsEmitting</Member>
           </CustomProperty>
           <Properties>
             <PropertySave>
@@ -135,7 +150,7 @@
             </PropertySave>
           </Properties>
           <SourceType>FlatRedBallType</SourceType>
-          <SourceClassType>Parme.Frb.EmitterDrawableBatch</SourceClassType>
+          <SourceClassType>Parme.Frb.ParmeFrbEmitter</SourceClassType>
           <InstanceName>ParmeParticleEmitterInstance</InstanceName>
           <AttachToContainer>true</AttachToContainer>
           <GenerateTimedEmit>true</GenerateTimedEmit>
@@ -147,36 +162,7 @@
   </Entities>
   <GlobalFiles>
     <ReferencedFileSave>
-      <Name>GlobalContent/SampleParticles.png</Name>
-      <IsSharedStatic>true</IsSharedStatic>
-      <DestroyOnUnload>false</DestroyOnUnload>
-      <HasPublicProperty>true</HasPublicProperty>
-      <ProjectsToExcludeFrom />
-    </ReferencedFileSave>
-    <ReferencedFileSave>
       <Name>GlobalContent/Fire.emitter</Name>
-      <IsSharedStatic>true</IsSharedStatic>
-      <DestroyOnUnload>false</DestroyOnUnload>
-      <HasPublicProperty>true</HasPublicProperty>
-      <LoadedAtRuntime>false</LoadedAtRuntime>
-      <ProjectsToExcludeFrom />
-    </ReferencedFileSave>
-    <ReferencedFileSave>
-      <Name>GlobalContent/test.emitter</Name>
-      <IsSharedStatic>true</IsSharedStatic>
-      <DestroyOnUnload>false</DestroyOnUnload>
-      <HasPublicProperty>true</HasPublicProperty>
-      <ProjectsToExcludeFrom />
-    </ReferencedFileSave>
-    <ReferencedFileSave>
-      <Name>GlobalContent/purple.emitter</Name>
-      <IsSharedStatic>true</IsSharedStatic>
-      <DestroyOnUnload>false</DestroyOnUnload>
-      <HasPublicProperty>true</HasPublicProperty>
-      <ProjectsToExcludeFrom />
-    </ReferencedFileSave>
-    <ReferencedFileSave>
-      <Name>GlobalContent/something.emitter</Name>
       <IsSharedStatic>true</IsSharedStatic>
       <DestroyOnUnload>false</DestroyOnUnload>
       <HasPublicProperty>true</HasPublicProperty>

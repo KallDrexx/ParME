@@ -34,6 +34,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Parme.Core\Parme.Core.csproj" />
       <ProjectReference Include="..\Parme.CSharp\Parme.CSharp.csproj" />
+      <ProjectReference Include="..\Parme.Frb\Parme.Frb.csproj" />
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">

@@ -39,11 +39,15 @@ namespace Parme.Frb.Example.Screens
                 SomeCircleInstance.X -= TimeManager.SecondDifference * movementSpeed;
             }
 
-            
-
             if (InputManager.Keyboard.KeyReleased(Keys.Enter))
             {
-                // EmitterDrawableBatchInstance.IsEmitting = !EmitterDrawableBatchInstance.IsEmitting;
+                SomeCircleInstance.ParmeParticleEmitterInstanceIsEmitting =
+                    !SomeCircleInstance.ParmeParticleEmitterInstanceIsEmitting;
+            }
+
+            if (InputManager.Keyboard.KeyReleased(Keys.Delete))
+            {
+                SomeCircleInstance.Destroy();
             }
         }
 

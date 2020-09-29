@@ -19,14 +19,11 @@ namespace Parme.Frb.Example
     public static partial class GlobalContent
     {
         
-        public static Microsoft.Xna.Framework.Graphics.Texture2D SampleParticles { get; set; }
         [System.Obsolete("Use GetFile instead")]
         public static object GetStaticMember (string memberName) 
         {
             switch(memberName)
             {
-                case  "SampleParticles":
-                    return SampleParticles;
             }
             return null;
         }
@@ -34,8 +31,6 @@ namespace Parme.Frb.Example
         {
             switch(memberName)
             {
-                case  "SampleParticles":
-                    return SampleParticles;
             }
             return null;
         }
@@ -45,7 +40,6 @@ namespace Parme.Frb.Example
         public static void Initialize () 
         {
             
-            SampleParticles = FlatRedBall.FlatRedBallServices.Load<Microsoft.Xna.Framework.Graphics.Texture2D>(@"content/globalcontent/sampleparticles.png", ContentManagerName);
             			IsInitialized = true;
             #if DEBUG && WINDOWS
             InitializeFileWatch();
@@ -53,16 +47,6 @@ namespace Parme.Frb.Example
         }
         public static void Reload (object whatToReload) 
         {
-            if (whatToReload == SampleParticles)
-            {
-                var oldTexture = SampleParticles;
-                {
-                    var cm = FlatRedBall.FlatRedBallServices.GetContentManagerByName("Global");
-                    cm.UnloadAsset(SampleParticles);
-                    SampleParticles = FlatRedBall.FlatRedBallServices.Load<Microsoft.Xna.Framework.Graphics.Texture2D>("content/globalcontent/sampleparticles.png");
-                }
-                FlatRedBall.SpriteManager.ReplaceTexture(oldTexture, SampleParticles);
-            }
         }
         #if DEBUG && WINDOWS
         static System.IO.FileSystemWatcher watcher;
@@ -86,10 +70,6 @@ namespace Parme.Frb.Example
                 System.Threading.Thread.Sleep(500);
                 var fullFileName = e.FullPath;
                 var relativeFileName = FlatRedBall.IO.FileManager.MakeRelative(FlatRedBall.IO.FileManager.Standardize(fullFileName));
-                if (relativeFileName == "content/globalcontent/sampleparticles.png")
-                {
-                    Reload(SampleParticles);
-                }
             }
             catch{}
         }

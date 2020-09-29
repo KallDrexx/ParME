@@ -24,19 +24,27 @@ namespace Parme.Frb.GluePlugin
                 CanBeObject = true,
                 QualifiedRuntimeTypeName = new PlatformSpecificType
                 {
-                    QualifiedType = "Parme.Frb.EmitterDrawableBatch",
+                    QualifiedType = "Parme.Frb.ParmeFrbEmitter",
                 },
                 FriendlyName = "Parme Particle Emitter",
                 ConstructorFunc = ConstructorFunc,
-                AddToManagersFunc = (element, save, arg3, arg4) => $"FlatRedBall.SpriteManager.AddDrawableBatch({save.FieldName});",
+                DestroyMethod = "this.Destroy()",
                 VariableDefinitions =
                 {
                     new VariableDefinition
                     {
-                        Name = "Emitter Type",
+                        Name = "Behavior",
                         Type = "string",
                         UsesCustomCodeGeneration = true,
                         ForcedOptions = EmitterLogicTypes,
+                    },
+                    
+                    new VariableDefinition
+                    {
+                        Name = "Emitter Group",
+                        Type = "string",
+                        DefaultValue = ParmeEmitterManager.DefaultGroupName,
+                        UsesCustomCodeGeneration = true,
                     },
                     
                     new VariableDefinition
@@ -48,42 +56,39 @@ namespace Parme.Frb.GluePlugin
                     
                     new VariableDefinition
                     {
-                        Name = "X",
+                        Name = "XOffset",
                         Type = "float",
                     }, 
                     
                     new VariableDefinition
                     {
-                        Name = "Y",
-                        Type = "float",
-                    }, 
-                    
-                    new VariableDefinition
-                    {
-                        Name = "Z",
+                        Name = "YOffset",
                         Type = "float",
                     },
                 }
             };
         }
 
-        private string ConstructorFunc(IElement element, NamedObjectSave namedObject, ReferencedFileSave referencedFile)
+        private static string ConstructorFunc(IElement element, NamedObjectSave namedObject, ReferencedFileSave referencedFile)
         {
-            var emitterTypeSelected = namedObject.GetCustomVariable("Emitter Type")?.Value as string;
-            
-            var result = new StringBuilder();
-            result.AppendLine($"{namedObject.FieldName} = new EmitterDrawableBatch();");
+            var emitterTypeSelected = namedObject.GetCustomVariable("Behavior")?.Value as string;
+            var emitterGroupName = namedObject.GetCustomVariable("Emitter Group")?.Value as string;
 
-            if (emitterTypeSelected != null)
+            if (string.IsNullOrWhiteSpace(emitterTypeSelected))
             {
-                result.AppendLine($"            {namedObject.FieldName}.EmitterLogic = new {emitterTypeSelected}();");
-
-                if (element is EntitySave)
-                {
-                    result.AppendLine($"            {namedObject.FieldName}.Parent = this;");
-                }
+                // No behavior selected, so we can't actually create the emitter
+                return string.Empty;
             }
 
+            var parentString = element is EntitySave ? "this" : "null";
+            var groupNameString = $"\"{emitterGroupName}\"";
+            
+            var result = new StringBuilder();
+            result.AppendLine($"            var emitterLogic = new {emitterTypeSelected}();");
+            result.AppendLine($"            {namedObject.FieldName} = Parme.Frb.ParmeEmitterManager.Instance");
+            result.AppendLine($"                .CreateEmitter(emitterLogic, {parentString}, {groupNameString});");
+            result.AppendLine();
+            
             return result.ToString();
         }
     }

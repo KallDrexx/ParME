@@ -7,9 +7,12 @@ namespace Parme.CSharp
     {
         protected readonly IEmitterLogic EmitterLogic;
         protected readonly ParticleBuffer ParticleBuffer;
+        private bool _isDisposed;
         
         public Vector2 WorldCoordinates { get; set; }
         public bool IsEmittingNewParticles { get; set; }
+        
+        // ReSharper disable once MemberCanBeProtected.Global
         public Vector2 FullTextureSize { get; protected set; }
 
         protected Emitter(IEmitterLogic emitterLogic, ParticlePool particlePool)
@@ -22,23 +25,13 @@ namespace Parme.CSharp
 
         public void Update(float timeSinceLastFrame)
         {
+            if (_isDisposed)
+            {
+                const string message = "Attempted to update a disposed emitter";
+                throw new InvalidOperationException(message);
+            }
+            
             EmitterLogic.Update(ParticleBuffer, timeSinceLastFrame, this);
-        }
-
-        /// <summary>
-        /// Begins emitting particles
-        /// </summary>
-        public void Start()
-        {
-            IsEmittingNewParticles = true;
-        }
-
-        /// <summary>
-        /// Stops emitting new particles, but existing particles will still be active
-        /// </summary>
-        public void Stop()
-        {
-            IsEmittingNewParticles = false;
         }
         
         public void KillAllParticles()
@@ -68,9 +61,10 @@ namespace Parme.CSharp
 
         public void Dispose()
         {
-            Stop();
+            IsEmittingNewParticles = false;
             KillAllParticles();
             ParticleBuffer.Dispose();
+            _isDisposed = true;
         }
     }
 }

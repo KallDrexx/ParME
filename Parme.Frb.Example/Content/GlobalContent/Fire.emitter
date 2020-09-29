@@ -1,32 +1,7 @@
 {
   "MaxParticleLifeTime": 1.0,
-  "TextureFileName": "SampleParticles.png",
-  "TextureSections": [
-    {
-      "LeftX": 0,
-      "TopY": 0,
-      "RightX": 16,
-      "BottomY": 16
-    },
-    {
-      "LeftX": 16,
-      "TopY": 0,
-      "RightX": 32,
-      "BottomY": 16
-    },
-    {
-      "LeftX": 32,
-      "TopY": 0,
-      "RightX": 48,
-      "BottomY": 16
-    },
-    {
-      "LeftX": 48,
-      "TopY": 0,
-      "RightX": 64,
-      "BottomY": 16
-    }
-  ],
+  "TextureFileName": null,
+  "TextureSections": [],
   "Trigger": {
     "EditorShortName": "Time Elapsed",
     "EditorShortValue": "every 0.01 seconds",
@@ -43,20 +18,20 @@
     },
     {
       "EditorShortName": "Static",
-      "EditorShortValue": "1, 0.64705884, 0, 1",
-      "RedMultiplier": 1.0,
-      "GreenMultiplier": 0.64705884,
-      "BlueMultiplier": 0.0,
-      "AlphaMultiplier": 1.0,
+      "EditorShortValue": "255, 165, 0, 1",
+      "Red": 255,
+      "Green": 165,
+      "Blue": 0,
+      "Alpha": 1.0,
       "$ParmeType": "StaticColorInitializer"
     },
     {
       "EditorShortName": "Random Range",
-      "EditorShortValue": "(0, 2) - (0, 5)",
+      "EditorShortValue": "(0, 100) - (0, 200)",
       "MinXVelocity": 0.0,
       "MaxXVelocity": 0.0,
-      "MinYVelocity": 2.0,
-      "MaxYVelocity": 5.0,
+      "MinYVelocity": 100.0,
+      "MaxYVelocity": 200.0,
       "$ParmeType": "RandomRangeVelocityInitializer"
     },
     {
@@ -69,15 +44,10 @@
       "$ParmeType": "RandomRegionPositionInitializer"
     },
     {
-      "EditorShortName": "Random",
-      "EditorShortValue": "",
-      "$ParmeType": "RandomTextureInitializer"
-    },
-    {
       "EditorShortName": "Static",
-      "EditorShortValue": "(100, 100)",
-      "Width": 100,
-      "Height": 100,
+      "EditorShortValue": "(10, 10)",
+      "Width": 10,
+      "Height": 10,
       "$ParmeType": "StaticSizeInitializer"
     }
   ],
@@ -90,9 +60,9 @@
     },
     {
       "EditorShortName": "Constant Acceleration",
-      "EditorShortValue": "(-5, 5)",
-      "XAcceleration": -5.0,
-      "YAcceleration": 5.0,
+      "EditorShortValue": "(-75, 0)",
+      "XAcceleration": -75.0,
+      "YAcceleration": 0.0,
       "$ParmeType": "ConstantAccelerationModifier"
     },
     {
@@ -103,13 +73,13 @@
       "$ParmeType": "ConstantSizeModifier"
     },
     {
-      "EditorShortName": "Constant Color Mult",
-      "EditorShortValue": "-1, -1, -1, -1",
-      "RedMultiplierChangePerSecond": -1.0,
-      "GreenMultiplierChangePerSecond": -1.0,
-      "BlueMultiplierChangePerSecond": -1.0,
-      "AlphaMultiplierChangePerSecond": -1.0,
-      "$ParmeType": "ConstantColorMultiplierChangeModifier"
+      "EditorShortName": "Ending Color Multiplier",
+      "EditorShortValue": "255, 165, 0, 0",
+      "Red": 255,
+      "Green": 165,
+      "Blue": 0,
+      "Alpha": 0.0,
+      "$ParmeType": "EndingColorModifier"
     }
   ]
 }

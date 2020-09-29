@@ -8,6 +8,7 @@ namespace Parme.CSharp
 
         private readonly ParticlePool.Reservation _particles;
         private int _firstActiveIndex = 0, _lastActiveIndex = 0;
+        private bool _isDisposed;
 
         public ParticleBuffer(ParticlePool particlePool, int initialCapacity)
         {
@@ -25,6 +26,12 @@ namespace Parme.CSharp
         {
             get
             {
+                if (_isDisposed)
+                {
+                    const string message = "Attempted to get particles from disposed particle buffer";
+                    throw new InvalidOperationException(message);
+                }
+                
                 ConstrainActiveArea();
                 return _particles.Slice.Span.Slice(_firstActiveIndex, _lastActiveIndex - _firstActiveIndex + 1);
             }
@@ -32,6 +39,12 @@ namespace Parme.CSharp
 
         public void Add(Particle particle)
         {
+            if (_isDisposed)
+            {
+                const string message = "Attempted to add particles to disposed particle buffer";
+                throw new InvalidOperationException(message);
+            }
+            
             ConstrainActiveArea();
 
             if (_firstActiveIndex > 0)
@@ -61,6 +74,7 @@ namespace Parme.CSharp
         public void Dispose()
         {
             _particles?.Dispose();
+            _isDisposed = true;
         }
 
         private void ConstrainActiveArea()
