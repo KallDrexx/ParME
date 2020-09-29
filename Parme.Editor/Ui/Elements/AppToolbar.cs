@@ -14,6 +14,7 @@ namespace Parme.Editor.Ui.Elements
         public bool UnsavedChangesPresent { get; set; }
         public Version AppVersion { get; set; }
         public int ParticleCount { get; set; }
+        public int ZoomPercentage { get; set; }
         
         protected override void CustomRender()
         {
@@ -37,9 +38,16 @@ namespace Parme.Editor.Ui.Elements
                 }
 
                 var versionString = $"v{AppVersion}";
-                var width = ImGui.CalcTextSize(versionString) * ImGui.GetIO().FontGlobalScale;
-                ImGui.SameLine(ImGui.GetWindowWidth() - width.X);
+                var versionWidth = ImGui.CalcTextSize(versionString) * ImGui.GetIO().FontGlobalScale;
+                var versionStartPoint = ImGui.GetWindowWidth() - versionWidth.X;
+                ImGui.SameLine(versionStartPoint);
                 ImGui.Text(versionString);
+
+                var zoomString = $"{ZoomPercentage}%%";
+                var zoomWidth = ImGui.CalcTextSize(zoomString) * ImGui.GetIO().FontGlobalScale;
+                var zoomStartPoint = versionStartPoint - zoomWidth.X - 25;
+                ImGui.SameLine(zoomStartPoint);
+                ImGui.Text(zoomString);
 
                 ImGui.EndMainMenuBar();
             }

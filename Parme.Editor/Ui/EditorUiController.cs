@@ -72,6 +72,7 @@ namespace Parme.Editor.Ui
             _appToolbar.UnsavedChangesPresent = _applicationState.HasUnsavedChanges;
             _appToolbar.AppVersion = _applicationState.Version;
             _appToolbar.ParticleCount = _applicationState.ParticleCount;
+            _appToolbar.ZoomPercentage = (int) (_applicationState.Zoom * 100);
 
             if (!string.IsNullOrWhiteSpace(_applicationState.ErrorMessage))
             {

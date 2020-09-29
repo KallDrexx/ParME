@@ -103,14 +103,10 @@ namespace Parme.Editor
                 var scrollChange = _currentMouseState.ScrollWheelValue - _previousMouseState.ScrollWheelValue;
                 if (scrollChange != 0)
                 {
-                    const float scrollZoomModifier = 1.2f;
-                    _camera.HorizontalZoomFactor = scrollChange > 0
-                        ? _camera.HorizontalZoomFactor * scrollZoomModifier
-                        : _camera.HorizontalZoomFactor / scrollZoomModifier;
-                    
-                    _camera.VerticalZoomFactor = scrollChange > 0
-                        ? _camera.VerticalZoomFactor * scrollZoomModifier
-                        : _camera.VerticalZoomFactor / scrollZoomModifier;
+                    const float scrollZoomModifier = 0.1f;
+                    _applicationState.Zoom = scrollChange > 0
+                        ? _applicationState.Zoom + scrollZoomModifier
+                        : _applicationState.Zoom - scrollZoomModifier;
                 }
             }
         }

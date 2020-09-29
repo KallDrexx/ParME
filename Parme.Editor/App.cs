@@ -110,6 +110,10 @@ namespace Parme.Editor
             
             _commandHandler.UpdateTime((float) gameTime.ElapsedGameTime.TotalSeconds);
             _inputHandler.Update();
+            
+            _camera.HorizontalZoomFactor = _applicationState.Zoom;
+            _camera.VerticalZoomFactor = _applicationState.Zoom;
+            
             _emitter?.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
             _applicationState.ParticleCount = _emitter?.CalculateLiveParticleCount() ?? 0;
             _uiController.Update();
@@ -183,8 +187,7 @@ namespace Parme.Editor
             _camera.PositiveYAxisPointsUp = true;
             _camera.PixelWidth = GraphicsDevice.Viewport.Width;
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
-            _camera.VerticalZoomFactor = 1f;
-            _camera.HorizontalZoomFactor = 1f;
+            _applicationState.Zoom = 1f;
 
             if (resetEmitterPosition && _emitter != null)
             {
