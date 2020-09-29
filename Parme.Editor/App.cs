@@ -27,6 +27,7 @@ namespace Parme.Editor
         private readonly SettingsCommandHandler _commandHandler;
         private TextureFileLoader _textureFileLoader;
         private MonoGameEmitter _emitter;
+        private MonoGameEmitterRenderGroup _emitterRenderGroup;
         private ImGuiManager _imGuiManager;
         private EditorUiController _uiController;
         private InputHandler _inputHandler;
@@ -53,6 +54,7 @@ namespace Parme.Editor
         protected override void Initialize()
         {
             _textureFileLoader = new TextureFileLoader(GraphicsDevice, _applicationState);
+            _emitterRenderGroup = new MonoGameEmitterRenderGroup(GraphicsDevice);
             
             ResetCamera();
 
@@ -136,7 +138,7 @@ namespace Parme.Editor
             
             GraphicsDevice.Clear(backgroundColor);
 
-            _emitter?.Render(_camera);
+            _emitterRenderGroup.Render(_camera);
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
             base.Draw(gameTime);
@@ -148,6 +150,7 @@ namespace Parme.Editor
             {
                 _emitter.Stop();
                 _emitter.KillAllParticles();
+                _emitterRenderGroup.RemoveEmitter(_emitter);
                 _emitter = null;
             }
 
@@ -161,6 +164,7 @@ namespace Parme.Editor
                 var logicClass = CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions).GetAwaiter().GetResult();
 
                 _emitter = new MonoGameEmitter(logicClass, GraphicsDevice, _textureFileLoader);
+                _emitterRenderGroup.AddEmitter(_emitter);
                 _emitter.Start();
                 ResetCamera();
             }

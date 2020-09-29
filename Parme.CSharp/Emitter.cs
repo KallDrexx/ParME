@@ -64,8 +64,5 @@ namespace Parme.CSharp
 
             return count;
         }
-        
-        // ReSharper disable once UnusedMemberInSuper.Global
-        public abstract void Render(ParticleCamera camera);
     }
 }

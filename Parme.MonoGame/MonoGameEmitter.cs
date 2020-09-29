@@ -8,9 +8,7 @@ namespace Parme.MonoGame
     public class MonoGameEmitter : Emitter
     {
         private readonly Texture2D _texture;
-        private readonly SpriteBatch _spriteBatch;
-        private readonly BasicEffect _basicEffect;
-        
+
         public MonoGameEmitter(IEmitterLogic emitterLogic, 
             GraphicsDevice graphicsDevice,
             ITextureFileLoader textureFileLoader) 
@@ -24,32 +22,12 @@ namespace Parme.MonoGame
             _texture = string.IsNullOrWhiteSpace(emitterLogic.TextureFilePath)
                 ? GetDefaultWhiteTexture(graphicsDevice)
                 : textureFileLoader.LoadTexture2D(emitterLogic.TextureFilePath);
-
-            _spriteBatch = new SpriteBatch(graphicsDevice);
-            _basicEffect = new BasicEffect(graphicsDevice);
+            
             FullTextureSize = new System.Numerics.Vector2(_texture.Width, _texture.Height);
         }
 
-        public override void Render(ParticleCamera camera)
+        public void Render(ParticleCamera camera, SpriteBatch spriteBatch)
         {
-            var totalHorizontalZoomFactor = camera.HorizontalZoomFactor;
-            var totalVerticalZoomFactor = camera.VerticalZoomFactor;
-            
-            _basicEffect.TextureEnabled = true;
-            _basicEffect.LightingEnabled = false;
-            _basicEffect.FogEnabled = false;
-            _basicEffect.VertexColorEnabled = true;
-            _basicEffect.World = Matrix.Identity;
-            _basicEffect.Projection = Matrix.CreateOrthographic(camera.PixelWidth, -camera.PixelHeight, -1, 1);
-            _basicEffect.View =
-                Matrix.CreateTranslation(
-                    -camera.Origin.X, 
-                    camera.Origin.Y,
-                    0) *
-                Matrix.CreateScale(totalHorizontalZoomFactor, totalVerticalZoomFactor, 1);
-
-            _spriteBatch.Begin(blendState: BlendState.NonPremultiplied, effect: _basicEffect);
-
             var particles = ParticleBuffer.Particles;
             for (var x = 0; x < particles.Length; x++)
             {
@@ -88,7 +66,7 @@ namespace Parme.MonoGame
                         particle.BlueMultiplier,
                         particle.AlphaMultiplier);
 
-                    _spriteBatch.Draw(_texture,
+                    spriteBatch.Draw(_texture,
                         destinationRectangle,
                         sourceRectangle,
                         colorModifier,
@@ -98,8 +76,6 @@ namespace Parme.MonoGame
                         0f);
                 }
             }
-            
-            _spriteBatch.End();
         }
 
         private static Texture2D GetDefaultWhiteTexture(GraphicsDevice graphicsDevice)

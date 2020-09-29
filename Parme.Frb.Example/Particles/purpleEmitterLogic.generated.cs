@@ -72,7 +72,12 @@ namespace Parme.Frb.Example
                 }
 
                 
-                particle.Position += particle.Velocity;
+                particle.Position += particle.Velocity * timeSinceLastFrame;
+                if (particle.AlphaMultiplier <= 0)
+                {
+                    // Since the particle is now invisible, kill it to save on performance
+                    particle.IsAlive = false;
+                }
             }
             
             var shouldCreateNewParticle = false;

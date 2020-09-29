@@ -9,8 +9,9 @@ namespace Parme.Frb
     {
         private readonly ITextureFileLoader _textureFileLoader = new FrbTextureFileLoader();
         private readonly ParticleCamera _particleCamera = new ParticleCamera{PositiveYAxisPointsUp = true};
+        private readonly MonoGameEmitterRenderGroup _emitterRenderGroup;
         private bool _isEmitting;
-        private Emitter _emitter;
+        private MonoGameEmitter _emitter;
         private IEmitterLogic _emitterLogic;
         
         public PositionedObject Parent { get; set; }
@@ -24,6 +25,7 @@ namespace Parme.Frb
                 {
                     _emitter.IsEmittingNewParticles = false;
                     _emitter.KillAllParticles();
+                    _emitterRenderGroup.RemoveEmitter(_emitter);
                     _emitter = null;
                 }
 
@@ -34,10 +36,12 @@ namespace Parme.Frb
                     {
                         IsEmittingNewParticles = _isEmitting,
                     };
+                    _emitterRenderGroup.AddEmitter(_emitter);
                 }
             }
         }
 
+        // ReSharper disable once UnusedMember.Global
         public bool IsEmitting
         {
             get => _isEmitting;
@@ -55,6 +59,7 @@ namespace Parme.Frb
 
         public EmitterDrawableBatch()
         {
+            _emitterRenderGroup = new MonoGameEmitterRenderGroup(FlatRedBallServices.GraphicsDevice);
             _isEmitting = true;
         }
         
@@ -66,7 +71,7 @@ namespace Parme.Frb
             _particleCamera.HorizontalZoomFactor = camera.DestinationRectangle.Width / camera.OrthogonalWidth;
             _particleCamera.VerticalZoomFactor = camera.DestinationRectangle.Height / camera.OrthogonalHeight;
             
-            _emitter.Render(_particleCamera);
+            _emitterRenderGroup.Render(_particleCamera);
         }
 
         public void Update()
