@@ -12,6 +12,7 @@ namespace Parme.Editor.Ui.Elements.Editors
     {
         private string _currentFileName;
         private IntPtr? _imguiTextureId;
+        private bool _copyTextureToEmitterPath;
 
         [SelfManagedProperty]
         private string SelectedFileName
@@ -72,10 +73,8 @@ namespace Parme.Editor.Ui.Elements.Editors
             var sourceDirectory = Path.GetDirectoryName(SelectedFileName);
             var emitterDirectory = Path.GetDirectoryName(ApplicationState.ActiveFileName);
             var destinationFileName = Path.Combine(emitterDirectory!, textureFileName!);
-            
-            // Move the texture image to the same location as the emitter.  They should always be side by side
-            // for now.
-            if (!string.IsNullOrWhiteSpace(sourceDirectory) && sourceDirectory != emitterDirectory)
+
+            if (_copyTextureToEmitterPath)
             {
                 try
                 {
@@ -90,6 +89,12 @@ namespace Parme.Editor.Ui.Elements.Editors
                     AppOperationQueue.Enqueue(new RaiseErrorMessage(message));
                     return;
                 }
+
+                _copyTextureToEmitterPath = false;
+            }
+            else
+            {
+                textureFileName = Path.GetRelativePath(emitterDirectory, SelectedFileName);
             }
             
             // Texture file now exists in the same directory as the emitter, so now update the emitter to use it
@@ -107,6 +112,24 @@ namespace Parme.Editor.Ui.Elements.Editors
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
+                const string message = "Do you want to copy the texture to the same directory as the emitter?  " +
+                                       "If no is selected then the emitter will contain a relative path to the selected texture.";
+                
+                var confirm = MessageBox.Show(message, "Copy Texture File?", MessageBoxButtons.YesNoCancel);
+                switch (confirm)
+                {
+                    case DialogResult.Yes:
+                        _copyTextureToEmitterPath = true;
+                        break;
+                    
+                    case DialogResult.No:
+                        _copyTextureToEmitterPath = false;
+                        break;
+                    
+                    default:
+                        return; // cancel pressed
+                }
+                    
                 SelectedFileName = dialog.FileName;
             }
         }
