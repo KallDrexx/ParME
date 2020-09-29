@@ -19,11 +19,9 @@ namespace Parme.Editor.Ui
         private readonly AppOperationQueue _appOperationQueue;
         private readonly MessagePopup _messagePopup;
         private readonly ApplicationState _applicationState;
-        private readonly AppToolbar _appToolbar;
 
         public bool AcceptingKeyboardInput => _imGuiManager.AcceptingKeyboardInput;
         public bool AcceptingMouseInput => _imGuiManager.AcceptingMouseInput;
-        public Vector3 BackgroundColor => _emitterSettingsController.BackgroundColor;
         public Vector2 EmitterVelocity => _emitterSettingsController.EmitterVelocity;
 
         public EditorUiController(ImGuiManager imGuiManager, 
@@ -40,8 +38,8 @@ namespace Parme.Editor.Ui
             _imguiDemoWindow = new DemoWindow{IsVisible = false};
             _imGuiManager.AddElement(_imguiDemoWindow);
             
-            _appToolbar = new AppToolbar();
-            _imGuiManager.AddElement(_appToolbar);
+            var appToolbar = new AppToolbar(_appOperationQueue, _applicationState);
+            _imGuiManager.AddElement(appToolbar);
 
             _newFileDialog = new NewFileDialog();
             _newFileDialog.CreateButtonClicked += NewFileDialogOnCreateButtonClicked;
@@ -59,20 +57,14 @@ namespace Parme.Editor.Ui
                 textureFileLoader,
                 monoGameImGuiRenderer);
             
-            _appToolbar.NewMenuItemClicked += AppToolbarOnNewMenuItemClicked;
-            _appToolbar.OpenMenuItemClicked += AppToolbarOnOpenMenuItemClicked;
-            _appToolbar.SaveMenuItemClicked += AppToolbarOnSaveMenuItemClicked;
+            appToolbar.NewMenuItemClicked += AppToolbarOnNewMenuItemClicked;
+            appToolbar.OpenMenuItemClicked += AppToolbarOnOpenMenuItemClicked;
+            appToolbar.SaveMenuItemClicked += AppToolbarOnSaveMenuItemClicked;
         }
 
         public void Update()
         {
             _emitterSettingsController.Update();
-
-            _appToolbar.CurrentlyOpenFileName = _applicationState.ActiveFileName;
-            _appToolbar.UnsavedChangesPresent = _applicationState.HasUnsavedChanges;
-            _appToolbar.AppVersion = _applicationState.Version;
-            _appToolbar.ParticleCount = _applicationState.ParticleCount;
-            _appToolbar.ZoomPercentage = (int) (_applicationState.Zoom * 100);
 
             if (!string.IsNullOrWhiteSpace(_applicationState.ErrorMessage))
             {

@@ -1,4 +1,5 @@
-﻿using Parme.Core;
+﻿using System.Numerics;
+using Parme.Core;
 
 namespace Parme.Editor.AppOperations
 {
@@ -9,5 +10,7 @@ namespace Parme.Editor.AppOperations
         public EmitterSettings UpdatedSettings { get; set; }
         public string UpdatedFileName { get; set; }
         public bool ResetUnsavedChangesMarker { get; set; }
+        public decimal? UpdatedZoomLevel { get; set; }
+        public Vector3? UpdatedBackgroundColor { get; set; }
     }
 }

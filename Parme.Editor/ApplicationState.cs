@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Numerics;
 using System.Reflection;
 using Parme.Core;
 using Parme.Editor.AppOperations;
@@ -18,7 +19,8 @@ namespace Parme.Editor
         public bool EmitterUpdatedFromFileLoad { get; private set; }
         public bool HasUnsavedChanges { get; private set; }
         public int ParticleCount { get; set; }
-        public float Zoom { get; set; } = 1;
+        public decimal Zoom { get; set; } = 1;
+        public Vector3 BackgroundColor { get; private set; }
 
         public ApplicationState()
         {
@@ -63,6 +65,16 @@ namespace Parme.Editor
             else if (operationResult.RemoveErrorMessage)
             {
                 ErrorMessage = null;
+            }
+
+            if (operationResult.UpdatedZoomLevel != null)
+            {
+                Zoom = operationResult.UpdatedZoomLevel.Value;
+            }
+
+            if (operationResult.UpdatedBackgroundColor != null)
+            {
+                BackgroundColor = operationResult.UpdatedBackgroundColor.Value;
             }
         }
     }

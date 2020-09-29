@@ -28,8 +28,7 @@ namespace Parme.Editor.Ui
         private readonly MonoGameImGuiRenderer _monoGameImGuiRenderer;
         private bool _ignoreChangeNotifications;
         private float _lastEmitterChangedAt = -1;
-
-        public Vector3 BackgroundColor => _workbench.BackgroundColor;
+        
         public Vector2 EmitterVelocity => _workbench.EmitterVelocity;
 
         public EmitterSettingsController(ImGuiManager imGuiManager, 

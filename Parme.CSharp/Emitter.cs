@@ -52,7 +52,7 @@ namespace Parme.CSharp
 
         public int CalculateLiveParticleCount()
         {
-            int count = 0;
+            var count = 0;
             var particles = ParticleBuffer.Particles;
             for (var x = 0; x < particles.Length; x++)
             {

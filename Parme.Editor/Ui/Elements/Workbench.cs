@@ -43,12 +43,6 @@ namespace Parme.Editor.Ui.Elements
             set => Set(value);
         }
 
-        public Vector3 BackgroundColor
-        {
-            get => Get<Vector3>();
-            set => Set(value);
-        }
-
         public Vector2 EmitterVelocity
         {
             get => Get<Vector2>();
@@ -181,14 +175,14 @@ namespace Parme.Editor.Ui.Elements
                 
                 RenderModifiersSection();
                 
-                //ImGui.NewLine();
-                ImGui.SetNextItemWidth(200);
-                var color = BackgroundColor;
-                if (ImGui.ColorEdit3("Background Color", ref color))
+                ImGui.NewLine();
+                
+                if (ImGui.Button("Stop"))
                 {
-                    BackgroundColor = color;
+                    EmitterVelocity = Vector2.Zero;
                 }
                 
+                ImGui.SameLine();
                 ImGui.SetNextItemWidth(200);
                 var velocity = EmitterVelocity;
                 if (ImGui.InputFloat2("Emitter Velocity", ref velocity))

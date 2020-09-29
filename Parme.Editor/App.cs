@@ -111,8 +111,8 @@ namespace Parme.Editor
             _commandHandler.UpdateTime((float) gameTime.ElapsedGameTime.TotalSeconds);
             _inputHandler.Update();
             
-            _camera.HorizontalZoomFactor = _applicationState.Zoom;
-            _camera.VerticalZoomFactor = _applicationState.Zoom;
+            _camera.HorizontalZoomFactor = (float) _applicationState.Zoom;
+            _camera.VerticalZoomFactor = (float) _applicationState.Zoom;
             
             _emitter?.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
             _applicationState.ParticleCount = _emitter?.CalculateLiveParticleCount() ?? 0;
@@ -135,7 +135,7 @@ namespace Parme.Editor
 
         protected override void Draw(GameTime gameTime)
         {
-            var backgroundColorVector = _uiController.BackgroundColor;
+            var backgroundColorVector = _applicationState.BackgroundColor;
             var backgroundColor = new Color(backgroundColorVector.X, 
                 backgroundColorVector.Y, 
                 backgroundColorVector.Z);
@@ -187,7 +187,7 @@ namespace Parme.Editor
             _camera.PositiveYAxisPointsUp = true;
             _camera.PixelWidth = GraphicsDevice.Viewport.Width;
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
-            _applicationState.Zoom = 1f;
+            _applicationState.Zoom = 1;
 
             if (resetEmitterPosition && _emitter != null)
             {
