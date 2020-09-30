@@ -32,6 +32,8 @@ namespace Parme.Editor
         private EditorUiController _uiController;
         private InputHandler _inputHandler;
         private float _lastProcessedEmitterChangeTime;
+        private Texture2D _gridTexture;
+        private SpriteBatch _spriteBatch;
 
         public App()
         {
@@ -53,6 +55,9 @@ namespace Parme.Editor
 
         protected override void Initialize()
         {
+            _gridTexture = SetupGridTexture(GraphicsDevice,32);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            
             _textureFileLoader = new TextureFileLoader(GraphicsDevice, _applicationState);
             _emitterRenderGroup = new MonoGameEmitterRenderGroup(GraphicsDevice);
             
@@ -100,6 +105,11 @@ namespace Parme.Editor
             if (_applicationState.RenderSamplerState != null)
             {
                 GraphicsDevice.SamplerStates[0] = _applicationState.RenderSamplerState;
+            }
+
+            if (_gridTexture.Width != _applicationState.GridSize)
+            {
+                _gridTexture = SetupGridTexture(GraphicsDevice, _applicationState.GridSize);
             }
 
             // Only update the emitter if it's been updated since the last time we have processed it
@@ -151,11 +161,28 @@ namespace Parme.Editor
                 backgroundColorVector.Z);
             
             GraphicsDevice.Clear(backgroundColor);
+            RenderGrid(backgroundColor);
 
             _emitterRenderGroup.Render(_camera);
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
             base.Draw(gameTime);
+        }
+
+        private void RenderGrid(Color backgroundColor)
+        {
+            _spriteBatch.Begin(samplerState: SamplerState.LinearWrap);
+            _spriteBatch.Draw(_gridTexture,
+                new Rectangle(0, 
+                    0, 
+                    GraphicsDevice.Viewport.Width, 
+                    GraphicsDevice.Viewport.Height), 
+                new Rectangle((int)_camera.Origin.X, 
+                    (int) -_camera.Origin.Y, 
+                    (int) (GraphicsDevice.Viewport.Width / _camera.HorizontalZoomFactor), 
+                    (int) (GraphicsDevice.Viewport.Height / _camera.VerticalZoomFactor)),
+                backgroundColor);
+            _spriteBatch.End();
         }
 
         private void UpdateEmitter(EmitterSettings settings)
@@ -203,6 +230,33 @@ namespace Parme.Editor
             {
                 _emitter.WorldCoordinates = Vector2.Zero;
             }
+        }
+
+        private static Texture2D SetupGridTexture(GraphicsDevice graphicsDevice, int squareSizeInPixels)
+        {
+            var pixels = new Color[squareSizeInPixels * squareSizeInPixels];
+
+            for (var row = 0; row < squareSizeInPixels; row++)
+            for (var col = 0; col < squareSizeInPixels; col++)
+            {
+                Color color;
+                if (col == squareSizeInPixels - 1 || col == squareSizeInPixels * 2 - 1 ||
+                    row == squareSizeInPixels - 1 || row == squareSizeInPixels * 2 - 1)
+                {
+                    color = Color.Black;
+                }
+                else
+                {
+                    color = Color.White;
+                }
+
+                pixels[row * squareSizeInPixels + col] = color;
+            }
+            
+            var texture = new Texture2D(graphicsDevice, squareSizeInPixels, squareSizeInPixels);
+            texture.SetData(pixels);
+
+            return texture;
         }
     }
 }

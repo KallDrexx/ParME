@@ -14,5 +14,6 @@ namespace Parme.Editor.AppOperations
         public decimal? UpdatedZoomLevel { get; set; }
         public Vector3? UpdatedBackgroundColor { get; set; }
         public SamplerState UpdatedSamplerState { get; set; }
+        public int? UpdatedGridSize { get; set; }
     }
 }

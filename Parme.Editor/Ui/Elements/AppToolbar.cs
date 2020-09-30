@@ -147,6 +147,15 @@ namespace Parme.Editor.Ui.Elements
                     });
                 }
 
+                var gridSize = _applicationState.GridSize;
+                if (ImGui.InputInt("Grid Size (pixels)", ref gridSize, 1))
+                {
+                    _appOperationQueue.Enqueue(new UpdateViewOptionsRequested
+                    {
+                        UpdatedGridSize = gridSize,
+                    });
+                }
+
                 ImGui.Separator();
                 
                 ImGui.Text($"Live Particle Count: {_applicationState.ParticleCount}");

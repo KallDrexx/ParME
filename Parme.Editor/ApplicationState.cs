@@ -23,12 +23,15 @@ namespace Parme.Editor
         public decimal Zoom { get; set; } = 1;
         public Vector3 BackgroundColor { get; private set; }
         public SamplerState RenderSamplerState { get; private set; }
+        public int GridSize { get; private set; }
 
         public ApplicationState()
         {
             var assembly = Assembly.GetExecutingAssembly();
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             Version = new Version(fileVersionInfo.ProductVersion);
+            BackgroundColor = new Vector3(48 / 255f, 48 / 255f, 48 / 255f);
+            GridSize = 32;
         }
 
         public void UpdateTotalTime(float totalTime)
@@ -82,6 +85,11 @@ namespace Parme.Editor
             if (operationResult.UpdatedSamplerState != null)
             {
                 RenderSamplerState = operationResult.UpdatedSamplerState;
+            }
+
+            if (operationResult.UpdatedGridSize != null && operationResult.UpdatedGridSize > 1)
+            {
+                GridSize = operationResult.UpdatedGridSize.Value;
             }
         }
     }
