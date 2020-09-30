@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using ImGuiHandler;
 using ImGuiNET;
+using Microsoft.Xna.Framework.Graphics;
 using Parme.Editor.AppOperations;
 
 namespace Parme.Editor.Ui.Elements
@@ -10,6 +13,11 @@ namespace Parme.Editor.Ui.Elements
     {
         private readonly AppOperationQueue _appOperationQueue;
         private readonly ApplicationState _applicationState;
+        private readonly List<SamplerState> _samplerStates = new List<SamplerState> 
+            {null, SamplerState.PointClamp, SamplerState.LinearClamp, SamplerState.AnisotropicClamp,};
+        
+        private readonly string[] _samplerStateNames = {"<Unknown>", "Point", "Linear", "Anisotropic"};
+        private int _selectedSamplerStateIndex;
 
         public event EventHandler NewMenuItemClicked;
         public event EventHandler OpenMenuItemClicked;
@@ -121,7 +129,24 @@ namespace Parme.Editor.Ui.Elements
                         UpdatedZoomLevel = _applicationState.Zoom + 0.1m,
                     });
                 }
-                
+
+                _selectedSamplerStateIndex = _samplerStates.IndexOf(_applicationState.RenderSamplerState);
+                if (_selectedSamplerStateIndex < 0)
+                {
+                    _selectedSamplerStateIndex = 0;
+                }
+
+                if (ImGui.Combo("Monogame Sampler State",
+                    ref _selectedSamplerStateIndex,
+                    _samplerStateNames,
+                    _samplerStateNames.Length))
+                {
+                    _appOperationQueue.Enqueue(new UpdateViewOptionsRequested
+                    {
+                        UpdatedSamplerState = _samplerStates[_selectedSamplerStateIndex],
+                    });
+                }
+
                 ImGui.Separator();
                 
                 ImGui.Text($"Live Particle Count: {_applicationState.ParticleCount}");

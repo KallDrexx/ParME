@@ -73,6 +73,11 @@ namespace Parme.Editor
             ImGui.GetIO().FontGlobalScale = 1.2f;
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             
+            _appOperationQueue.Enqueue(new UpdateViewOptionsRequested
+            {
+                UpdatedSamplerState = SamplerState.PointClamp,
+            });
+            
             base.Initialize();
         }
 
@@ -90,6 +95,11 @@ namespace Parme.Editor
             {
                 var operationResult = appOperation.Run();
                 _applicationState.Apply(operationResult);
+            }
+
+            if (_applicationState.RenderSamplerState != null)
+            {
+                GraphicsDevice.SamplerStates[0] = _applicationState.RenderSamplerState;
             }
 
             // Only update the emitter if it's been updated since the last time we have processed it

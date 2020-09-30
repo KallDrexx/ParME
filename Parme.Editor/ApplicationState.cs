@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Numerics;
 using System.Reflection;
+using Microsoft.Xna.Framework.Graphics;
 using Parme.Core;
 using Parme.Editor.AppOperations;
 
@@ -21,6 +22,7 @@ namespace Parme.Editor
         public int ParticleCount { get; set; }
         public decimal Zoom { get; set; } = 1;
         public Vector3 BackgroundColor { get; private set; }
+        public SamplerState RenderSamplerState { get; private set; }
 
         public ApplicationState()
         {
@@ -75,6 +77,11 @@ namespace Parme.Editor
             if (operationResult.UpdatedBackgroundColor != null)
             {
                 BackgroundColor = operationResult.UpdatedBackgroundColor.Value;
+            }
+
+            if (operationResult.UpdatedSamplerState != null)
+            {
+                RenderSamplerState = operationResult.UpdatedSamplerState;
             }
         }
     }
