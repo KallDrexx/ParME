@@ -1,8 +1,9 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Parme.CSharp
 {
-    public abstract class Emitter
+    public abstract class Emitter : IDisposable
     {
         protected readonly IEmitterLogic EmitterLogic;
         protected readonly ParticleBuffer ParticleBuffer;
@@ -11,12 +12,12 @@ namespace Parme.CSharp
         public bool IsEmittingNewParticles { get; set; }
         public Vector2 FullTextureSize { get; protected set; }
 
-        protected Emitter(IEmitterLogic emitterLogic)
+        protected Emitter(IEmitterLogic emitterLogic, ParticlePool particlePool)
         {
             EmitterLogic = emitterLogic;
             
             // TODO: find a way to estimate initial capacity from particle count initializer and trigger
-            ParticleBuffer = new ParticleBuffer(50);
+            ParticleBuffer = new ParticleBuffer(particlePool, 50);
         }
 
         public void Update(float timeSinceLastFrame)
@@ -63,6 +64,13 @@ namespace Parme.CSharp
             }
 
             return count;
+        }
+
+        public void Dispose()
+        {
+            Stop();
+            KillAllParticles();
+            ParticleBuffer.Dispose();
         }
     }
 }

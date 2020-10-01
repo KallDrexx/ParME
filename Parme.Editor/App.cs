@@ -23,6 +23,7 @@ namespace Parme.Editor
         
         private readonly ParticleCamera _camera = new ParticleCamera();
         private readonly ApplicationState _applicationState = new ApplicationState();
+        private readonly ParticlePool _particlePool = new ParticlePool();
         private readonly AppOperationQueue _appOperationQueue;
         private readonly SettingsCommandHandler _commandHandler;
         private TextureFileLoader _textureFileLoader;
@@ -189,9 +190,8 @@ namespace Parme.Editor
         {
             if (_emitter != null)
             {
-                _emitter.Stop();
-                _emitter.KillAllParticles();
                 _emitterRenderGroup.RemoveEmitter(_emitter);
+                _emitter.Dispose();
                 _emitter = null;
             }
 
@@ -204,7 +204,7 @@ namespace Parme.Editor
                 
                 var logicClass = CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions).GetAwaiter().GetResult();
 
-                _emitter = new MonoGameEmitter(logicClass, GraphicsDevice, _textureFileLoader);
+                _emitter = new MonoGameEmitter(logicClass, _particlePool, GraphicsDevice, _textureFileLoader);
                 _emitterRenderGroup.AddEmitter(_emitter);
                 _emitter.Start();
                 ResetCamera();

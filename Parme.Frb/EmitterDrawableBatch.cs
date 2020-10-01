@@ -9,6 +9,7 @@ namespace Parme.Frb
     {
         private readonly ITextureFileLoader _textureFileLoader = new FrbTextureFileLoader();
         private readonly ParticleCamera _particleCamera = new ParticleCamera{PositiveYAxisPointsUp = true};
+        private readonly ParticlePool _particlePool = new ParticlePool();
         private readonly MonoGameEmitterRenderGroup _emitterRenderGroup;
         private bool _isEmitting;
         private MonoGameEmitter _emitter;
@@ -32,7 +33,7 @@ namespace Parme.Frb
                 _emitterLogic = value;
                 if (value != null)
                 {
-                    _emitter = new MonoGameEmitter(value, FlatRedBallServices.GraphicsDevice, _textureFileLoader)
+                    _emitter = new MonoGameEmitter(value, _particlePool, FlatRedBallServices.GraphicsDevice, _textureFileLoader)
                     {
                         IsEmittingNewParticles = _isEmitting,
                     };
@@ -85,8 +86,7 @@ namespace Parme.Frb
 
         public void Destroy()
         {
-            _emitter.Stop();
-            _emitter.KillAllParticles();
+            _emitter.Dispose();
         }
 
         public void KillAllParticles() => _emitter.KillAllParticles();

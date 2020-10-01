@@ -2,16 +2,16 @@
 
 namespace Parme.CSharp
 {
-    public class ParticleBuffer
+    public class ParticleBuffer : IDisposable
     {
         private const double ScaleFactor = 1.5;
-        
-        private Particle[] _buffer;
+
+        private readonly ParticlePool.Reservation _particles;
         private int _firstActiveIndex = 0, _lastActiveIndex = 0;
 
-        public ParticleBuffer(int initialCapacity)
+        public ParticleBuffer(ParticlePool particlePool, int initialCapacity)
         {
-            _buffer = new Particle[initialCapacity];
+            _particles = particlePool.Reserve(initialCapacity);
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Parme.CSharp
             get
             {
                 ConstrainActiveArea();
-                return _buffer.AsSpan(_firstActiveIndex, _lastActiveIndex - _firstActiveIndex + 1);
+                return _particles.Slice.Span.Slice(_firstActiveIndex, _lastActiveIndex - _firstActiveIndex + 1);
             }
         }
 
@@ -37,36 +37,40 @@ namespace Parme.CSharp
             if (_firstActiveIndex > 0)
             {
                 _firstActiveIndex--;
-                _buffer[_firstActiveIndex] = particle;
+                _particles.Slice.Span[_firstActiveIndex] = particle;
                 
                 return;
             }
 
-            if (_lastActiveIndex < _buffer.Length - 1)
+            if (_lastActiveIndex < _particles.Slice.Length - 1)
             {
                 _lastActiveIndex++;
-                _buffer[_lastActiveIndex] = particle;
+                _particles.Slice.Span[_lastActiveIndex] = particle;
 
                 return;
             }
             
             // If we got here there's no room left
-            var newBuffer = new Particle[(int)(_buffer.Length * ScaleFactor)];
-            _buffer.CopyTo(newBuffer, 0);
-            newBuffer[_buffer.Length] = particle;
-            _buffer = newBuffer;
-
+            var additionalRequested = _particles.Slice.Length * ScaleFactor - _particles.Slice.Length;
+            _particles.IncreaseSize((int) additionalRequested);
+            
             _lastActiveIndex++;
+            _particles.Slice.Span[_lastActiveIndex] = particle;
+        }
+
+        public void Dispose()
+        {
+            _particles?.Dispose();
         }
 
         private void ConstrainActiveArea()
         {
-            while (!_buffer[_firstActiveIndex].IsAlive && _firstActiveIndex < _lastActiveIndex)
+            while (!_particles.Slice.Span[_firstActiveIndex].IsAlive && _firstActiveIndex < _lastActiveIndex)
             {
                 _firstActiveIndex++;
             }
 
-            while (!_buffer[_lastActiveIndex].IsAlive && _firstActiveIndex < _lastActiveIndex)
+            while (!_particles.Slice.Span[_lastActiveIndex].IsAlive && _firstActiveIndex < _lastActiveIndex)
             {
                 _lastActiveIndex--;
             }

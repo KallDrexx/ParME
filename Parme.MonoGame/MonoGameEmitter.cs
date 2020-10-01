@@ -9,10 +9,11 @@ namespace Parme.MonoGame
     {
         private readonly Texture2D _texture;
 
-        public MonoGameEmitter(IEmitterLogic emitterLogic, 
+        public MonoGameEmitter(IEmitterLogic emitterLogic,
+            ParticlePool particlePool,
             GraphicsDevice graphicsDevice,
             ITextureFileLoader textureFileLoader) 
-            : base(emitterLogic)
+            : base(emitterLogic, particlePool)
         {
             if (textureFileLoader == null)
             {
