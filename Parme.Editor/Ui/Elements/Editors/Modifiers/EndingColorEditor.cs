@@ -1,13 +1,12 @@
-using System;
-using System.Linq;
+﻿using System.Linq;
 using ImGuiNET;
-using Parme.Core.Initializers;
+using Parme.Core.Modifiers;
 using Parme.Editor.Commands;
 
-namespace Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier
+namespace Parme.Editor.Ui.Elements.Editors.Modifiers
 {
-    [EditorForType(typeof(StaticColorInitializer))]
-    public class StaticColorMultiplierEditor : SettingsEditorBase
+    [EditorForType(typeof(EndingColorModifier))]
+    public class EndingColorEditor : SettingsEditorBase
     {
         [SelfManagedProperty]
         public int RedMultiplier
@@ -39,13 +38,15 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier
         
         protected override void CustomRender()
         {
+            ImGui.TextWrapped("The final color multiplier the particle should be at when the particle reaches" +
+                              "it's maximum lifetime.  The color will change with a linear interpolations.");
+            
+            ImGui.NewLine();
+            
             var red = RedMultiplier;
             var green = GreenMultiplier;
             var blue = BlueMultiplier;
             var alpha = AlphaMultiplier;
-            
-            ImGui.TextWrapped("Determines the color multiplier the particle will start with.");
-            ImGui.NewLine();
 
             if (ImGui.SliderInt("Red", ref red, 0, 255))
             {
@@ -70,37 +71,27 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier
 
         protected override void OnNewSettingsLoaded()
         {
-            var initializer = (EmitterSettings.Initializers ?? Array.Empty<IParticleInitializer>())
-                .FirstOrDefault(x => x.InitializerType == InitializerType.ColorMultiplier);
+            var modifier = EmitterSettings.Modifiers
+                .OfType<EndingColorModifier>()
+                .First();
 
-            if (initializer == null)
-            {
-                RedMultiplier = 255;
-                GreenMultiplier = 255;
-                BlueMultiplier = 255;
-                AlphaMultiplier = 1;
-            }
-            else
-            {
-                var colorInitializer = (StaticColorInitializer) initializer;
-                RedMultiplier = colorInitializer.Red;
-                GreenMultiplier = colorInitializer.Green;
-                BlueMultiplier = colorInitializer.Blue;
-                AlphaMultiplier = colorInitializer.Alpha;
-            }
+            RedMultiplier = modifier.Red;
+            GreenMultiplier = modifier.Green;
+            BlueMultiplier = modifier.Blue;
+            AlphaMultiplier = modifier.Alpha;
         }
 
         protected override void OnSelfManagedPropertyChanged(string propertyName)
         {
-            var initializer = new StaticColorInitializer
+            var modifier = new EndingColorModifier
             {
                 Red = (byte) RedMultiplier,
                 Green = (byte) GreenMultiplier,
                 Blue = (byte) BlueMultiplier,
-                Alpha = AlphaMultiplier,
+                Alpha = (byte) AlphaMultiplier,
             };
             
-            CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.ColorMultiplier, initializer));
+            CommandHandler.Execute(new UpdateModifierCommand(modifier));
         }
     }
 }

@@ -4,26 +4,26 @@
     {
         public InitializerType InitializerType => InitializerType.ColorMultiplier;
         public string EditorShortName => "Static";
-        public string EditorShortValue => $"{RedMultiplier}, {GreenMultiplier}, {BlueMultiplier}, {AlphaMultiplier}";
+        public string EditorShortValue => $"{Red}, {Green}, {Blue}, {Alpha:0.00}";
 
         /// <summary>
-        /// The value to multiply the red color by.  Valid values are between 0.0 and 1.0.
+        /// Amount of red to have in the particle.  Valid values are between 0 and 255
         /// </summary>
-        public float RedMultiplier { get; set; } = 1.0f;
+        public byte Red { get; set; } = 255;
+
+        /// <summary>
+        /// Amount of green to have in the particle.  Valid values are between 0 and 255
+        /// </summary>
+        public byte Green { get; set; } = 255;
         
         /// <summary>
-        /// The value to multiply the green color by.  Valid values are between 0.0 and 1.0.
+        /// Amount of blue to have in the particle.  Valid values are between 0 and 255.
         /// </summary>
-        public float GreenMultiplier { get; set; } = 1.0f;
+        public byte Blue { get; set; } = 255;
         
         /// <summary>
-        /// The value to multiply the blue color by.  Valid values are between 0.0 and 1.0.
+        /// Opaqueness of the particle.  Valid values are between 0.0 and 1.0.
         /// </summary>
-        public float BlueMultiplier { get; set; } = 1.0f;
-        
-        /// <summary>
-        /// The value to multiply the alpha by.  Valid values are between 0.0 and 1.0.
-        /// </summary>
-        public float AlphaMultiplier { get; set; } = 1.0f;
+        public float Alpha { get; set; } = 1f;
     }
 }

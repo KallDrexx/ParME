@@ -62,10 +62,10 @@ namespace Parme.MonoGame
                             section.BottomY - section.TopY);
                     }
 
-                    var colorModifier = new Color(particle.RedMultiplier,
-                        particle.GreenMultiplier,
-                        particle.BlueMultiplier,
-                        particle.AlphaMultiplier);
+                    var colorModifier = new Color(particle.CurrentRed,
+                        particle.CurrentGreen,
+                        particle.CurrentBlue,
+                        particle.CurrentAlpha);
 
                     spriteBatch.Draw(_texture,
                         destinationRectangle,

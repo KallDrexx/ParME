@@ -19,9 +19,13 @@ namespace Parme.CSharp
         public Vector2 Velocity;
         public float TimeAlive;
         public float RotationInRadians;
-        public float RedMultiplier;
-        public float GreenMultiplier;
-        public float BlueMultiplier;
-        public float AlphaMultiplier;
+        public byte InitialRed;
+        public byte InitialGreen;
+        public byte InitialBlue;
+        public byte InitialAlpha;
+        public byte CurrentRed;
+        public byte CurrentGreen;
+        public byte CurrentBlue;
+        public byte CurrentAlpha;
     }
 }

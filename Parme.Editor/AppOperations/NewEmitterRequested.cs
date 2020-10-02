@@ -67,18 +67,18 @@ namespace Parme.Editor.AppOperations
                 new StaticColorInitializer
                 {
                     // Orange
-                    RedMultiplier = 1.0f,
-                    GreenMultiplier = 165f / 255f,
-                    BlueMultiplier = 0f,
-                    AlphaMultiplier = 1f
+                    Red = 255,
+                    Green = 165,
+                    Blue = 0,
+                    Alpha = 1f
                 },
 
                 new RandomRangeVelocityInitializer
                 {
                     MinXVelocity = 0,
                     MaxXVelocity = 0,
-                    MinYVelocity = 200,
-                    MaxYVelocity = 500,
+                    MinYVelocity = 100,
+                    MaxYVelocity = 200,
                 },
 
                 new RandomRegionPositionInitializer
@@ -101,7 +101,7 @@ namespace Parme.Editor.AppOperations
                 new ConstantRotationModifier {DegreesPerSecond = 100f},
                 new ConstantAccelerationModifier
                 {
-                    XAcceleration = -250,
+                    XAcceleration = -75,
                     YAcceleration = 0,
                 },
 
@@ -111,12 +111,12 @@ namespace Parme.Editor.AppOperations
                     HeightChangePerSecond = -5,
                 },
 
-                new ConstantColorMultiplierChangeModifier
+                new EndingColorModifier()
                 {
-                    RedMultiplierChangePerSecond = -1,
-                    GreenMultiplierChangePerSecond = -1,
-                    BlueMultiplierChangePerSecond = -1,
-                    AlphaMultiplierChangePerSecond = -0.5f,
+                    Red = 255,
+                    Green = 165,
+                    Blue = 0,
+                    Alpha = 0f,
                 },
             };
 

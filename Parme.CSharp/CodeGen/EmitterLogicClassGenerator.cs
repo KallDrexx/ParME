@@ -63,11 +63,6 @@ using Parme.CSharp;
                 {5}
                 
                 particle.Position += particle.Velocity * timeSinceLastFrame;
-                if (particle.AlphaMultiplier <= 0)
-                {{
-                    // Since the particle is now invisible, kill it to save on performance
-                    particle.IsAlive = false;
-                }}
             }}
             
             var shouldCreateNewParticle = false;

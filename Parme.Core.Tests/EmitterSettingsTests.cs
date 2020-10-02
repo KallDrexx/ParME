@@ -107,7 +107,7 @@ namespace Parme.Core.Tests
         [Fact]
         public void Can_Deserialize_Basic_Fire_Effect_Json()
         {
-            const string json = "{\n  \"MaxParticleLifeTime\": 1.0,\n  \"Trigger\": {\n    \"Frequency\": 0.01,\n    \"$ParmeType\": \"TimeElapsedTrigger\"\n  },\n  \"Initializers\": [\n    {\n      \"MinimumToSpawn\": 0,\n      \"MaximumToSpawn\": 5,\n      \"$ParmeType\": \"RandomParticleCountInitializer\"\n    },\n    {\n      \"RedMultiplier\": 1.0,\n      \"GreenMultiplier\": 0.64705884,\n      \"BlueMultiplier\": 0.0,\n      \"AlphaMultiplier\": 1.0,\n      \"$ParmeType\": \"StaticColorInitializer\"\n    },\n    {\n      \"MinXVelocity\": 0.0,\n      \"MaxXVelocity\": 0.0,\n      \"MinYVelocity\": 2.0,\n      \"MaxYVelocity\": 5.0,\n      \"$ParmeType\": \"RandomRangeVelocityInitializer\"\n    },\n    {\n      \"MinXOffset\": -25.0,\n      \"MinYOffset\": -50.0,\n      \"MaxXOffset\": 25.0,\n      \"MaxYOffset\": -50.0,\n      \"$ParmeType\": \"RandomRegionPositionInitializer\"\n    },\n    {\n      \"Width\": 10,\n      \"Height\": 10,\n      \"$ParmeType\": \"StaticSizeInitializer\"\n    }\n  ],\n  \"Modifiers\": [\n    {\n      \"DegreesPerSecond\": 100.0,\n      \"$ParmeType\": \"ConstantRotationModifier\"\n    },\n    {\n      \"XAcceleration\": -5.0,\n      \"YAcceleration\": 5.0,\n      \"$ParmeType\": \"ConstantAccelerationModifier\"\n    },\n    {\n      \"WidthChangePerSecond\": -10.0,\n      \"HeightChangePerSecond\": -10.0,\n      \"$ParmeType\": \"ConstantSizeModifier\"\n    },\n    {\n      \"RedMultiplierChangePerSecond\": -1.0,\n      \"GreenMultiplierChangePerSecond\": -1.0,\n      \"BlueMultiplierChangePerSecond\": -1.0,\n      \"AlphaMultiplierChangePerSecond\": -1.0,\n      \"$ParmeType\": \"ConstantColorMultiplierChangeModifier\"\n    }\n  ]\n}";
+            const string json = "{\n  \"MaxParticleLifeTime\": 1.0,\n  \"Trigger\": {\n    \"Frequency\": 0.01,\n    \"$ParmeType\": \"TimeElapsedTrigger\"\n  },\n  \"Initializers\": [\n    {\n      \"MinimumToSpawn\": 0,\n      \"MaximumToSpawn\": 5,\n      \"$ParmeType\": \"RandomParticleCountInitializer\"\n    },\n    {\n      \"Red\": 255,\n      \"Green\": 165,\n      \"Blue\": 0,\n      \"Alpha\": 1.0,\n      \"$ParmeType\": \"StaticColorInitializer\"\n    },\n    {\n      \"MinXVelocity\": 0.0,\n      \"MaxXVelocity\": 0.0,\n      \"MinYVelocity\": 2.0,\n      \"MaxYVelocity\": 5.0,\n      \"$ParmeType\": \"RandomRangeVelocityInitializer\"\n    },\n    {\n      \"MinXOffset\": -25.0,\n      \"MinYOffset\": -50.0,\n      \"MaxXOffset\": 25.0,\n      \"MaxYOffset\": -50.0,\n      \"$ParmeType\": \"RandomRegionPositionInitializer\"\n    },\n    {\n      \"Width\": 10,\n      \"Height\": 10,\n      \"$ParmeType\": \"StaticSizeInitializer\"\n    }\n  ],\n  \"Modifiers\": [\n    {\n      \"DegreesPerSecond\": 100.0,\n      \"$ParmeType\": \"ConstantRotationModifier\"\n    },\n    {\n      \"XAcceleration\": -5.0,\n      \"YAcceleration\": 5.0,\n      \"$ParmeType\": \"ConstantAccelerationModifier\"\n    },\n    {\n      \"WidthChangePerSecond\": -10.0,\n      \"HeightChangePerSecond\": -10.0,\n      \"$ParmeType\": \"ConstantSizeModifier\"\n    },\n    {\n      \"Red\": 3,\n      \"Green\": 2,\n      \"Blue\": 1,\n      \"Alpha\": 0.5,\n      \"$ParmeType\": \"EndingColorModifier\"\n    }\n  ]\n}";
 
             var emitter = EmitterSettings.FromJson(json);
             
@@ -124,10 +124,10 @@ namespace Parme.Core.Tests
             ((RandomParticleCountInitializer) emitter.Initializers[0]).MaximumToSpawn.ShouldBe(5);
             
             emitter.Initializers[1].ShouldBeOfType<StaticColorInitializer>();
-            ((StaticColorInitializer) emitter.Initializers[1]).RedMultiplier.ShouldBe(1.0f);
-            ((StaticColorInitializer) emitter.Initializers[1]).GreenMultiplier.ShouldBe(0.64705884f);
-            ((StaticColorInitializer) emitter.Initializers[1]).BlueMultiplier.ShouldBe(0.0f);
-            ((StaticColorInitializer) emitter.Initializers[1]).AlphaMultiplier.ShouldBe(1.0f);
+            ((StaticColorInitializer) emitter.Initializers[1]).Red.ShouldBe((byte) 255);
+            ((StaticColorInitializer) emitter.Initializers[1]).Green.ShouldBe((byte) 165);
+            ((StaticColorInitializer) emitter.Initializers[1]).Blue.ShouldBe((byte) 0);
+            ((StaticColorInitializer) emitter.Initializers[1]).Alpha.ShouldBe(1.0f);
             
             emitter.Initializers[2].ShouldBeOfType<RandomRangeVelocityInitializer>();
             ((RandomRangeVelocityInitializer) emitter.Initializers[2]).MinXVelocity.ShouldBe(0.0f);
@@ -159,11 +159,11 @@ namespace Parme.Core.Tests
             ((ConstantSizeModifier) emitter.Modifiers[2]).WidthChangePerSecond.ShouldBe(-10);
             ((ConstantSizeModifier) emitter.Modifiers[2]).HeightChangePerSecond.ShouldBe(-10);
             
-            emitter.Modifiers[3].ShouldBeOfType<ConstantColorMultiplierChangeModifier>();
-            ((ConstantColorMultiplierChangeModifier) emitter.Modifiers[3]).RedMultiplierChangePerSecond.ShouldBe(-1);
-            ((ConstantColorMultiplierChangeModifier) emitter.Modifiers[3]).GreenMultiplierChangePerSecond.ShouldBe(-1);
-            ((ConstantColorMultiplierChangeModifier) emitter.Modifiers[3]).BlueMultiplierChangePerSecond.ShouldBe(-1);
-            ((ConstantColorMultiplierChangeModifier) emitter.Modifiers[3]).AlphaMultiplierChangePerSecond.ShouldBe(-1);
+            emitter.Modifiers[3].ShouldBeOfType<EndingColorModifier>();
+            ((EndingColorModifier) emitter.Modifiers[3]).Red.ShouldBe((byte) 3);
+            ((EndingColorModifier) emitter.Modifiers[3]).Green.ShouldBe((byte) 2);
+            ((EndingColorModifier) emitter.Modifiers[3]).Blue.ShouldBe((byte) 1);
+            ((EndingColorModifier) emitter.Modifiers[3]).Alpha.ShouldBe(0.5f);
         }
 
         [Fact]

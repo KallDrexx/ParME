@@ -12,10 +12,10 @@ namespace Parme.CSharp.CodeGen.Initializers
             var initializer = (StaticColorInitializer) obj;
             
             return $@"
-        public float StaticColorRedMultiplier {{ get; set; }} = {initializer.RedMultiplier}f;
-        public float StaticColorGreenMultiplier {{ get; set; }} = {initializer.GreenMultiplier}f;
-        public float StaticColorBlueMultiplier {{ get; set; }} = {initializer.BlueMultiplier}f;
-        public float StaticColorAlphaMultiplier {{ get; set; }} = {initializer.AlphaMultiplier}f;
+        public byte StaticColorStartingRed {{ get; set; }} = {initializer.Red};
+        public byte StaticColorStartingGreen {{ get; set; }} = {initializer.Green};
+        public byte StaticColorStartingBlue {{ get; set; }} = {initializer.Blue};
+        public byte StaticColorStartingAlpha {{ get; set; }} = {(byte) (initializer.Alpha * 255)};
 ";
         }
 
@@ -27,10 +27,14 @@ namespace Parme.CSharp.CodeGen.Initializers
         public string GenerateExecutionCode(object obj)
         {
             return @"
-                        particle.RedMultiplier = StaticColorRedMultiplier;
-                        particle.GreenMultiplier = StaticColorGreenMultiplier;
-                        particle.BlueMultiplier = StaticColorBlueMultiplier;
-                        particle.AlphaMultiplier = StaticColorAlphaMultiplier;
+                        particle.InitialRed = StaticColorStartingRed;
+                        particle.CurrentRed = StaticColorStartingRed;
+                        particle.InitialGreen = StaticColorStartingGreen;
+                        particle.CurrentGreen = StaticColorStartingGreen;
+                        particle.InitialBlue = StaticColorStartingBlue;
+                        particle.CurrentBlue = StaticColorStartingBlue;
+                        particle.InitialAlpha = StaticColorStartingAlpha;
+                        particle.CurrentAlpha = StaticColorStartingAlpha;
             ";
         }
     }

@@ -64,11 +64,6 @@
     </Compile>
     <Compile Include="GlobalContent.Generated.cs" />
     <Compile Include="GlueControl\GlueControlManager.Generated.cs" />
-    <Compile Include="Particles\ExceptionEmitterLogic.generated.cs" />
-    <Compile Include="Particles\FireEmitterLogic.generated.cs" />
-    <Compile Include="Particles\purpleEmitterLogic.generated.cs" />
-    <Compile Include="Particles\SomethingEmitterLogic.generated.cs" />
-    <Compile Include="Particles\testEmitterLogic.generated.cs" />
     <Compile Include="Performance\IEntityFactory.Generated.cs" />
     <Compile Include="Performance\PoolList.Generated.cs" />
     <Compile Include="Program.cs" />
