@@ -133,11 +133,7 @@
           <CustomProperty>
             <Type>string</Type>
             <Member>Behavior</Member>
-            <ValueAsString>FireEmitterLogic</ValueAsString>
-          </CustomProperty>
-          <CustomProperty>
-            <Type>bool</Type>
-            <Member>IsEmitting</Member>
+            <ValueAsString>TestEmitterLogic</ValueAsString>
           </CustomProperty>
           <Properties>
             <PropertySave>
@@ -162,7 +158,7 @@
   </Entities>
   <GlobalFiles>
     <ReferencedFileSave>
-      <Name>GlobalContent/Fire.emitter</Name>
+      <Name>GlobalContent/test.emlogic</Name>
       <IsSharedStatic>true</IsSharedStatic>
       <DestroyOnUnload>false</DestroyOnUnload>
       <HasPublicProperty>true</HasPublicProperty>

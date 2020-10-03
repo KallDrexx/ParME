@@ -1,0 +1,85 @@
+{
+  "MaxParticleLifeTime": 1.0,
+  "TextureFileName": null,
+  "TextureSections": [],
+  "Trigger": {
+    "EditorShortName": "Time Elapsed",
+    "EditorShortValue": "every 0.01 seconds",
+    "Frequency": 0.01,
+    "$ParmeType": "TimeElapsedTrigger"
+  },
+  "Initializers": [
+    {
+      "EditorShortName": "Random",
+      "EditorShortValue": "0 - 5",
+      "MinimumToSpawn": 0,
+      "MaximumToSpawn": 5,
+      "$ParmeType": "RandomParticleCountInitializer"
+    },
+    {
+      "EditorShortName": "Static",
+      "EditorShortValue": "255, 165, 0, 1.00",
+      "Red": 255,
+      "Green": 165,
+      "Blue": 0,
+      "Alpha": 1.0,
+      "$ParmeType": "StaticColorInitializer"
+    },
+    {
+      "EditorShortName": "Random Range",
+      "EditorShortValue": "(0, 100) - (0, 200)",
+      "MinXVelocity": 0.0,
+      "MaxXVelocity": 0.0,
+      "MinYVelocity": 100.0,
+      "MaxYVelocity": 200.0,
+      "$ParmeType": "RandomRangeVelocityInitializer"
+    },
+    {
+      "EditorShortName": "Region",
+      "EditorShortValue": "(-25, 20) - (25, -20)",
+      "MinXOffset": -25.0,
+      "MinYOffset": 20.0,
+      "MaxXOffset": 25.0,
+      "MaxYOffset": -20.0,
+      "$ParmeType": "RandomRegionPositionInitializer"
+    },
+    {
+      "EditorShortName": "Static",
+      "EditorShortValue": "(10, 10)",
+      "Width": 10,
+      "Height": 10,
+      "$ParmeType": "StaticSizeInitializer"
+    }
+  ],
+  "Modifiers": [
+    {
+      "EditorShortName": "Constant Rotation",
+      "EditorShortValue": "100°",
+      "DegreesPerSecond": 100.0,
+      "$ParmeType": "ConstantRotationModifier"
+    },
+    {
+      "EditorShortName": "Constant Acceleration",
+      "EditorShortValue": "(-75, 0)",
+      "XAcceleration": -75.0,
+      "YAcceleration": 0.0,
+      "$ParmeType": "ConstantAccelerationModifier"
+    },
+    {
+      "EditorShortName": "Constant Size",
+      "EditorShortValue": "(-5, -5)",
+      "WidthChangePerSecond": -5.0,
+      "HeightChangePerSecond": -5.0,
+      "$ParmeType": "ConstantSizeModifier"
+    },
+    {
+      "EditorShortName": "Ending Color Multiplier",
+      "EditorShortValue": "255, 165, 0, 0.00",
+      "Red": 255,
+      "Green": 165,
+      "Blue": 0,
+      "Alpha": 0.0,
+      "$ParmeType": "EndingColorModifier"
+    }
+  ]
+}

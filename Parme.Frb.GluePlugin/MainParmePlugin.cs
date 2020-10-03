@@ -21,6 +21,9 @@ namespace Parme.Frb.GluePlugin
     [Export(typeof(PluginBase))]
     public class MainParmePlugin : PluginBase
     {
+        public const string Extension = "emlogic";
+        public const string ExtensionWithPeriod = "." + Extension;
+        
         private readonly AssetTypeInfoManager _assetTypeInfoManager = new AssetTypeInfoManager();
         
         public override string FriendlyName => "ParME GluePlugin";
@@ -89,25 +92,25 @@ namespace Parme.Frb.GluePlugin
             emitter.TextureFileName = prevTextureFileName;
         }
 
-        private void NewFileHandler(ReferencedFileSave newfile)
+        private void NewFileHandler(ReferencedFileSave newFile)
         {
-            if (Path.GetExtension(newfile.Name) != ".emitter")
+            if (Path.GetExtension(newFile.Name) != ExtensionWithPeriod)
             {
                 return;
             }
             
-            var name = GetLogicClassName(newfile.Name);
-            var json = File.ReadAllText(GlueCommands.Self.GetAbsoluteFileName(newfile));
+            var name = GetLogicClassName(newFile.Name);
+            var json = File.ReadAllText(GlueCommands.Self.GetAbsoluteFileName(newFile));
                 
             var emitter = EmitterSettings.FromJson(json);
-            GenerateAndSave(emitter, name, newfile.Name);
+            GenerateAndSave(emitter, name, newFile.Name);
                 
             _assetTypeInfoManager.EmitterLogicTypes.Add(name);
         }
 
         private void FileChangeHandler(string filename)
         {
-            if (Path.GetExtension(filename) != ".emitter")
+            if (Path.GetExtension(filename) != ExtensionWithPeriod)
             {
                 return;
             }
@@ -120,7 +123,7 @@ namespace Parme.Frb.GluePlugin
 
         private GeneralResponse CustomFillWithReferencedFiles(FilePath currentFile, List<FilePath> referencedFiles)
         {
-            if (currentFile.Extension != "emitter")
+            if (currentFile.Extension != Extension)
             {
                 return GeneralResponse.SuccessfulResponse;
             }
@@ -162,7 +165,7 @@ namespace Parme.Frb.GluePlugin
         {
             var emitterFiles = ObjectFinder.Self
                 .GetAllReferencedFiles()
-                .Where(x => Path.GetExtension(x.Name).Equals(".emitter", StringComparison.OrdinalIgnoreCase))
+                .Where(x => Path.GetExtension(x.Name).Equals(ExtensionWithPeriod, StringComparison.OrdinalIgnoreCase))
                 .ToArray();
             
             foreach (var emitterFile in emitterFiles)

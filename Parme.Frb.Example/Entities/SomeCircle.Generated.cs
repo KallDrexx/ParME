@@ -75,7 +75,7 @@ namespace Parme.Frb.Example.Entities
             LoadStaticContent(ContentManagerName);
             mCircleInstance = new FlatRedBall.Math.Geometry.Circle();
             mCircleInstance.Name = "mCircleInstance";
-                        var emitterLogic = new FireEmitterLogic();
+                        var emitterLogic = new TestEmitterLogic();
             ParmeParticleEmitterInstance = Parme.Frb.ParmeEmitterManager.Instance
                 .CreateEmitter(emitterLogic, this, "");
 

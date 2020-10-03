@@ -15,7 +15,7 @@ namespace Parme.Frb.GluePlugin
         {
             FileAssetTypeInfo = new AssetTypeInfo
             {
-                Extension = "emitter",
+                Extension = MainParmePlugin.Extension,
                 CanBeObject = false,
             };
             

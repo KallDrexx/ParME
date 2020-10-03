@@ -65,6 +65,7 @@
     <Compile Include="GlobalContent.Generated.cs" />
     <Compile Include="GlueControl\GlueControlManager.Generated.cs" />
     <Compile Include="Particles\FireEmitterLogic.generated.cs" />
+    <Compile Include="Particles\TestEmitterLogic.generated.cs" />
     <Compile Include="Performance\IEntityFactory.Generated.cs" />
     <Compile Include="Performance\PoolList.Generated.cs" />
     <Compile Include="Program.cs" />
@@ -181,9 +182,9 @@
     <Content Include="Content\shader.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="content\globalcontent\fire.emitter">
+    <None Include="content\globalcontent\test.emlogic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Name>Fire</Name>
+      <Name>test</Name>
     </None>
     <None Include="Libraries\DesktopGl\Debug\FlatRedBall.Forms.dll" />
     <None Include="Libraries\DesktopGl\Debug\GumCoreXnaPc.dll" />
