@@ -177,17 +177,33 @@ namespace Parme.Editor.Ui.Elements
                 
                 ImGui.NewLine();
                 
+                ImGui.Text("Moving Emitter Preview:");
+                
+                ImGui.SameLine();
                 if (ImGui.Button("Stop"))
                 {
                     EmitterVelocity = Vector2.Zero;
                 }
                 
+                var magnitude = (float) Math.Sqrt(Math.Pow(EmitterVelocity.X, 2) + Math.Pow(EmitterVelocity.Y, 2));
+                var angleRadians = Math.Atan2(EmitterVelocity.Y, EmitterVelocity.X);
+                var angleDegrees = (int) (angleRadians * (180 / Math.PI));
+                
                 ImGui.SameLine();
-                ImGui.SetNextItemWidth(200);
-                var velocity = EmitterVelocity;
-                if (ImGui.InputFloat2("Emitter Velocity", ref velocity))
+                ImGui.SetNextItemWidth(100);
+                var magnitudeChanged = ImGui.InputFloat("Speed", ref magnitude);
+                
+                ImGui.SameLine();
+                ImGui.SetNextItemWidth(100);
+                var angleChanged = ImGui.SliderInt("Angle", ref angleDegrees, 0, 360);
+
+                if (magnitudeChanged || angleChanged)
                 {
-                    EmitterVelocity = velocity;
+                    var radians = angleDegrees * (Math.PI / 180);
+                    var x = magnitude * Math.Cos(radians);
+                    var y = magnitude * Math.Sin(radians);
+                    
+                    EmitterVelocity = new Vector2((float) x, (float) y);
                 }
 
                 if (_commandHandler.CanUndo)
