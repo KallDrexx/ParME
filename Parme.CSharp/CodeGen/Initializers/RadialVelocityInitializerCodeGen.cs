@@ -26,7 +26,7 @@ namespace Parme.CSharp.CodeGen.Initializers
         public string GenerateExecutionCode(object obj)
         {
             return @"
-                        var radians = RadialVelocityMagnitude - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
+                        var radians = RadialVelocityMaxRadians - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
                 
                         // convert from polar coordinates to cartesian coordinates
                         var x = RadialVelocityMagnitude * Math.Cos(radians);

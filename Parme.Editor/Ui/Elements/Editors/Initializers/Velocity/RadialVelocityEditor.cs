@@ -34,13 +34,13 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
             InputFloat(nameof(Magnitude), "Magnitude");
 
             var min = MinDegrees;
-            if (ImGui.SliderInt("Min Degrees", ref min, 0, 360))
+            if (ImGui.InputInt("Min Degrees", ref min) && min >= 0 && min <= 360)
             {
                 MinDegrees = min;
             }
             
             var max = MaxDegrees;
-            if (ImGui.SliderInt("Max Degrees", ref max, 0, 360))
+            if (ImGui.InputInt("Max Degrees", ref max) && max >= 0 && max <= 360)
             {
                 MaxDegrees = max;
             }
