@@ -54,12 +54,22 @@ namespace Parme.Editor.Ui.Elements.Editors
             _sections.Clear();
             _sections.AddRange(EmitterSettings.TextureSections ?? Array.Empty<TextureSectionCoords>());
 
-            if (!string.IsNullOrWhiteSpace(EmitterSettings.TextureFileName))
+            if (string.IsNullOrWhiteSpace(EmitterSettings.TextureFileName))
+            {
+                if (_imguiTextureId != null)
+                {
+                    MonoGameImGuiRenderer.UnbindTexture(_imguiTextureId.Value);
+                }
+                
+                _texture = null;
+                _imguiTextureId = null;
+            }
+            else
             {
                 _texture = TextureFileLoader.LoadTexture2D(EmitterSettings.TextureFileName);
                 _imguiTextureId = MonoGameImGuiRenderer.BindTexture(_texture);
             }
-
+    
             if (_texture != null)
             {
                 // Since we have no texture, there's no point to the section editor existing, so don't bother

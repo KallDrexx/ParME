@@ -54,7 +54,16 @@ namespace Parme.Editor.Ui.Elements.Editors
         {
             _currentFileName = EmitterSettings.TextureFileName;
 
-            if (!string.IsNullOrWhiteSpace(_currentFileName))
+            if (string.IsNullOrWhiteSpace(_currentFileName))
+            {
+                if (_imguiTextureId != null)
+                {
+                    MonoGameImGuiRenderer.UnbindTexture(_imguiTextureId.Value);
+                }
+
+                _imguiTextureId = null;
+            }
+            else
             {
                 var texture = TextureFileLoader.LoadTexture2D(_currentFileName);
                 _imguiTextureId = MonoGameImGuiRenderer.BindTexture(texture);
