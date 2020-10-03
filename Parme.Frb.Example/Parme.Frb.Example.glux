@@ -132,6 +132,21 @@
         <NamedObjectSave>
           <CustomProperty>
             <Type>string</Type>
+            <Member>Emitter Logic</Member>
+            <ValueAsString>TestEmitterLogic</ValueAsString>
+          </CustomProperty>
+          <CustomProperty>
+            <Type>float</Type>
+            <Member>XOffset</Member>
+            <ValueAsFloat>0</ValueAsFloat>
+          </CustomProperty>
+          <CustomProperty>
+            <Type>float</Type>
+            <Member>YOffset</Member>
+            <ValueAsFloat>0</ValueAsFloat>
+          </CustomProperty>
+          <CustomProperty>
+            <Type>string</Type>
             <Member>Behavior</Member>
             <ValueAsString>TestEmitterLogic</ValueAsString>
           </CustomProperty>

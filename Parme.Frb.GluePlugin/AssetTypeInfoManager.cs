@@ -7,6 +7,9 @@ namespace Parme.Frb.GluePlugin
 {
     public class AssetTypeInfoManager
     {
+        private const string LogicVarName = "Emitter Logic";
+        private const string GroupVarName = "Emitter Grouping";
+        
         public AssetTypeInfo LogicAssetTypeInfo { get; }
         public AssetTypeInfo FileAssetTypeInfo { get; }
         public List<string> EmitterLogicTypes { get; } = new List<string>();
@@ -33,7 +36,7 @@ namespace Parme.Frb.GluePlugin
                 {
                     new VariableDefinition
                     {
-                        Name = "Behavior",
+                        Name = LogicVarName,
                         Type = "string",
                         UsesCustomCodeGeneration = true,
                         ForcedOptions = EmitterLogicTypes,
@@ -41,7 +44,7 @@ namespace Parme.Frb.GluePlugin
                     
                     new VariableDefinition
                     {
-                        Name = "Emitter Group",
+                        Name = GroupVarName,
                         Type = "string",
                         DefaultValue = ParmeEmitterManager.DefaultGroupName,
                         UsesCustomCodeGeneration = true,
@@ -58,12 +61,14 @@ namespace Parme.Frb.GluePlugin
                     {
                         Name = "XOffset",
                         Type = "float",
+                        DefaultValue = "0",
                     }, 
                     
                     new VariableDefinition
                     {
                         Name = "YOffset",
                         Type = "float",
+                        DefaultValue = "0",
                     },
                 }
             };
@@ -71,8 +76,8 @@ namespace Parme.Frb.GluePlugin
 
         private static string ConstructorFunc(IElement element, NamedObjectSave namedObject, ReferencedFileSave referencedFile)
         {
-            var emitterTypeSelected = namedObject.GetCustomVariable("Behavior")?.Value as string;
-            var emitterGroupName = namedObject.GetCustomVariable("Emitter Group")?.Value as string;
+            var emitterTypeSelected = namedObject.GetCustomVariable(LogicVarName)?.Value as string;
+            var emitterGroupName = namedObject.GetCustomVariable(GroupVarName)?.Value as string;
 
             if (string.IsNullOrWhiteSpace(emitterTypeSelected))
             {
