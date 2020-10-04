@@ -44,7 +44,10 @@ namespace Parme.Frb
             Emitter = new MonoGameEmitter(logic,
                 particlePool,
                 FlatRedBallServices.GraphicsDevice,
-                new FrbTextureFileLoader());
+                new FrbTextureFileLoader())
+            {
+                IsEmittingNewParticles = true
+            };
         }
 
         public void UpdatePosition()

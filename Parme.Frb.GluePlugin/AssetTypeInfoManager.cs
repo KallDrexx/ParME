@@ -89,11 +89,9 @@ namespace Parme.Frb.GluePlugin
             var groupNameString = $"\"{emitterGroupName}\"";
             
             var result = new StringBuilder();
-            result.AppendLine($"            var emitterLogic = new {emitterTypeSelected}();");
-            result.AppendLine($"            {namedObject.FieldName} = Parme.Frb.ParmeEmitterManager.Instance");
-            result.AppendLine($"                .CreateEmitter(emitterLogic, {parentString}, {groupNameString});");
-            result.AppendLine();
-            
+            result.AppendLine($"{namedObject.FieldName} = Parme.Frb.ParmeEmitterManager.Instance");
+            result.AppendLine($"                .CreateEmitter(new {emitterTypeSelected}(), {parentString}, {groupNameString});");
+
             return result.ToString();
         }
     }
