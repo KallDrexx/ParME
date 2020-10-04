@@ -5,3 +5,4 @@
 *.suo
 packages/
 Parme.Frb.Example/Plugins/
+.vs/
