@@ -48,7 +48,7 @@
             </PropertySave>
           </Properties>
           <SourceType>Entity</SourceType>
-          <SourceFile>Entities\Player</SourceFile>
+          <SourceFile>Entities/Player</SourceFile>
           <SourceClassType>Entities\Player</SourceClassType>
           <InstanceName>PlayerInstance</InstanceName>
           <AttachToContainer>true</AttachToContainer>
