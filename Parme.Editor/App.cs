@@ -248,8 +248,7 @@ namespace Parme.Editor
             for (var col = 0; col < squareSizeInPixels; col++)
             {
                 Color color;
-                if (col == squareSizeInPixels - 1 || col == squareSizeInPixels * 2 - 1 ||
-                    row == squareSizeInPixels - 1 || row == squareSizeInPixels * 2 - 1)
+                if (col == squareSizeInPixels - 1 || row == squareSizeInPixels - 1)
                 {
                     color = Color.Black;
                 }
