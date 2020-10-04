@@ -45,17 +45,12 @@ namespace Parme.Editor.AppOperations
 
         private static EmitterSettings GetEmitterForTemplate(NewEmitterTemplate template)
         {
-            switch (template)
+            return template switch
             {
-                case NewEmitterTemplate.Fire:
-                    return GetFireEmitter();
-                
-                case NewEmitterTemplate.None:
-                    return new EmitterSettings();
-                
-                default:
-                    throw new NotSupportedException($"No emitter can be set up for template '{template}'");
-            }
+                NewEmitterTemplate.Fire => GetFireEmitter(),
+                NewEmitterTemplate.None => GetBlankEmitter(),
+                _ => throw new NotSupportedException($"No emitter can be set up for template '{template}'")
+            };
         }
 
         private static EmitterSettings GetFireEmitter()
@@ -126,6 +121,21 @@ namespace Parme.Editor.AppOperations
                 Initializers = initializers,
                 Modifiers = modifiers,
                 MaxParticleLifeTime = 1f,
+            };
+        }
+
+        private static EmitterSettings GetBlankEmitter()
+        {
+            return new EmitterSettings
+            {
+                MaxParticleLifeTime = 1,
+                Trigger = new OneShotTrigger(),
+                Initializers = new IParticleInitializer[]
+                {
+                    new StaticSizeInitializer {Width = 32, Height = 32},
+                    new StaticColorInitializer {Red = 255, Green = 255, Blue = 255, Alpha = 1f},
+                    new StaticParticleCountInitializer {ParticleSpawnCount = 1}, 
+                }
             };
         }
     }
