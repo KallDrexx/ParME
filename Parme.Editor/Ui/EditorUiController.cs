@@ -66,6 +66,15 @@ namespace Parme.Editor.Ui
         {
             _emitterSettingsController.Update();
 
+            if (_applicationState.IsModalOpen(Modal.NewFileDialog) && !_newFileDialog.DialogIsOpen)
+            {
+                _newFileDialog.OpenPopup();
+            }
+            else if (!_applicationState.IsModalOpen(Modal.NewFileDialog) && _newFileDialog.DialogIsOpen)
+            {
+                _newFileDialog.ClosePopup();
+            }
+
             if (!string.IsNullOrWhiteSpace(_applicationState.ErrorMessage))
             {
                 // If a dialog is open, then most likely the error is specific to that dialog
@@ -97,7 +106,7 @@ namespace Parme.Editor.Ui
 
         private void AppToolbarOnNewMenuItemClicked(object sender, EventArgs e)
         {
-            _newFileDialog.OpenPopup();
+            _appOperationQueue.Enqueue(new OpenModalRequested(Modal.NewFileDialog));
         }
 
         private void NewFileDialogOnCreateButtonClicked(object sender, EventArgs e)
@@ -119,6 +128,7 @@ namespace Parme.Editor.Ui
 
         private void NewFileDialogOnModalClosed(object sender, EventArgs e)
         {
+            _appOperationQueue.Enqueue(new CloseModalRequested(Modal.NewFileDialog));
             _appOperationQueue.Enqueue(new ClearErrorMessageRequested());
         }
 

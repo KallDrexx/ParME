@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using System.Reflection;
@@ -10,6 +11,7 @@ namespace Parme.Editor
 {
     public class ApplicationState
     {
+        private readonly HashSet<Modal> _openModals = new HashSet<Modal>();
         private float _currentTime;
         
         public Version Version { get; }
@@ -91,6 +93,21 @@ namespace Parme.Editor
             {
                 GridSize = operationResult.UpdatedGridSize.Value;
             }
+
+            if (operationResult.ModalToOpen != null)
+            {
+                _openModals.Add(operationResult.ModalToOpen.Value);
+            }
+
+            if (operationResult.ModalToClose != null)
+            {
+                _openModals.Remove(operationResult.ModalToClose.Value);
+            }
+        }
+
+        public bool IsModalOpen(Modal modal)
+        {
+            return _openModals.Contains(modal);
         }
     }
 }

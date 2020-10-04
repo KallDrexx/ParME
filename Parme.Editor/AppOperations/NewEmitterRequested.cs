@@ -40,6 +40,7 @@ namespace Parme.Editor.AppOperations
                 UpdatedSettings = emitter,
                 UpdatedFileName = FileName,
                 ResetUnsavedChangesMarker = true,
+                ModalToClose = Modal.NewFileDialog,
             };
         }
 

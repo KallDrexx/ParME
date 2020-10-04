@@ -15,5 +15,7 @@ namespace Parme.Editor.AppOperations
         public Vector3? UpdatedBackgroundColor { get; set; }
         public SamplerState UpdatedSamplerState { get; set; }
         public int? UpdatedGridSize { get; set; }
+        public Modal? ModalToClose { get; set; }
+        public Modal? ModalToOpen { get; set; }
     }
 }
