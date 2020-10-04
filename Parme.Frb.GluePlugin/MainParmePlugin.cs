@@ -42,7 +42,6 @@ namespace Parme.Frb.GluePlugin
         {
             ReactToLoadedGlux += GluxLoaded;
             ReactToFileRemoved += FileRemoved;
-            FillWithReferencedFiles += CustomFillWithReferencedFiles;
             ReactToUnloadedGlux += GluxUnloaded;
             ReactToFileChangeHandler += FileChangeHandler;
             ReactToNewFileHandler += NewFileHandler;
@@ -69,6 +68,48 @@ namespace Parme.Frb.GluePlugin
             
             return name.Replace("-", "")
                 .Replace(" ", "");
+        }
+
+        private void ParseAndGenerateEmitterLogic(string filename)
+        {
+            var className = GetLogicClassName(filename);
+            string json;
+            try
+            {
+                json = File.ReadAllText(filename);
+            }
+            catch (IOException)
+            {
+                // File can't be read yet, so ignore it for now
+                return;
+            }
+
+            EmitterSettings emitter;
+            try
+            {
+                emitter = EmitterSettings.FromJson(json);
+            }
+            catch (Exception exception)
+            {
+                var message = $"Failed to parse emitter settings from `{filename}`: {exception}";
+                GlueCommands.Self.PrintError(message);
+
+                return;
+            }
+
+            try
+            {
+                GenerateAndSave(emitter, className, filename);
+            }
+            catch (Exception exception)
+            {
+                var message = $"Failed to generate emitter logic class for '{className}': {exception}";
+                GlueCommands.Self.PrintError(message);
+
+                return;
+            }
+            
+            _assetTypeInfoManager.EmitterLogicTypes.Add(className);
         }
 
         private static void GenerateAndSave(EmitterSettings emitter, string logicClassName, string filename)
@@ -98,14 +139,9 @@ namespace Parme.Frb.GluePlugin
             {
                 return;
             }
-            
-            var name = GetLogicClassName(newFile.Name);
-            var json = File.ReadAllText(GlueCommands.Self.GetAbsoluteFileName(newFile));
-                
-            var emitter = EmitterSettings.FromJson(json);
-            GenerateAndSave(emitter, name, newFile.Name);
-                
-            _assetTypeInfoManager.EmitterLogicTypes.Add(name);
+
+            var filename = GlueCommands.Self.GetAbsoluteFileName(newFile);
+            ParseAndGenerateEmitterLogic(filename);
         }
 
         private void FileChangeHandler(string filename)
@@ -114,35 +150,8 @@ namespace Parme.Frb.GluePlugin
             {
                 return;
             }
-            
-            var className = GetLogicClassName(filename);
-            var json = File.ReadAllText(filename);
-            var emitter = EmitterSettings.FromJson(json);
-            GenerateAndSave(emitter, className, filename);
-        }
 
-        private GeneralResponse CustomFillWithReferencedFiles(FilePath currentFile, List<FilePath> referencedFiles)
-        {
-            if (currentFile.Extension != Extension)
-            {
-                return GeneralResponse.SuccessfulResponse;
-            }
-            
-            // Add an association of the emitter with the texture it's referencing
-            var json = File.ReadAllText(currentFile.FullPath);
-            var emitter = EmitterSettings.FromJson(json);
-            if (!string.IsNullOrWhiteSpace(emitter.TextureFileName))
-            {
-                var texturePath = Path.IsPathRooted(emitter.TextureFileName)
-                    ? emitter.TextureFileName
-                    : Path.Combine(Path.GetDirectoryName(currentFile.FullPath), emitter.TextureFileName);
-                
-                referencedFiles.Add(new FilePath(texturePath));
-            }
-            
-            // see if arg1 is a .emitter, then load that emitter, find pngs and add them to arg2
-            // arg1 has full path, get directory of arg1 for emitter
-            return GeneralResponse.SuccessfulResponse;
+            ParseAndGenerateEmitterLogic(filename);
         }
 
         public override bool ShutDown(PluginShutDownReason shutDownReason)
