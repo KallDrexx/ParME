@@ -151,6 +151,13 @@ namespace Parme.Frb.GluePlugin
                 return;
             }
 
+            var referencedFile = GlueCommands.Self.GluxCommands.GetReferencedFileSaveFromFile(filename);
+            if (referencedFile == null)
+            {
+                // Ignore since it's not part of the project
+                return;
+            }
+
             ParseAndGenerateEmitterLogic(filename);
         }
 
