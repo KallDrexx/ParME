@@ -35,13 +35,10 @@ namespace Parme.MonoGame
                 ref var particle = ref particles[x];
                 if (particle.IsAlive)
                 {
-                    var particleHalfWidth = particle.Size.X / 2;
-                    var particleHalfHeight = particle.Size.Y / 2;
-
-                    var startX = particle.Position.X - particleHalfWidth;
+                    var startX = particle.Position.X;
                     var startY = camera.PositiveYAxisPointsUp
-                        ? -particle.Position.Y - particleHalfHeight
-                        : particle.Position.Y - particleHalfHeight;
+                        ? -particle.Position.Y
+                        : particle.Position.Y;
 
                     var destinationRectangle = new Rectangle((int) startX, 
                         (int) startY, 
