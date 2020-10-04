@@ -14,22 +14,16 @@ namespace Parme.CSharp.CodeGen.Triggers
 
         public string GenerateFields(object obj)
         {
-            return @"private bool _hasTriggered;
-";
+            return string.Empty;
         }
 
         public string GenerateExecutionCode(object obj)
         {
-            return @"if (_hasTriggered)
-            {
-                shouldCreateNewParticle = false;
-            }
-            else
-            {
-                shouldCreateNewParticle = true;
-                _hasTriggered = true;
-            }
-";
+            return @"if (parent.IsEmittingNewParticles)
+                {
+                    shouldCreateNewParticle = true;
+                    stopEmittingAfterUpdate = true;
+                }";
         }
     }
 }

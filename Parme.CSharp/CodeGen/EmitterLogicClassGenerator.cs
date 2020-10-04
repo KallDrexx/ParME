@@ -66,6 +66,7 @@ using Parme.CSharp;
             }}
             
             var shouldCreateNewParticle = false;
+            var stopEmittingAfterUpdate = false;
             {{
                 {6}
             }}
@@ -94,6 +95,12 @@ using Parme.CSharp;
                     
                     particleBuffer.Add(particle);            
                 }}
+            }}
+
+            if (stopEmittingAfterUpdate)
+            {{
+                parent.IsEmittingNewParticles = false;
+                stopEmittingAfterUpdate = false;
             }}
         }}
     }}
