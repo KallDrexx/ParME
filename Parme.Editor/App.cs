@@ -134,13 +134,18 @@ namespace Parme.Editor
             
             _camera.HorizontalZoomFactor = (float) _applicationState.Zoom;
             _camera.VerticalZoomFactor = (float) _applicationState.Zoom;
-            
-            _emitter?.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
-            _applicationState.ParticleCount = _emitter?.CalculateLiveParticleCount() ?? 0;
-            _uiController.Update();
-            
+
             if (_emitter != null)
             {
+                if (!_emitter.IsEmittingNewParticles && _emitter.CalculateLiveParticleCount() == 0)
+                {
+                    // This most likely means the emitter is a one shot that has already fired.  Now that its particles
+                    // are dead we want to re-emit.  Otherwise it makes it difficult to validate a one shot emitter
+                    _emitter.IsEmittingNewParticles = true;
+                }
+                
+                _emitter.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
+                
                 if (_uiController.EmitterVelocity != Vector2.Zero)
                 {
                     // Apply velocity to the emitter, but make sure the camera retains it's distance from the emitter
@@ -150,6 +155,9 @@ namespace Parme.Editor
                     _camera.Origin = _emitter.WorldCoordinates - distance;
                 }
             }
+            
+            _applicationState.ParticleCount = _emitter?.CalculateLiveParticleCount() ?? 0;
+            _uiController.Update();
             
             base.Update(gameTime);
         }
