@@ -16,8 +16,8 @@ namespace Parme.Frb.Example.Screens
         static bool HasBeenLoadedWithGlobalContentManager = false;
         #endif
         
-        private Parme.Frb.Example.Entities.Player PlayerInstance;
         private FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet> BulletList;
+        private Parme.Frb.Example.Entities.Player PlayerInstance;
         public GameScreen () 
         	: base ("GameScreen")
         {
@@ -25,10 +25,10 @@ namespace Parme.Frb.Example.Screens
         public override void Initialize (bool addToManagers) 
         {
             LoadStaticContent(ContentManagerName);
-            PlayerInstance = new Parme.Frb.Example.Entities.Player(ContentManagerName, false);
-            PlayerInstance.Name = "PlayerInstance";
             BulletList = new FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet>();
             BulletList.Name = "BulletList";
+            PlayerInstance = new Parme.Frb.Example.Entities.Player(ContentManagerName, false);
+            PlayerInstance.Name = "PlayerInstance";
             
             
             PostInitialize();
@@ -50,7 +50,6 @@ namespace Parme.Frb.Example.Screens
             if (!IsPaused)
             {
                 
-                PlayerInstance.Activity();
                 for (int i = BulletList.Count - 1; i > -1; i--)
                 {
                     if (i < BulletList.Count)
@@ -59,6 +58,7 @@ namespace Parme.Frb.Example.Screens
                         BulletList[i].Activity();
                     }
                 }
+                PlayerInstance.Activity();
             }
             else
             {
@@ -74,14 +74,14 @@ namespace Parme.Frb.Example.Screens
             base.Destroy();
             
             BulletList.MakeOneWay();
+            for (int i = BulletList.Count - 1; i > -1; i--)
+            {
+                BulletList[i].Destroy();
+            }
             if (PlayerInstance != null)
             {
                 PlayerInstance.Destroy();
                 PlayerInstance.Detach();
-            }
-            for (int i = BulletList.Count - 1; i > -1; i--)
-            {
-                BulletList[i].Destroy();
             }
             BulletList.MakeTwoWay();
             FlatRedBall.Math.Collision.CollisionManager.Self.Relationships.Clear();
@@ -100,11 +100,11 @@ namespace Parme.Frb.Example.Screens
         }
         public virtual void RemoveFromManagers () 
         {
-            PlayerInstance.RemoveFromManagers();
             for (int i = BulletList.Count - 1; i > -1; i--)
             {
                 BulletList[i].Destroy();
             }
+            PlayerInstance.RemoveFromManagers();
         }
         public virtual void AssignCustomVariables (bool callOnContainedElements) 
         {
@@ -115,11 +115,11 @@ namespace Parme.Frb.Example.Screens
         }
         public virtual void ConvertToManuallyUpdated () 
         {
-            PlayerInstance.ConvertToManuallyUpdated();
             for (int i = 0; i < BulletList.Count; i++)
             {
                 BulletList[i].ConvertToManuallyUpdated();
             }
+            PlayerInstance.ConvertToManuallyUpdated();
         }
         public static void LoadStaticContent (string contentManagerName) 
         {

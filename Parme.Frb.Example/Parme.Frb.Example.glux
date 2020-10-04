@@ -24,12 +24,14 @@
             </PropertySave>
             <PropertySave>
               <Name>SourceType</Name>
-              <ValueAsObject xsi:type="SourceType">Entity</ValueAsObject>
+              <ValueAsObject xsi:type="SourceType">FlatRedBallType</ValueAsObject>
             </PropertySave>
           </Properties>
-          <SourceType>Entity</SourceType>
-          <SourceClassType>Player</SourceClassType>
-          <InstanceName>PlayerInstance</InstanceName>
+          <SourceType>FlatRedBallType</SourceType>
+          <SourceFile>PositionedObjectList (Generic)</SourceFile>
+          <SourceClassType>PositionedObjectList&lt;T&gt;</SourceClassType>
+          <SourceClassGenericType>Entities\Bullet</SourceClassGenericType>
+          <InstanceName>BulletList</InstanceName>
           <AttachToContainer>true</AttachToContainer>
           <GenerateTimedEmit>true</GenerateTimedEmit>
           <IndependentOfCamera>false</IndependentOfCamera>
@@ -42,14 +44,13 @@
             </PropertySave>
             <PropertySave>
               <Name>SourceType</Name>
-              <ValueAsObject xsi:type="SourceType">FlatRedBallType</ValueAsObject>
+              <ValueAsObject xsi:type="SourceType">Entity</ValueAsObject>
             </PropertySave>
           </Properties>
-          <SourceType>FlatRedBallType</SourceType>
-          <SourceFile>PositionedObjectList (Generic)</SourceFile>
-          <SourceClassType>PositionedObjectList&lt;T&gt;</SourceClassType>
-          <SourceClassGenericType>Entities\Bullet</SourceClassGenericType>
-          <InstanceName>BulletList</InstanceName>
+          <SourceType>Entity</SourceType>
+          <SourceFile>Entities\Player</SourceFile>
+          <SourceClassType>Entities\Player</SourceClassType>
+          <InstanceName>PlayerInstance</InstanceName>
           <AttachToContainer>true</AttachToContainer>
           <GenerateTimedEmit>true</GenerateTimedEmit>
           <IndependentOfCamera>false</IndependentOfCamera>
