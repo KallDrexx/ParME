@@ -7,6 +7,7 @@ using FlatRedBall;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FlatRedBall.Math;
 namespace Parme.Frb.Example.Screens
 {
     public partial class GameScreen : FlatRedBall.Screens.Screen
@@ -15,7 +16,8 @@ namespace Parme.Frb.Example.Screens
         static bool HasBeenLoadedWithGlobalContentManager = false;
         #endif
         
-        private Parme.Frb.Example.Entities.SomeCircle SomeCircleInstance;
+        private Parme.Frb.Example.Entities.Player PlayerInstance;
+        private FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet> BulletList;
         public GameScreen () 
         	: base ("GameScreen")
         {
@@ -23,8 +25,10 @@ namespace Parme.Frb.Example.Screens
         public override void Initialize (bool addToManagers) 
         {
             LoadStaticContent(ContentManagerName);
-            SomeCircleInstance = new Parme.Frb.Example.Entities.SomeCircle(ContentManagerName, false);
-            SomeCircleInstance.Name = "SomeCircleInstance";
+            PlayerInstance = new Parme.Frb.Example.Entities.Player(ContentManagerName, false);
+            PlayerInstance.Name = "PlayerInstance";
+            BulletList = new FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet>();
+            BulletList.Name = "BulletList";
             
             
             PostInitialize();
@@ -36,7 +40,7 @@ namespace Parme.Frb.Example.Screens
         }
         public override void AddToManagers () 
         {
-            SomeCircleInstance.AddToManagers(mLayer);
+            PlayerInstance.AddToManagers(mLayer);
             base.AddToManagers();
             AddToManagersBottomUp();
             CustomInitialize();
@@ -46,7 +50,15 @@ namespace Parme.Frb.Example.Screens
             if (!IsPaused)
             {
                 
-                SomeCircleInstance.Activity();
+                PlayerInstance.Activity();
+                for (int i = BulletList.Count - 1; i > -1; i--)
+                {
+                    if (i < BulletList.Count)
+                    {
+                        // We do the extra if-check because activity could destroy any number of entities
+                        BulletList[i].Activity();
+                    }
+                }
             }
             else
             {
@@ -61,11 +73,17 @@ namespace Parme.Frb.Example.Screens
         {
             base.Destroy();
             
-            if (SomeCircleInstance != null)
+            BulletList.MakeOneWay();
+            if (PlayerInstance != null)
             {
-                SomeCircleInstance.Destroy();
-                SomeCircleInstance.Detach();
+                PlayerInstance.Destroy();
+                PlayerInstance.Detach();
             }
+            for (int i = BulletList.Count - 1; i > -1; i--)
+            {
+                BulletList[i].Destroy();
+            }
+            BulletList.MakeTwoWay();
             FlatRedBall.Math.Collision.CollisionManager.Self.Relationships.Clear();
             CustomDestroy();
         }
@@ -82,18 +100,26 @@ namespace Parme.Frb.Example.Screens
         }
         public virtual void RemoveFromManagers () 
         {
-            SomeCircleInstance.RemoveFromManagers();
+            PlayerInstance.RemoveFromManagers();
+            for (int i = BulletList.Count - 1; i > -1; i--)
+            {
+                BulletList[i].Destroy();
+            }
         }
         public virtual void AssignCustomVariables (bool callOnContainedElements) 
         {
             if (callOnContainedElements)
             {
-                SomeCircleInstance.AssignCustomVariables(true);
+                PlayerInstance.AssignCustomVariables(true);
             }
         }
         public virtual void ConvertToManuallyUpdated () 
         {
-            SomeCircleInstance.ConvertToManuallyUpdated();
+            PlayerInstance.ConvertToManuallyUpdated();
+            for (int i = 0; i < BulletList.Count; i++)
+            {
+                BulletList[i].ConvertToManuallyUpdated();
+            }
         }
         public static void LoadStaticContent (string contentManagerName) 
         {
@@ -111,7 +137,7 @@ namespace Parme.Frb.Example.Screens
                 throw new System.Exception("This type has been loaded with a Global content manager, then loaded with a non-global.  This can lead to a lot of bugs");
             }
             #endif
-            Parme.Frb.Example.Entities.SomeCircle.LoadStaticContent(contentManagerName);
+            Parme.Frb.Example.Entities.Player.LoadStaticContent(contentManagerName);
             CustomLoadStaticContent(contentManagerName);
         }
         public override void PauseThisScreen () 

@@ -1,0 +1,83 @@
+{
+  "MaxParticleLifeTime": 0.5,
+  "TextureFileName": "SampleParticles.png",
+  "TextureSections": [
+    {
+      "LeftX": 16,
+      "TopY": 0,
+      "RightX": 32,
+      "BottomY": 16
+    },
+    {
+      "LeftX": 32,
+      "TopY": 0,
+      "RightX": 48,
+      "BottomY": 16
+    },
+    {
+      "LeftX": 48,
+      "TopY": 0,
+      "RightX": 64,
+      "BottomY": 16
+    }
+  ],
+  "Trigger": {
+    "EditorShortName": "Distance Travelled",
+    "EditorShortValue": "every 20 units",
+    "UnitsPerEmission": 20.0,
+    "$ParmeType": "DistanceBasedTrigger"
+  },
+  "Initializers": [
+    {
+      "EditorShortName": "Static",
+      "EditorShortValue": "1",
+      "ParticleSpawnCount": 1,
+      "$ParmeType": "StaticParticleCountInitializer"
+    },
+    {
+      "EditorShortName": "Static",
+      "EditorShortValue": "(0, 0)",
+      "XOffset": 0.0,
+      "YOffset": 0.0,
+      "$ParmeType": "StaticPositionInitializer"
+    },
+    {
+      "EditorShortName": "Static",
+      "EditorShortValue": "255, 159, 11, 1.00",
+      "Red": 255,
+      "Green": 159,
+      "Blue": 11,
+      "Alpha": 1.0,
+      "$ParmeType": "StaticColorInitializer"
+    },
+    {
+      "EditorShortName": "Static",
+      "EditorShortValue": "(50, 50)",
+      "Width": 50,
+      "Height": 50,
+      "$ParmeType": "StaticSizeInitializer"
+    },
+    {
+      "EditorShortName": "Random",
+      "EditorShortValue": "",
+      "$ParmeType": "RandomTextureInitializer"
+    }
+  ],
+  "Modifiers": [
+    {
+      "EditorShortName": "Ending Color Multiplier",
+      "EditorShortValue": "255, 255, 255, 0.00",
+      "Red": 255,
+      "Green": 255,
+      "Blue": 255,
+      "Alpha": 0.0,
+      "$ParmeType": "EndingColorModifier"
+    },
+    {
+      "EditorShortName": "Constant Rotation",
+      "EditorShortValue": "180°",
+      "DegreesPerSecond": 180.0,
+      "$ParmeType": "ConstantRotationModifier"
+    }
+  ]
+}

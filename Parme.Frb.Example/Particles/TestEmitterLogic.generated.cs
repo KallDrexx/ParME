@@ -100,6 +100,7 @@ namespace Parme.Frb.Example
             }
             
             var shouldCreateNewParticle = false;
+            var stopEmittingAfterUpdate = false;
             {
                 
             shouldCreateNewParticle = false;
@@ -167,6 +168,12 @@ namespace Parme.Frb.Example
                     
                     particleBuffer.Add(particle);            
                 }
+            }
+
+            if (stopEmittingAfterUpdate)
+            {
+                parent.IsEmittingNewParticles = false;
+                stopEmittingAfterUpdate = false;
             }
         }
     }

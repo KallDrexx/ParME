@@ -53,9 +53,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DataTypes\TileMapInfo.Generated.cs" />
-    <Compile Include="Entities\SomeCircle.cs" />
-    <Compile Include="Entities\SomeCircle.Generated.cs">
-      <DependentUpon>SomeCircle.cs</DependentUpon>
+    <Compile Include="Entities\Bullet.cs" />
+    <Compile Include="Entities\Bullet.Generated.cs">
+      <DependentUpon>Bullet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\Player.Generated.cs">
+      <DependentUpon>Player.cs</DependentUpon>
     </Compile>
     <Compile Include="FileAliases.Generated.cs" />
     <Compile Include="Game1.cs" />
@@ -64,7 +68,8 @@
     </Compile>
     <Compile Include="GlobalContent.Generated.cs" />
     <Compile Include="GlueControl\GlueControlManager.Generated.cs" />
-    <Compile Include="Particles\FireEmitterLogic.generated.cs" />
+    <Compile Include="Particles\ContrailsEmitterLogic.generated.cs" />
+    <Compile Include="Particles\ExplosionEmitterLogic.generated.cs" />
     <Compile Include="Particles\TestEmitterLogic.generated.cs" />
     <Compile Include="Performance\IEntityFactory.Generated.cs" />
     <Compile Include="Performance\PoolList.Generated.cs" />
@@ -182,6 +187,18 @@
     <Content Include="Content\shader.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="content\globalcontent\contrails.emlogic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>contrails</Name>
+    </None>
+    <None Include="content\globalcontent\explosion.emlogic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>explosion</Name>
+    </None>
+    <None Include="content\globalcontent\sampleparticles.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>sampleparticles</Name>
+    </None>
     <None Include="content\globalcontent\test.emlogic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Name>test</Name>

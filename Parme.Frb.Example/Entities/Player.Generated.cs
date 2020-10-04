@@ -9,10 +9,9 @@ using FlatRedBall;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using FlatRedBall.Math.Geometry;
 namespace Parme.Frb.Example.Entities
 {
-    public partial class SomeCircle : FlatRedBall.PositionedObject, FlatRedBall.Graphics.IDestroyable, FlatRedBall.Math.Geometry.ICollidable
+    public partial class Player : FlatRedBall.PositionedObject, FlatRedBall.Graphics.IDestroyable
     {
         // This is made static so that static lazy-loaded content can access it.
         public static string ContentManagerName { get; set; }
@@ -23,48 +22,29 @@ namespace Parme.Frb.Example.Entities
         static System.Collections.Generic.List<string> mRegisteredUnloads = new System.Collections.Generic.List<string>();
         static System.Collections.Generic.List<string> LoadedContentManagers = new System.Collections.Generic.List<string>();
         
-        private FlatRedBall.Math.Geometry.Circle mCircleInstance;
-        public FlatRedBall.Math.Geometry.Circle CircleInstance
+        private FlatRedBall.Math.Geometry.Line mLineInstance;
+        public FlatRedBall.Math.Geometry.Line LineInstance
         {
             get
             {
-                return mCircleInstance;
+                return mLineInstance;
             }
             private set
             {
-                mCircleInstance = value;
+                mLineInstance = value;
             }
         }
-        private Parme.Frb.ParmeFrbEmitter ParmeParticleEmitterInstance;
-        public bool ParmeParticleEmitterInstanceIsEmitting
-        {
-            get
-            {
-                return ParmeParticleEmitterInstance.IsEmitting;
-            }
-            set
-            {
-                ParmeParticleEmitterInstance.IsEmitting = value;
-            }
-        }
-        private FlatRedBall.Math.Geometry.ShapeCollection mGeneratedCollision;
-        public FlatRedBall.Math.Geometry.ShapeCollection Collision
-        {
-            get
-            {
-                return mGeneratedCollision;
-            }
-        }
+        public int RotationDegreesPerSecond = 360;
         protected FlatRedBall.Graphics.Layer LayerProvidedByContainer = null;
-        public SomeCircle () 
+        public Player () 
         	: this(FlatRedBall.Screens.ScreenManager.CurrentScreen.ContentManagerName, true)
         {
         }
-        public SomeCircle (string contentManagerName) 
+        public Player (string contentManagerName) 
         	: this(contentManagerName, true)
         {
         }
-        public SomeCircle (string contentManagerName, bool addToManagers) 
+        public Player (string contentManagerName, bool addToManagers) 
         	: base()
         {
             ContentManagerName = contentManagerName;
@@ -73,13 +53,8 @@ namespace Parme.Frb.Example.Entities
         protected virtual void InitializeEntity (bool addToManagers) 
         {
             LoadStaticContent(ContentManagerName);
-            mCircleInstance = new FlatRedBall.Math.Geometry.Circle();
-            mCircleInstance.Name = "mCircleInstance";
-                        var emitterLogic = new TestEmitterLogic();
-            ParmeParticleEmitterInstance = Parme.Frb.ParmeEmitterManager.Instance
-                .CreateEmitter(emitterLogic, this, "");
-
-
+            mLineInstance = new FlatRedBall.Math.Geometry.Line();
+            mLineInstance.Name = "mLineInstance";
             
             PostInitialize();
             if (addToManagers)
@@ -91,13 +66,13 @@ namespace Parme.Frb.Example.Entities
         {
             LayerProvidedByContainer = layerToAddTo;
             FlatRedBall.SpriteManager.AddPositionedObject(this);
-            FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(mCircleInstance, LayerProvidedByContainer);
+            FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(mLineInstance, LayerProvidedByContainer);
         }
         public virtual void AddToManagers (FlatRedBall.Graphics.Layer layerToAddTo) 
         {
             LayerProvidedByContainer = layerToAddTo;
             FlatRedBall.SpriteManager.AddPositionedObject(this);
-            FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(mCircleInstance, LayerProvidedByContainer);
+            FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(mLineInstance, LayerProvidedByContainer);
             AddToManagersBottomUp(layerToAddTo);
             CustomInitialize();
         }
@@ -110,29 +85,21 @@ namespace Parme.Frb.Example.Entities
         {
             FlatRedBall.SpriteManager.RemovePositionedObject(this);
             
-            if (CircleInstance != null)
+            if (LineInstance != null)
             {
-                FlatRedBall.Math.Geometry.ShapeManager.Remove(CircleInstance);
+                FlatRedBall.Math.Geometry.ShapeManager.Remove(LineInstance);
             }
-            if (ParmeParticleEmitterInstance != null)
-            {
-                ParmeParticleEmitterInstance.Destroy();
-            }
-            mGeneratedCollision.RemoveFromManagers(clearThis: false);
             CustomDestroy();
         }
         public virtual void PostInitialize () 
         {
             bool oldShapeManagerSuppressAdd = FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue;
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = true;
-            if (mCircleInstance.Parent == null)
+            if (mLineInstance.Parent == null)
             {
-                mCircleInstance.CopyAbsoluteToRelative();
-                mCircleInstance.AttachTo(this, false);
+                mLineInstance.CopyAbsoluteToRelative();
+                mLineInstance.AttachTo(this, false);
             }
-            CircleInstance.Radius = 16f;
-            mGeneratedCollision = new FlatRedBall.Math.Geometry.ShapeCollection();
-            Collision.Circles.AddOneWay(mCircleInstance);
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
         }
         public virtual void AddToManagersBottomUp (FlatRedBall.Graphics.Layer layerToAddTo) 
@@ -142,23 +109,17 @@ namespace Parme.Frb.Example.Entities
         public virtual void RemoveFromManagers () 
         {
             FlatRedBall.SpriteManager.ConvertToManuallyUpdated(this);
-            if (CircleInstance != null)
+            if (LineInstance != null)
             {
-                FlatRedBall.Math.Geometry.ShapeManager.RemoveOneWay(CircleInstance);
+                FlatRedBall.Math.Geometry.ShapeManager.RemoveOneWay(LineInstance);
             }
-            if (ParmeParticleEmitterInstance != null)
-            {
-                ParmeParticleEmitterInstance.Destroy();
-            }
-            mGeneratedCollision.RemoveFromManagers(clearThis: false);
         }
         public virtual void AssignCustomVariables (bool callOnContainedElements) 
         {
             if (callOnContainedElements)
             {
             }
-            CircleInstance.Radius = 16f;
-            ParmeParticleEmitterInstanceIsEmitting = true;
+            RotationDegreesPerSecond = 360;
         }
         public virtual void ConvertToManuallyUpdated () 
         {
@@ -190,7 +151,7 @@ namespace Parme.Frb.Example.Entities
                 {
                     if (!mRegisteredUnloads.Contains(ContentManagerName) && ContentManagerName != FlatRedBall.FlatRedBallServices.GlobalContentManager)
                     {
-                        FlatRedBall.FlatRedBallServices.GetContentManagerByName(ContentManagerName).AddUnloadMethod("SomeCircleStaticUnload", UnloadStaticContent);
+                        FlatRedBall.FlatRedBallServices.GetContentManagerByName(ContentManagerName).AddUnloadMethod("PlayerStaticUnload", UnloadStaticContent);
                         mRegisteredUnloads.Add(ContentManagerName);
                     }
                 }
@@ -201,7 +162,7 @@ namespace Parme.Frb.Example.Entities
                 {
                     if (!mRegisteredUnloads.Contains(ContentManagerName) && ContentManagerName != FlatRedBall.FlatRedBallServices.GlobalContentManager)
                     {
-                        FlatRedBall.FlatRedBallServices.GetContentManagerByName(ContentManagerName).AddUnloadMethod("SomeCircleStaticUnload", UnloadStaticContent);
+                        FlatRedBall.FlatRedBallServices.GetContentManagerByName(ContentManagerName).AddUnloadMethod("PlayerStaticUnload", UnloadStaticContent);
                         mRegisteredUnloads.Add(ContentManagerName);
                     }
                 }
@@ -241,16 +202,16 @@ namespace Parme.Frb.Example.Entities
         public virtual void SetToIgnorePausing () 
         {
             FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(this);
-            FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(CircleInstance);
+            FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(LineInstance);
         }
         public virtual void MoveToLayer (FlatRedBall.Graphics.Layer layerToMoveTo) 
         {
             var layerToRemoveFrom = LayerProvidedByContainer;
             if (layerToRemoveFrom != null)
             {
-                layerToRemoveFrom.Remove(CircleInstance);
+                layerToRemoveFrom.Remove(LineInstance);
             }
-            FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(CircleInstance, layerToMoveTo);
+            FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(LineInstance, layerToMoveTo);
             LayerProvidedByContainer = layerToMoveTo;
         }
     }

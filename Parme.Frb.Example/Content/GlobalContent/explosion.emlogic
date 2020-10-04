@@ -1,0 +1,87 @@
+{
+  "MaxParticleLifeTime": 0.75,
+  "TextureFileName": "SampleParticles.png",
+  "TextureSections": [
+    {
+      "LeftX": 0,
+      "TopY": 64,
+      "RightX": 32,
+      "BottomY": 96
+    },
+    {
+      "LeftX": 32,
+      "TopY": 64,
+      "RightX": 64,
+      "BottomY": 96
+    },
+    {
+      "LeftX": 64,
+      "TopY": 64,
+      "RightX": 96,
+      "BottomY": 96
+    },
+    {
+      "LeftX": 0,
+      "TopY": 96,
+      "RightX": 32,
+      "BottomY": 128
+    },
+    {
+      "LeftX": 32,
+      "TopY": 96,
+      "RightX": 64,
+      "BottomY": 128
+    },
+    {
+      "LeftX": 64,
+      "TopY": 96,
+      "RightX": 96,
+      "BottomY": 128
+    }
+  ],
+  "Trigger": {
+    "EditorShortName": "One Shot",
+    "EditorShortValue": "",
+    "$ParmeType": "OneShotTrigger"
+  },
+  "Initializers": [
+    {
+      "EditorShortName": "Static",
+      "EditorShortValue": "255, 255, 255, 1.00",
+      "Red": 255,
+      "Green": 255,
+      "Blue": 255,
+      "Alpha": 1.0,
+      "$ParmeType": "StaticColorInitializer"
+    },
+    {
+      "EditorShortName": "Static",
+      "EditorShortValue": "(30, 30)",
+      "Width": 30,
+      "Height": 30,
+      "$ParmeType": "StaticSizeInitializer"
+    },
+    {
+      "EditorShortName": "Wedge",
+      "EditorShortValue": "50 btw 0° - 360°",
+      "Magnitude": 50.0,
+      "MinDegrees": 0.0,
+      "MaxDegrees": 360.0,
+      "$ParmeType": "RadialVelocityInitializer"
+    },
+    {
+      "EditorShortName": "Random",
+      "EditorShortValue": "3 - 5",
+      "MinimumToSpawn": 3,
+      "MaximumToSpawn": 5,
+      "$ParmeType": "RandomParticleCountInitializer"
+    }
+  ],
+  "Modifiers": [
+    {
+      "EditorShortName": "Animating Texture",
+      "EditorShortValue": "",
+      "$ParmeType": "AnimatingTextureModifier"
+    }
+  ]
+}

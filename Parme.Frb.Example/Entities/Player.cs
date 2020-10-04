@@ -11,8 +11,9 @@ using FlatRedBall.Math.Geometry;
 
 namespace Parme.Frb.Example.Entities
 {
-    public partial class SomeCircle
+    public partial class Player
     {
+        
         /// <summary>
         /// Initialization logic which is execute only one time for this Entity (unless the Entity is pooled).
         /// This method is called when the Entity is added to managers. Entities which are instantiated but not
@@ -20,24 +21,20 @@ namespace Parme.Frb.Example.Entities
         /// </summary>
         private void CustomInitialize()
         {
-            //ParmeParticleEmitterInstance.IsEmitting = true;
+            LineInstance.RelativePoint1 = new Point3D(0, 0);
+            LineInstance.RelativePoint2 = new Point3D(20, 0);
         }
 
         private void CustomActivity()
         {
-
         }
 
         private void CustomDestroy()
         {
-
-
         }
 
         private static void CustomLoadStaticContent(string contentManagerName)
         {
-
-
         }
     }
 }

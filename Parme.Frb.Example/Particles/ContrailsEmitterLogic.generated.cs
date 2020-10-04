@@ -7,53 +7,41 @@ using Parme.CSharp;
 namespace Parme.Frb.Example
 {
 
-    public class FireEmitterLogic : IEmitterLogic
+    public class ContrailsEmitterLogic : IEmitterLogic
     {
         private readonly Random _random = new Random();
-        private float _timeSinceLastTrigger;
+        private Vector2 _lastEmittedPosition;
 
-        public float MaxParticleLifeTime { get; set; } = 1f;
+        public float MaxParticleLifeTime { get; set; } = 0.5f;
         
-        public string TextureFilePath { get; } = @"";
+        public string TextureFilePath { get; } = @"Content\GlobalContent\SampleParticles.png";
         public TextureSectionCoords[] TextureSections { get; } = new TextureSectionCoords[] {
+            new TextureSectionCoords(16, 0, 32, 16),
+            new TextureSectionCoords(32, 0, 48, 16),
+            new TextureSectionCoords(48, 0, 64, 16),
         };
         
         
-        public float TimeElapsedTriggerFrequency { get; set; } = 0.01f; 
+        public float DistanceBasedTriggerUnitsPerEmission { get; set; } = 20f;
+        public int StaticParticleSpawnCount { get; set; } = 1;
 
-        public int RandomParticleCountMinToSpawn { get; set; } = 0;
-        public int RandomParticleCountMaxToSpawn { get; set; } = 5;
+        public float StaticPositionXOffset { get; set; } = 0f;
+        public float StaticPositionYOffset { get; set; } = 0;
 
         public byte StaticColorStartingRed { get; set; } = 255;
-        public byte StaticColorStartingGreen { get; set; } = 165;
-        public byte StaticColorStartingBlue { get; set; } = 0;
+        public byte StaticColorStartingGreen { get; set; } = 159;
+        public byte StaticColorStartingBlue { get; set; } = 11;
         public byte StaticColorStartingAlpha { get; set; } = 255;
 
-        public float RandomRangeVelocityMinX { get; set; } = 0f;
-        public float RandomRangeVelocityMaxX { get; set; } = 0f;
-        public float RandomRangeVelocityMinY { get; set; } = 100f;
-        public float RandomRangeVelocityMaxY { get; set; } = 200f; 
-
-        public float RandomRegionPositionMinXOffset { get; set; } = -25f;
-        public float RandomRegionPositionMaxXOffset { get; set; } = 25f;
-        public float RandomRegionPositionMinYOffset { get; set; } = 20f;
-        public float RandomRegionPositionMaxYOffset { get; set; } = -20f;
-
-        public int StaticSizeWidth { get; set; } = 10;
-        public int StaticSizeHeight { get; set; } = 10;
-
-        public float ConstantRotationRadiansPerSecond { get; set; } = 1.7453292519943295f;
-
-        public float ConstantAccelerationX { get; set; } = -75f;
-        public float ConstantAccelerationY { get; set; } = 0f;
-
-        public float ConstantSizeWidthChangePerSecond { get; set; } = -5f;
-        public float ConstantSizeHeightChangePerSecond { get; set; } = -5f;
+        public int StaticSizeWidth { get; set; } = 50;
+        public int StaticSizeHeight { get; set; } = 50;
 
         public byte EndingColorRed { get; set; } = 255;
-        public byte EndingColorGreen { get; set; } = 165;
-        public byte EndingColorBlue { get; set; } = 0;
+        public byte EndingColorGreen { get; set; } = 255;
+        public byte EndingColorBlue { get; set; } = 255;
         public byte EndingColorAlpha { get; set; } = 0;
+
+        public float ConstantRotationRadiansPerSecond { get; set; } = 3.141592653589793f;
 
         
         public void Update(ParticleBuffer particleBuffer, float timeSinceLastFrame, Emitter parent)
@@ -80,19 +68,13 @@ namespace Parme.Frb.Example
                 // modifiers
                 
                 {
-                        particle.RotationInRadians += timeSinceLastFrame * ConstantRotationRadiansPerSecond;
-                }
-                {
-                        particle.Velocity += timeSinceLastFrame * new Vector2(ConstantAccelerationX, ConstantAccelerationY);
-                }
-                {
-                        particle.Size += timeSinceLastFrame * new Vector2(ConstantSizeWidthChangePerSecond, ConstantSizeHeightChangePerSecond);
-                }
-                {
                         particle.CurrentRed -= (byte) (((particle.InitialRed - EndingColorRed) / MaxParticleLifeTime) * timeSinceLastFrame);
                         particle.CurrentGreen -= (byte) (((particle.InitialGreen - EndingColorGreen) / MaxParticleLifeTime) * timeSinceLastFrame);
                         particle.CurrentBlue -= (byte) (((particle.InitialBlue - EndingColorBlue) / MaxParticleLifeTime) * timeSinceLastFrame);
                         particle.CurrentAlpha -= (byte) (((particle.InitialAlpha - EndingColorAlpha) / MaxParticleLifeTime) * timeSinceLastFrame);
+                }
+                {
+                        particle.RotationInRadians += timeSinceLastFrame * ConstantRotationRadiansPerSecond;
                 }
 
                 
@@ -100,15 +82,16 @@ namespace Parme.Frb.Example
             }
             
             var shouldCreateNewParticle = false;
+            var stopEmittingAfterUpdate = false;
             {
                 
             shouldCreateNewParticle = false;
-            _timeSinceLastTrigger += timeSinceLastFrame;
-            if (_timeSinceLastTrigger >= TimeElapsedTriggerFrequency)
+            var distance = Math.Abs(Vector2.Distance(_lastEmittedPosition, parent.WorldCoordinates));
+            if (DistanceBasedTriggerUnitsPerEmission > 0 && distance >= DistanceBasedTriggerUnitsPerEmission)
             {
                 shouldCreateNewParticle = true;
-                _timeSinceLastTrigger = 0;  
-            }          
+                _lastEmittedPosition = parent.WorldCoordinates;
+            }
 
             }
             
@@ -118,7 +101,7 @@ namespace Parme.Frb.Example
                 {
                     
                     {
-                        newParticleCount = _random.Next(RandomParticleCountMinToSpawn, RandomParticleCountMaxToSpawn);
+                        newParticleCount = StaticParticleSpawnCount;
                     }
 
                 }
@@ -136,6 +119,10 @@ namespace Parme.Frb.Example
                     
                     {
                         
+                        particle.Position = new Vector2(StaticPositionXOffset, StaticPositionYOffset);
+                    }
+                    {
+                        
                         particle.InitialRed = StaticColorStartingRed;
                         particle.CurrentRed = StaticColorStartingRed;
                         particle.InitialGreen = StaticColorStartingGreen;
@@ -146,19 +133,11 @@ namespace Parme.Frb.Example
                         particle.CurrentAlpha = StaticColorStartingAlpha;
                                 }
                     {
-                        
-                        var x = RandomRangeVelocityMaxX - _random.NextDouble() * (RandomRangeVelocityMaxX - RandomRangeVelocityMinX);
-                        var y = RandomRangeVelocityMaxY - _random.NextDouble() * (RandomRangeVelocityMaxY - RandomRangeVelocityMinY);
-                        particle.Velocity = new Vector2((float) x, (float) y);
-                    }
-                    {
-                        
-                        var x = RandomRegionPositionMaxXOffset - _random.NextDouble() * (RandomRegionPositionMaxXOffset - RandomRegionPositionMinXOffset);
-                        var y = RandomRegionPositionMaxYOffset - _random.NextDouble() * (RandomRegionPositionMaxYOffset - RandomRegionPositionMinYOffset);
-                        particle.Position = new Vector2((float) x, (float) y);
-                    }
-                    {
                         particle.Size = new Vector2(StaticSizeWidth, StaticSizeHeight);
+                    }
+                    {
+                        
+                        particle.TextureSectionIndex = (byte) _random.Next(0, TextureSections.Length);
                     }
 
 
@@ -167,6 +146,12 @@ namespace Parme.Frb.Example
                     
                     particleBuffer.Add(particle);            
                 }
+            }
+
+            if (stopEmittingAfterUpdate)
+            {
+                parent.IsEmittingNewParticles = false;
+                stopEmittingAfterUpdate = false;
             }
         }
     }

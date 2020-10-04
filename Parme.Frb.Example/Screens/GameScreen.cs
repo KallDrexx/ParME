@@ -1,11 +1,8 @@
+using System;
 using FlatRedBall;
 using FlatRedBall.Input;
 using Microsoft.Xna.Framework.Input;
-using Parme.Core;
-using Parme.Core.Initializers;
-using Parme.Core.Modifiers;
-using Parme.Core.Triggers;
-using Parme.CSharp;
+using Parme.Frb.Example.Entities;
 
 namespace Parme.Frb.Example.Screens
 {
@@ -13,41 +10,28 @@ namespace Parme.Frb.Example.Screens
     {
         void CustomInitialize()
         {
-            
         }
 
         void CustomActivity(bool firstTimeCalled)
         {
-            const float movementSpeed = 200;
-            if (InputManager.Keyboard.KeyDown(Keys.Up))
+            if (InputManager.Keyboard.KeyDown(Keys.Left))
             {
-                SomeCircleInstance.Y += TimeManager.SecondDifference * movementSpeed;
-            }
-
-            if (InputManager.Keyboard.KeyDown(Keys.Down))
-            {
-                SomeCircleInstance.Y -= TimeManager.SecondDifference * movementSpeed;
+                var radians = PlayerInstance.RotationDegreesPerSecond * (Math.PI / 180) * TimeManager.SecondDifference;
+                PlayerInstance.RotationZ += (float) radians;
             }
 
             if (InputManager.Keyboard.KeyDown(Keys.Right))
             {
-                SomeCircleInstance.X += TimeManager.SecondDifference * movementSpeed;
+                var radians = PlayerInstance.RotationDegreesPerSecond * (Math.PI / 180) * TimeManager.SecondDifference;
+                PlayerInstance.RotationZ -= (float) radians;
             }
 
-            if (InputManager.Keyboard.KeyDown(Keys.Left))
+            if (InputManager.Keyboard.KeyReleased(Keys.Space))
             {
-                SomeCircleInstance.X -= TimeManager.SecondDifference * movementSpeed;
-            }
-
-            if (InputManager.Keyboard.KeyReleased(Keys.Enter))
-            {
-                SomeCircleInstance.ParmeParticleEmitterInstanceIsEmitting =
-                    !SomeCircleInstance.ParmeParticleEmitterInstanceIsEmitting;
-            }
-
-            if (InputManager.Keyboard.KeyReleased(Keys.Delete))
-            {
-                SomeCircleInstance.Destroy();
+                var bullet = new Bullet();
+                bullet.Velocity.X = (float) (bullet.Speed * Math.Cos(PlayerInstance.RotationZ));
+                bullet.Velocity.Y = (float) (bullet.Speed * Math.Sin(PlayerInstance.RotationZ));
+                BulletList.Add(bullet);
             }
         }
 
