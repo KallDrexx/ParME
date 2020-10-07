@@ -94,7 +94,6 @@ namespace Parme.Editor.AppOperations
 
             var modifiers = new IParticleModifier[]
             {
-                new ConstantRotationModifier {DegreesPerSecond = 100f},
                 new ConstantAccelerationModifier
                 {
                     XAcceleration = -75,

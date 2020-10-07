@@ -19,6 +19,7 @@ namespace Parme.CSharp
         public Vector2 Velocity;
         public float TimeAlive;
         public float RotationInRadians;
+        public float RotationalVelocityInRadians;
         public byte InitialRed;
         public byte InitialGreen;
         public byte InitialBlue;

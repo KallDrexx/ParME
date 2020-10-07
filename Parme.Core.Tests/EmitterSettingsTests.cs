@@ -16,7 +16,7 @@ namespace Parme.Core.Tests
         {
             var trigger = new TimeElapsedTrigger {Frequency = 1.2f};
             var initializer = new StaticPositionInitializer {XOffset = 1.1f, YOffset = 2.2f};
-            var modifier = new ConstantRotationModifier {DegreesPerSecond = 5.2f};
+            var modifier = new ConstantSizeModifier {WidthChangePerSecond = 10, HeightChangePerSecond = 11};
             var emitter = new EmitterSettings
             {
                 Trigger = trigger,
@@ -45,8 +45,9 @@ namespace Parme.Core.Tests
             deserializedEmitter.Modifiers.ShouldNotBeNull();
             deserializedEmitter.Modifiers.Count.ShouldBe(1);
             deserializedEmitter.Modifiers[0].ShouldNotBeNull();
-            deserializedEmitter.Modifiers[0].ShouldBeOfType<ConstantRotationModifier>();
-            ((ConstantRotationModifier) deserializedEmitter.Modifiers[0]).DegreesPerSecond.ShouldBe(5.2f);
+            deserializedEmitter.Modifiers[0].ShouldBeOfType<ConstantSizeModifier>();
+            ((ConstantSizeModifier) deserializedEmitter.Modifiers[0]).WidthChangePerSecond.ShouldBe(10);
+            ((ConstantSizeModifier) deserializedEmitter.Modifiers[0]).HeightChangePerSecond.ShouldBe(11);
         }
 
         [Fact]
@@ -107,7 +108,7 @@ namespace Parme.Core.Tests
         [Fact]
         public void Can_Deserialize_Basic_Fire_Effect_Json()
         {
-            const string json = "{\n  \"MaxParticleLifeTime\": 1.0,\n  \"Trigger\": {\n    \"Frequency\": 0.01,\n    \"$ParmeType\": \"TimeElapsedTrigger\"\n  },\n  \"Initializers\": [\n    {\n      \"MinimumToSpawn\": 0,\n      \"MaximumToSpawn\": 5,\n      \"$ParmeType\": \"RandomParticleCountInitializer\"\n    },\n    {\n      \"Red\": 255,\n      \"Green\": 165,\n      \"Blue\": 0,\n      \"Alpha\": 1.0,\n      \"$ParmeType\": \"StaticColorInitializer\"\n    },\n    {\n      \"MinXVelocity\": 0.0,\n      \"MaxXVelocity\": 0.0,\n      \"MinYVelocity\": 2.0,\n      \"MaxYVelocity\": 5.0,\n      \"$ParmeType\": \"RandomRangeVelocityInitializer\"\n    },\n    {\n      \"MinXOffset\": -25.0,\n      \"MinYOffset\": -50.0,\n      \"MaxXOffset\": 25.0,\n      \"MaxYOffset\": -50.0,\n      \"$ParmeType\": \"RandomRegionPositionInitializer\"\n    },\n    {\n      \"Width\": 10,\n      \"Height\": 10,\n      \"$ParmeType\": \"StaticSizeInitializer\"\n    }\n  ],\n  \"Modifiers\": [\n    {\n      \"DegreesPerSecond\": 100.0,\n      \"$ParmeType\": \"ConstantRotationModifier\"\n    },\n    {\n      \"XAcceleration\": -5.0,\n      \"YAcceleration\": 5.0,\n      \"$ParmeType\": \"ConstantAccelerationModifier\"\n    },\n    {\n      \"WidthChangePerSecond\": -10.0,\n      \"HeightChangePerSecond\": -10.0,\n      \"$ParmeType\": \"ConstantSizeModifier\"\n    },\n    {\n      \"Red\": 3,\n      \"Green\": 2,\n      \"Blue\": 1,\n      \"Alpha\": 0.5,\n      \"$ParmeType\": \"EndingColorModifier\"\n    }\n  ]\n}";
+            const string json = "{\n  \"MaxParticleLifeTime\": 1.0,\n  \"Trigger\": {\n    \"Frequency\": 0.01,\n    \"$ParmeType\": \"TimeElapsedTrigger\"\n  },\n  \"Initializers\": [\n    {\n      \"MinimumToSpawn\": 0,\n      \"MaximumToSpawn\": 5,\n      \"$ParmeType\": \"RandomParticleCountInitializer\"\n    },\n    {\n      \"Red\": 255,\n      \"Green\": 165,\n      \"Blue\": 0,\n      \"Alpha\": 1.0,\n      \"$ParmeType\": \"StaticColorInitializer\"\n    },\n    {\n      \"MinXVelocity\": 0.0,\n      \"MaxXVelocity\": 0.0,\n      \"MinYVelocity\": 2.0,\n      \"MaxYVelocity\": 5.0,\n      \"$ParmeType\": \"RandomRangeVelocityInitializer\"\n    },\n    {\n      \"MinXOffset\": -25.0,\n      \"MinYOffset\": -50.0,\n      \"MaxXOffset\": 25.0,\n      \"MaxYOffset\": -50.0,\n      \"$ParmeType\": \"RandomRegionPositionInitializer\"\n    },\n    {\n      \"Width\": 10,\n      \"Height\": 10,\n      \"$ParmeType\": \"StaticSizeInitializer\"\n    }\n  ],\n  \"Modifiers\": [\n    {\n      \"XAcceleration\": -5.0,\n      \"YAcceleration\": 5.0,\n      \"$ParmeType\": \"ConstantAccelerationModifier\"\n    },\n    {\n      \"WidthChangePerSecond\": -10.0,\n      \"HeightChangePerSecond\": -10.0,\n      \"$ParmeType\": \"ConstantSizeModifier\"\n    },\n    {\n      \"Red\": 3,\n      \"Green\": 2,\n      \"Blue\": 1,\n      \"Alpha\": 0.5,\n      \"$ParmeType\": \"EndingColorModifier\"\n    }\n  ]\n}";
 
             var emitter = EmitterSettings.FromJson(json);
             
@@ -146,24 +147,21 @@ namespace Parme.Core.Tests
             ((StaticSizeInitializer) emitter.Initializers[4]).Height.ShouldBe(10);
             
             emitter.Modifiers.ShouldNotBeNull();
-            emitter.Modifiers.Count.ShouldBe(4);
-
-            emitter.Modifiers[0].ShouldBeOfType<ConstantRotationModifier>();
-            ((ConstantRotationModifier) emitter.Modifiers[0]).DegreesPerSecond.ShouldBe(100);
+            emitter.Modifiers.Count.ShouldBe(3);
             
-            emitter.Modifiers[1].ShouldBeOfType<ConstantAccelerationModifier>();
-            ((ConstantAccelerationModifier) emitter.Modifiers[1]).XAcceleration.ShouldBe(-5);
-            ((ConstantAccelerationModifier) emitter.Modifiers[1]).YAcceleration.ShouldBe(5);
+            emitter.Modifiers[0].ShouldBeOfType<ConstantAccelerationModifier>();
+            ((ConstantAccelerationModifier) emitter.Modifiers[0]).XAcceleration.ShouldBe(-5);
+            ((ConstantAccelerationModifier) emitter.Modifiers[0]).YAcceleration.ShouldBe(5);
             
-            emitter.Modifiers[2].ShouldBeOfType<ConstantSizeModifier>();
-            ((ConstantSizeModifier) emitter.Modifiers[2]).WidthChangePerSecond.ShouldBe(-10);
-            ((ConstantSizeModifier) emitter.Modifiers[2]).HeightChangePerSecond.ShouldBe(-10);
+            emitter.Modifiers[1].ShouldBeOfType<ConstantSizeModifier>();
+            ((ConstantSizeModifier) emitter.Modifiers[1]).WidthChangePerSecond.ShouldBe(-10);
+            ((ConstantSizeModifier) emitter.Modifiers[1]).HeightChangePerSecond.ShouldBe(-10);
             
-            emitter.Modifiers[3].ShouldBeOfType<EndingColorModifier>();
-            ((EndingColorModifier) emitter.Modifiers[3]).Red.ShouldBe((byte) 3);
-            ((EndingColorModifier) emitter.Modifiers[3]).Green.ShouldBe((byte) 2);
-            ((EndingColorModifier) emitter.Modifiers[3]).Blue.ShouldBe((byte) 1);
-            ((EndingColorModifier) emitter.Modifiers[3]).Alpha.ShouldBe(0.5f);
+            emitter.Modifiers[2].ShouldBeOfType<EndingColorModifier>();
+            ((EndingColorModifier) emitter.Modifiers[2]).Red.ShouldBe((byte) 3);
+            ((EndingColorModifier) emitter.Modifiers[2]).Green.ShouldBe((byte) 2);
+            ((EndingColorModifier) emitter.Modifiers[2]).Blue.ShouldBe((byte) 1);
+            ((EndingColorModifier) emitter.Modifiers[2]).Alpha.ShouldBe(0.5f);
         }
 
         [Fact]

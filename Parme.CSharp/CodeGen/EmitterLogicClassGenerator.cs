@@ -63,6 +63,7 @@ using Parme.CSharp;
                 {5}
                 
                 particle.Position += particle.Velocity * timeSinceLastFrame;
+                particle.RotationInRadians += particle.RotationalVelocityInRadians * timeSinceLastFrame;
             }}
             
             var shouldCreateNewParticle = false;

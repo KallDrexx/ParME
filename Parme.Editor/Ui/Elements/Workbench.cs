@@ -17,7 +17,7 @@ namespace Parme.Editor.Ui.Elements
         /// <summary>
         /// Affects how much of the window size should be reserved for controls below the initializer/modifier section
         /// </summary>
-        private const int ChildWindowHeightSubtractionFactor = 80;
+        private const int ChildWindowHeightSubtractionFactor = 75;
 
         private readonly SettingsCommandHandler _commandHandler;
         public event EventHandler<IParticleModifier> ModifierRemovalRequested; 
@@ -133,6 +133,21 @@ namespace Parme.Editor.Ui.Elements
                 {
                     throw new InvalidOperationException($"Initializer type of {value.InitializerType} passed in, " +
                                                         "but only texture section initializers were expected");
+                }
+                
+                Set(value);
+            }
+        }
+
+        public IParticleInitializer RotationalVelocityInitializer
+        {
+            get => Get<IParticleInitializer>();
+            set
+            {
+                if (value != null && value.InitializerType != InitializerType.RotationalVelocity)
+                {
+                    throw new InvalidOperationException($"Initializer type of {value.InitializerType} passed in, " +
+                                                        "but only rotational velocity initializers were expected");
                 }
                 
                 Set(value);
@@ -313,11 +328,18 @@ namespace Parme.Editor.Ui.Elements
                 new EditorItem(EditorItemType.Initializer, InitializerType.Size));
             
             ImGui.NextColumn();
-            RightAlignText("Velocity:");
+            RightAlignText("Movement Velocity:");
             
             ImGui.NextColumn();
             Selectable(EditorObjectNameAndValue(VelocityInitializer),
                 new EditorItem(EditorItemType.Initializer, InitializerType.Velocity));
+            
+            ImGui.NextColumn();
+            RightAlignText("Rotational Velocity:");
+            
+            ImGui.NextColumn();
+            Selectable(EditorObjectNameAndValue(RotationalVelocityInitializer),
+                new EditorItem(EditorItemType.Initializer, InitializerType.RotationalVelocity));
             
             ImGui.Columns(1);
             ImGui.EndChild();

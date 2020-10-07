@@ -73,6 +73,7 @@ namespace Parme.Frb.Example
 
                 
                 particle.Position += particle.Velocity * timeSinceLastFrame;
+                particle.RotationInRadians += particle.RotationalVelocityInRadians;
             }
             
             var shouldCreateNewParticle = false;

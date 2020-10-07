@@ -151,6 +151,9 @@ namespace Parme.Editor.Ui
             _workbench.TextureSectionInitializer = (settings.Initializers ?? Array.Empty<IParticleInitializer>())
                 .FirstOrDefault(x => x.InitializerType == InitializerType.TextureSectionIndex);
 
+            _workbench.RotationalVelocityInitializer = (settings.Initializers ?? Array.Empty<IParticleInitializer>())
+                .FirstOrDefault(x => x.InitializerType == InitializerType.RotationalVelocity);
+
             _workbench.Modifiers.Clear();
             foreach (var modifier in settings.Modifiers ?? Array.Empty<IParticleModifier>())
             {

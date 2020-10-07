@@ -36,5 +36,10 @@
         /// An initializer that determines which part of a texture the particle should be rendered with 
         /// </summary>
         TextureSectionIndex = 6,
+        
+        /// <summary>
+        /// An initializer that determines the initial rotational speed of particles
+        /// </summary>
+        RotationalVelocity = 7
     }
 }
