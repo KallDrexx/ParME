@@ -22,6 +22,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.Frb.GluePlugin", "Par
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.Core.Tests", "Parme.Core.Tests\Parme.Core.Tests.csproj", "{39B75222-A214-4372-AC84-A146E46537A9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{62D7991D-1056-4C98-9457-1EB2C0601E28}"
+ProjectSection(SolutionItems) = preProject
+	build-packages.csx = build-packages.csx
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

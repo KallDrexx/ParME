@@ -6,3 +6,4 @@
 packages/
 Parme.Frb.Example/Plugins/
 .vs/
+.artifacts/

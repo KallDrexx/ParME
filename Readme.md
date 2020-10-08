@@ -20,4 +20,12 @@ The core idea behind Parme is to make it easy for artists and game designers to 
 
 The flexibility in defining how particles behave is done while minimizing branching and virtual calls by relying on code generation.  If a specific behavior isn't desired for a set of particles than that behavior won't exist in the particle's code at all.  
 
+## Usage
 
+### MonoGame
+
+(More detailed instructions coming)
+
+Note that this library uses the `System.Numerics.Vectors` NuGet package.  This dependency does not automatically work in Desktop (old) style C# projects by default due to assembly bindings.   This will cause a `FileLoadException` with a message such as `Could not load file or assembly 'System.Numerics.Vectors`.  
+
+To fix this, edit the `csproj` file and add the following to the first `PropertyGroup` node: `<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>`.  That should solve the issue.

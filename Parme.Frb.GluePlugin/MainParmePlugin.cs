@@ -36,7 +36,14 @@ namespace Parme.Frb.GluePlugin
             {
                 var assembly = Assembly.GetExecutingAssembly();
                 var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-                return new Version(fileVersionInfo.ProductVersion);
+                
+                // If this has a pre-release tag, remove it.  Otherwise it can't be parsed to a Version type
+                var dashIndex = fileVersionInfo.ProductVersion.IndexOf('-');
+                var versionString = dashIndex >= 0
+                    ? fileVersionInfo.ProductVersion.Substring(0, dashIndex)
+                    : fileVersionInfo.ProductVersion;
+                
+                return new Version(versionString);
             }
         }
         

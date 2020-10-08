@@ -14,7 +14,7 @@ namespace Parme.Editor
         private readonly HashSet<Modal> _openModals = new HashSet<Modal>();
         private float _currentTime;
         
-        public Version Version { get; }
+        public string Version { get; }
         public string ActiveFileName { get; private set; }
         public EmitterSettings ActiveEmitter { get; private set; }
         public string ErrorMessage { get; private set; }
@@ -31,7 +31,7 @@ namespace Parme.Editor
         {
             var assembly = Assembly.GetExecutingAssembly();
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-            Version = new Version(fileVersionInfo.ProductVersion);
+            Version = fileVersionInfo.ProductVersion;
             BackgroundColor = new Vector3(48 / 255f, 48 / 255f, 48 / 255f);
             GridSize = 32;
         }
