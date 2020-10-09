@@ -42,8 +42,6 @@ namespace Parme.Frb.Example
         public int StaticSizeWidth { get; set; } = 10;
         public int StaticSizeHeight { get; set; } = 10;
 
-        public float ConstantRotationRadiansPerSecond { get; set; } = 1.7453292519943295f;
-
         public float ConstantAccelerationX { get; set; } = -75f;
         public float ConstantAccelerationY { get; set; } = 0f;
 
@@ -80,9 +78,6 @@ namespace Parme.Frb.Example
                 // modifiers
                 
                 {
-                        particle.RotationInRadians += timeSinceLastFrame * ConstantRotationRadiansPerSecond;
-                }
-                {
                         particle.Velocity += timeSinceLastFrame * new Vector2(ConstantAccelerationX, ConstantAccelerationY);
                 }
                 {
@@ -97,6 +92,7 @@ namespace Parme.Frb.Example
 
                 
                 particle.Position += particle.Velocity * timeSinceLastFrame;
+                particle.RotationInRadians += particle.RotationalVelocityInRadians * timeSinceLastFrame;
             }
             
             var shouldCreateNewParticle = false;

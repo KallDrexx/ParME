@@ -72,12 +72,6 @@
       "Blue": 255,
       "Alpha": 0.0,
       "$ParmeType": "EndingColorModifier"
-    },
-    {
-      "EditorShortName": "Constant Rotation",
-      "EditorShortValue": "180°",
-      "DegreesPerSecond": 180.0,
-      "$ParmeType": "ConstantRotationModifier"
     }
   ]
 }

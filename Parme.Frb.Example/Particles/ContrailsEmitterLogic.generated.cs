@@ -41,8 +41,6 @@ namespace Parme.Frb.Example
         public byte EndingColorBlue { get; set; } = 255;
         public byte EndingColorAlpha { get; set; } = 0;
 
-        public float ConstantRotationRadiansPerSecond { get; set; } = 3.141592653589793f;
-
         
         public void Update(ParticleBuffer particleBuffer, float timeSinceLastFrame, Emitter parent)
         {
@@ -73,12 +71,10 @@ namespace Parme.Frb.Example
                         particle.CurrentBlue -= (byte) (((particle.InitialBlue - EndingColorBlue) / MaxParticleLifeTime) * timeSinceLastFrame);
                         particle.CurrentAlpha -= (byte) (((particle.InitialAlpha - EndingColorAlpha) / MaxParticleLifeTime) * timeSinceLastFrame);
                 }
-                {
-                        particle.RotationInRadians += timeSinceLastFrame * ConstantRotationRadiansPerSecond;
-                }
 
                 
                 particle.Position += particle.Velocity * timeSinceLastFrame;
+                particle.RotationInRadians += particle.RotationalVelocityInRadians * timeSinceLastFrame;
             }
             
             var shouldCreateNewParticle = false;

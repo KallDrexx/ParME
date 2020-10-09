@@ -53,12 +53,6 @@
   ],
   "Modifiers": [
     {
-      "EditorShortName": "Constant Rotation",
-      "EditorShortValue": "100°",
-      "DegreesPerSecond": 100.0,
-      "$ParmeType": "ConstantRotationModifier"
-    },
-    {
       "EditorShortName": "Constant Acceleration",
       "EditorShortValue": "(-75, 0)",
       "XAcceleration": -75.0,
