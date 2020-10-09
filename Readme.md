@@ -22,7 +22,14 @@ The flexibility in defining how particles behave is done while minimizing branch
 
 ## Usage
 
-### MonoGame
+### C#
+
+Nuget Packages: 
+* Parme.Core - [![Nuget](https://img.shields.io/nuget/v/Parme.Core?style=flat)](https://www.nuget.org/packages/Parme.Core)
+* Parme.CSharp - [![Nuget](https://img.shields.io/nuget/v/Parme.CSharp?style=flat)](https://www.nuget.org/packages/Parme.CSharp)
+* Parme.MonoGame - [![Nuget](https://img.shields.io/nuget/v/Parme.MonoGame?style=flat)](https://www.nuget.org/packages/Parme.MonoGame)
+* Parme.Frb - [![Nuget](https://img.shields.io/nuget/v/Parme.Frb?style=flat)](https://www.nuget.org/packages/Parme.Frb)
+
 
 (More detailed instructions coming)
 
