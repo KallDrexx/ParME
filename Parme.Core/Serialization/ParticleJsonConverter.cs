@@ -55,8 +55,7 @@ namespace Parme.Core.Serialization
             var typeName = jObject[TypeFieldName].ToString();
             if (!_typeNameMap.Map.TryGetValue(typeName, out var concreteType))
             {
-                var message = $"No known association for particle type of '{typeName}'";
-                throw new InvalidOperationException(message);
+                throw new MissingParmeTypeException(typeName);
             }
 
             var instance = Activator.CreateInstance(concreteType);

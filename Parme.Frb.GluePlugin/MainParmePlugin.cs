@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using FlatRedBall.Glue;
 using FlatRedBall.Glue.Elements;
 using FlatRedBall.Glue.Errors;
@@ -14,6 +15,7 @@ using FlatRedBall.Glue.Plugins.Interfaces;
 using FlatRedBall.Glue.SaveClasses;
 using FlatRedBall.IO;
 using Parme.Core;
+using Parme.Core.Serialization;
 using Parme.CSharp.CodeGen;
 
 namespace Parme.Frb.GluePlugin
@@ -89,10 +91,20 @@ namespace Parme.Frb.GluePlugin
             {
                 emitter = EmitterSettings.FromJson(json);
             }
+            catch (MissingParmeTypeException exception)
+            {
+                var message = $"The emitter logic defined in '{filename}' could not be read, as it is expecting a " +
+                              $"ParME type of '{exception.TypeName}', but this type is not known.";
+
+                MessageBox.Show(message);
+
+                return;
+            }
             catch (Exception exception)
             {
-                var message = $"Failed to parse emitter settings from `{filename}`: {exception}";
-                GlueCommands.Self.PrintError(message);
+                var message = $"Failed to parse emitter logic defined in `{filename}`: {exception.Message}" +
+                              $"{Environment.NewLine}{Environment.NewLine}{exception}";
+                MessageBox.Show(message);
 
                 return;
             }
