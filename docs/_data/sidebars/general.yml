@@ -1,0 +1,40 @@
+entries:
+- title: sidebar
+  folders:
+
+  - title: Overview
+    output: web, pdf
+    folderitems:
+
+    - title: Introduction
+      output: web, pdf
+      url: /index.html
+      type: homepage
+
+    - title: Triggers
+      output: web, pdf
+      url: /general_triggers.html
+
+    - title: Initializers
+      output: web, pdf
+      url: /general_initializers.html
+
+    - title: Modifiers
+      output: web, pdf
+      url: /general_modifiers.html
+
+    - title: Particle Editor Tool
+      output: web, pdf
+      url: /general_editor.html
+
+  - title: Integrations
+    output: web, pdf
+    folderitems:
+
+      - title: MonoGame
+        output: web, pdf
+        url: /general_monogame.html
+
+      - title: FlatRedBall Engine
+        output: web, pdf
+        url: /general_frb.html
