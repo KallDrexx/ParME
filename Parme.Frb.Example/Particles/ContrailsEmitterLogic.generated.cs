@@ -36,6 +36,10 @@ namespace Parme.Frb.Example
         public int StaticSizeWidth { get; set; } = 50;
         public int StaticSizeHeight { get; set; } = 50;
 
+        public float RadialVelocityMagnitude { get; set; } = 50f;
+        public float RadialVelocityMinRadians { get; set; } = 2.356194490192345f;
+        public float RadialVelocityMaxRadians { get; set; } = 3.9269908169872414f; 
+
         public byte EndingColorRed { get; set; } = 255;
         public byte EndingColorGreen { get; set; } = 255;
         public byte EndingColorBlue { get; set; } = 255;
@@ -108,7 +112,19 @@ namespace Parme.Frb.Example
                     {
                         IsAlive = true,
                         TimeAlive = 0,
-                        RotationInRadians = 0, // TODO: add initializer
+                        RotationInRadians = 0,
+                        Position = Vector2.Zero,
+                        RotationalVelocityInRadians = 0f,
+                        InitialRed = 255,
+                        InitialGreen = 255,
+                        InitialBlue = 255,
+                        InitialAlpha = 255,
+                        CurrentRed = 255,
+                        CurrentGreen = 255,
+                        CurrentBlue = 255,
+                        CurrentAlpha = 255,
+                        Size = Vector2.Zero,
+                        Velocity = Vector2.Zero,
                     };
                     
                     // Initializers
@@ -135,7 +151,21 @@ namespace Parme.Frb.Example
                         
                         particle.TextureSectionIndex = (byte) _random.Next(0, TextureSections.Length);
                     }
+                    {
+                        
+                        var radians = RadialVelocityMaxRadians - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
+                
+                        // convert from polar coordinates to cartesian coordinates
+                        var x = RadialVelocityMagnitude * Math.Cos(radians);
+                        var y = RadialVelocityMagnitude * Math.Sin(radians);
+                        particle.Velocity = new Vector2((float) x, (float) y);
+                    }
 
+
+                    // Adjust the particle's rotation, position, and velocity by the emitter's rotation
+                    RotateVector(ref particle.Position, parent.RotationInRadians);
+                    RotateVector(ref particle.Velocity, parent.RotationInRadians);
+                    particle.RotationInRadians += parent.RotationInRadians;
 
                     // Adjust the particle's position by the emitter's location
                     particle.Position += emitterCoordinates;
@@ -149,6 +179,21 @@ namespace Parme.Frb.Example
                 parent.IsEmittingNewParticles = false;
                 stopEmittingAfterUpdate = false;
             }
+        }
+
+        private static void RotateVector(ref Vector2 vector, float radians)
+        {
+            if (vector == Vector2.Zero)
+            {
+                return;
+            }
+            
+            var magnitude = vector.Length();
+            var angle = Math.Atan2(vector.Y, vector.X);
+            angle += radians;
+            
+            vector.X = magnitude * (float) Math.Cos(angle);
+            vector.Y = magnitude * (float) Math.Sin(angle);
         }
     }
 }

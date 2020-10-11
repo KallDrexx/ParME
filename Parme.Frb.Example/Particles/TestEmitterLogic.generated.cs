@@ -126,7 +126,19 @@ namespace Parme.Frb.Example
                     {
                         IsAlive = true,
                         TimeAlive = 0,
-                        RotationInRadians = 0, // TODO: add initializer
+                        RotationInRadians = 0,
+                        Position = Vector2.Zero,
+                        RotationalVelocityInRadians = 0f,
+                        InitialRed = 255,
+                        InitialGreen = 255,
+                        InitialBlue = 255,
+                        InitialAlpha = 255,
+                        CurrentRed = 255,
+                        CurrentGreen = 255,
+                        CurrentBlue = 255,
+                        CurrentAlpha = 255,
+                        Size = Vector2.Zero,
+                        Velocity = Vector2.Zero,
                     };
                     
                     // Initializers
@@ -159,6 +171,11 @@ namespace Parme.Frb.Example
                     }
 
 
+                    // Adjust the particle's rotation, position, and velocity by the emitter's rotation
+                    RotateVector(ref particle.Position, parent.RotationInRadians);
+                    RotateVector(ref particle.Velocity, parent.RotationInRadians);
+                    particle.RotationInRadians += parent.RotationInRadians;
+
                     // Adjust the particle's position by the emitter's location
                     particle.Position += emitterCoordinates;
                     
@@ -171,6 +188,21 @@ namespace Parme.Frb.Example
                 parent.IsEmittingNewParticles = false;
                 stopEmittingAfterUpdate = false;
             }
+        }
+
+        private static void RotateVector(ref Vector2 vector, float radians)
+        {
+            if (vector == Vector2.Zero)
+            {
+                return;
+            }
+            
+            var magnitude = vector.Length();
+            var angle = Math.Atan2(vector.Y, vector.X);
+            angle += radians;
+            
+            vector.X = magnitude * (float) Math.Cos(angle);
+            vector.Y = magnitude * (float) Math.Sin(angle);
         }
     }
 }

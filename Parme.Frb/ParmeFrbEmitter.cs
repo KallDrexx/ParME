@@ -19,6 +19,11 @@ namespace Parme.Frb
         /// The position of the emitter on the Y axis relative to its parent, or the origin if it has no parent
         /// </summary>
         public float YOffset { get; set; }
+        
+        /// <summary>
+        /// The rotation of the emitter relative to it's parent's rotation, or it's rotation relative to straight up.
+        /// </summary>
+        public float RotationOffsetInRadians { get; set; }
 
         /// <summary>
         /// Controls whether the emitter is actively running logic that will cause it to emit new particles.  If a
@@ -57,10 +62,13 @@ namespace Parme.Frb
                 Emitter.WorldCoordinates = new Vector2(
                     Parent.X + XOffset,
                     Parent.Y + YOffset);
+
+                Emitter.RotationInRadians = Parent.RotationZ + RotationOffsetInRadians;
             }
             else
             {
                 Emitter.WorldCoordinates = new Vector2(XOffset, YOffset);
+                Emitter.RotationInRadians = RotationOffsetInRadians;
             }
         }
 

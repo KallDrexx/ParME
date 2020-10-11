@@ -10,6 +10,7 @@ namespace Parme.CSharp
         private bool _isDisposed;
         
         public Vector2 WorldCoordinates { get; set; }
+        public float RotationInRadians { get; set; }
         public bool IsEmittingNewParticles { get; set; }
         
         // ReSharper disable once MemberCanBeProtected.Global
@@ -34,6 +35,7 @@ namespace Parme.CSharp
             EmitterLogic.Update(ParticleBuffer, timeSinceLastFrame, this);
         }
         
+        // ReSharper disable once MemberCanBePrivate.Global
         public void KillAllParticles()
         {
             var particles = ParticleBuffer.Particles;

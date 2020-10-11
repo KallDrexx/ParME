@@ -31,6 +31,7 @@ namespace Parme.Frb.Example.Screens
                 var bullet = new Bullet();
                 bullet.Velocity.X = (float) (bullet.Speed * Math.Cos(PlayerInstance.RotationZ));
                 bullet.Velocity.Y = (float) (bullet.Speed * Math.Sin(PlayerInstance.RotationZ));
+                bullet.RotationZ = PlayerInstance.RotationZ;
                 BulletList.Add(bullet);
             }
         }

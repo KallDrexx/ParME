@@ -61,6 +61,14 @@
       "EditorShortName": "Random",
       "EditorShortValue": "",
       "$ParmeType": "RandomTextureInitializer"
+    },
+    {
+      "EditorShortName": "Wedge",
+      "EditorShortValue": "50 btw 135° - 225°",
+      "Magnitude": 50.0,
+      "MinDegrees": 135.0,
+      "MaxDegrees": 225.0,
+      "$ParmeType": "RadialVelocityInitializer"
     }
   ],
   "Modifiers": [
