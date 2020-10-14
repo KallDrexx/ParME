@@ -10,14 +10,16 @@ namespace Parme.CSharp.Benchmarks.Benchmarks
     [IterationCount(100)]
     public class FireEmitter
     {
+        private ParticlePool _pool;
+        private IEmitterLogic _preInstantiatedLogic;
         private Emitter _emitter;
 
         [GlobalSetup]
         public void CreateEmitter()
         {
-            var pool = new ParticlePool();
-            var logic = Utilities.GetInstance(FireTemplate.Emitter);
-            _emitter = new BenchmarkEmitter(logic, pool)
+            _pool = new ParticlePool();
+            _preInstantiatedLogic = Utilities.GetInstance(FireTemplate.Emitter);
+            _emitter = new BenchmarkEmitter(_preInstantiatedLogic, _pool)
             {
                 IsEmittingNewParticles = true
             };
@@ -33,6 +35,13 @@ namespace Parme.CSharp.Benchmarks.Benchmarks
         public void FireEmitterUpdateCall()
         {
             _emitter.Update(1f/60);
+        }
+
+        [Benchmark]
+        public void CreateEmitterWithReUsedLogic()
+        {
+            using var emitter = new BenchmarkEmitter(_preInstantiatedLogic, _pool);
+            emitter.Update(1f/60);
         }
     }
 }
