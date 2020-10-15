@@ -29,6 +29,8 @@ EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.CSharp.Benchmarks", "Parme.CSharp.Benchmarks\Parme.CSharp.Benchmarks.csproj", "{624102E4-23CD-485D-99CB-C70C05080B1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parme.Cli", "Parme.Cli\Parme.Cli.csproj", "{324C15D0-6A17-4AA6-A593-1DA2D714D40C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{624102E4-23CD-485D-99CB-C70C05080B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{624102E4-23CD-485D-99CB-C70C05080B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{624102E4-23CD-485D-99CB-C70C05080B1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{324C15D0-6A17-4AA6-A593-1DA2D714D40C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{324C15D0-6A17-4AA6-A593-1DA2D714D40C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{324C15D0-6A17-4AA6-A593-1DA2D714D40C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{324C15D0-6A17-4AA6-A593-1DA2D714D40C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F53FCB69-D833-4C0E-A912-07329ACB9786} = {4AAC2D77-788B-471E-B603-D3F0AA1348C4}
