@@ -32,5 +32,10 @@ namespace Parme.CSharp.CodeGen.Modifiers
                         particle.CurrentAlpha -= (byte) (((particle.InitialAlpha - EndingColorAlpha) / MaxParticleLifeTime) * timeSinceLastFrame);
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -26,5 +26,10 @@ namespace Parme.CSharp.CodeGen.Initializers
             return @"newParticleCount = StaticParticleSpawnCount;
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            return "particlesPerTrigger = StaticParticleSpawnCount;";
+        }
     }
 }

@@ -27,5 +27,10 @@ namespace Parme.CSharp.CodeGen.Modifiers
             return @"particle.Size += timeSinceLastFrame * new Vector2(ConstantSizeWidthChangePerSecond, ConstantSizeHeightChangePerSecond);
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

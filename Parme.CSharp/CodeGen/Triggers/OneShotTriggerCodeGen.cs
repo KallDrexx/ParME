@@ -25,5 +25,10 @@ namespace Parme.CSharp.CodeGen.Triggers
                     stopEmittingAfterUpdate = true;
                 }";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            return "triggersPerSecond = 1 / MaxParticleLifeTime;";
+        }
     }
 }

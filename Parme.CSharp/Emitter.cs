@@ -18,10 +18,10 @@ namespace Parme.CSharp
 
         protected Emitter(IEmitterLogic emitterLogic, ParticlePool particlePool)
         {
-            EmitterLogic = emitterLogic;
-            
-            // TODO: find a way to estimate initial capacity from particle count initializer and trigger
-            ParticleBuffer = new ParticleBuffer(particlePool, 50);
+            EmitterLogic = emitterLogic ?? throw new ArgumentNullException(nameof(emitterLogic));
+
+            var initialCapacity = emitterLogic.GetEstimatedCapacity();
+            ParticleBuffer = new ParticleBuffer(particlePool, initialCapacity);
         }
 
         public void Update(float timeSinceLastFrame)

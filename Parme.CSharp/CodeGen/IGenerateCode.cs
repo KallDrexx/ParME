@@ -8,5 +8,6 @@ namespace Parme.CSharp.CodeGen
         string GenerateProperties(object obj);
         string GenerateFields(object obj);
         string GenerateExecutionCode(object obj);
+        string GenerateCapacityEstimationCode(object obj);
     }
 }

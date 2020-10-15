@@ -32,5 +32,12 @@ namespace Parme.CSharp.CodeGen.Initializers
             return @"newParticleCount = _random.Next(RandomParticleCountMinToSpawn, RandomParticleCountMaxToSpawn + 1);
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            return @"var difference = RandomParticleCountMaxToSpawn - RandomParticleCountMinToSpawn;
+                var twoThirds = difference * 0.65f;
+                particlesPerTrigger = RandomParticleCountMaxToSpawn - twoThirds;";
+        }
     }
 }

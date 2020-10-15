@@ -31,5 +31,11 @@ namespace Parme.CSharp.CodeGen.Triggers
             }
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            // Impossible to predict, so just assume it will max at 3
+            return "triggersPerSecond = 3;";
+        }
     }
 }

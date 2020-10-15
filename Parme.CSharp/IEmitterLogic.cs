@@ -7,5 +7,6 @@ namespace Parme.CSharp
         string TextureFilePath { get; }
         TextureSectionCoords[] TextureSections { get; }
         void Update(ParticleBuffer particleBuffer, float timeSinceLastFrame, Emitter parent);
+        int GetEstimatedCapacity();
     }
 }

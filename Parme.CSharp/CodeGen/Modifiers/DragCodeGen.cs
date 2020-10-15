@@ -25,5 +25,10 @@ namespace Parme.CSharp.CodeGen.Modifiers
         {
             return @"particle.Velocity -= DragFactor * particle.Velocity * timeSinceLastFrame;";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

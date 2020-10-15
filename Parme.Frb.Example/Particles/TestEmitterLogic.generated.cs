@@ -190,6 +190,24 @@ namespace Parme.Frb.Example
             }
         }
 
+        public int GetEstimatedCapacity()
+        {
+            var particlesPerTrigger = 0f;
+            var triggersPerSecond = 0f;
+
+            {
+                triggersPerSecond = 1 / TimeElapsedTriggerFrequency;
+            }
+            {
+                var difference = RandomParticleCountMaxToSpawn - RandomParticleCountMinToSpawn;
+                var twoThirds = difference * 0.65f;
+                particlesPerTrigger = RandomParticleCountMaxToSpawn - twoThirds;
+            }
+
+            
+            return (int) Math.Ceiling(particlesPerTrigger * triggersPerSecond * MaxParticleLifeTime);
+        }
+
         private static void RotateVector(ref Vector2 vector, float radians)
         {
             if (vector == Vector2.Zero)

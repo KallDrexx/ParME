@@ -27,5 +27,10 @@ namespace Parme.CSharp.CodeGen.Modifiers
             return @"particle.Velocity += timeSinceLastFrame * new Vector2(ConstantAccelerationX, ConstantAccelerationY);
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -24,5 +24,10 @@ namespace Parme.CSharp.CodeGen.Modifiers
                                                                TextureSections.Length);
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

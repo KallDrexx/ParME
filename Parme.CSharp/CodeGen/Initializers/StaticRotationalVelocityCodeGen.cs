@@ -27,5 +27,10 @@ namespace Parme.CSharp.CodeGen.Initializers
                         particle.RotationalVelocityInRadians = (float) (RotationSpeedInDegreesPerSecond * Math.PI / 180f);
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            return string.Empty;
+        }
     }
 }

@@ -32,5 +32,10 @@ namespace Parme.CSharp.CodeGen.Triggers
             }}          
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            return "triggersPerSecond = 1 / TimeElapsedTriggerFrequency;";
+        }
     }
 }

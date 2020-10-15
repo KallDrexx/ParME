@@ -122,6 +122,16 @@ using Parme.CSharp;
             }}
         }}
 
+        public int GetEstimatedCapacity()
+        {{
+            var particlesPerTrigger = 0f;
+            var triggersPerSecond = 0f;
+
+{12}
+            
+            return (int) Math.Ceiling(particlesPerTrigger * triggersPerSecond * MaxParticleLifeTime);
+        }}
+
         private static void RotateVector(ref Vector2 vector, float radians)
         {{
             if (vector == Vector2.Zero)
@@ -160,6 +170,7 @@ using Parme.CSharp;
             var initializers = GetInitializerCode(settings);
             var particleCountCode = GetParticleCountCode(settings);
             var textureSectionCode = GetTextureCoordinateMapCode(settings);
+            var estimationCode = GetEstimationCode(settings);
 
             var triggerGenerator = GetCodeGenerator(settings.Trigger?.GetType());
             
@@ -177,7 +188,8 @@ using Parme.CSharp;
                     ? $"return new {className}();"
                     : "}",
                 $"@\"{settings.TextureFileName}\"",
-                textureSectionCode
+                textureSectionCode,
+                estimationCode
             );
         }
 
@@ -300,6 +312,37 @@ using Parme.CSharp;
             }
             
             code.AppendLine("        };");
+
+            return code.ToString();
+        }
+
+        private static string GetEstimationCode(EmitterSettings settings)
+        {
+            var code = new StringBuilder();
+            
+            if (settings.Trigger != null)
+            {
+                var triggerCode = GetCodeGenerator(settings.Trigger.GetType())
+                    .GenerateCapacityEstimationCode(settings.Trigger);
+
+                if (!string.IsNullOrWhiteSpace(triggerCode))
+                {
+                    code.AppendLine("            {");
+                    code.AppendLine($"                {triggerCode}");
+                    code.AppendLine("            }");
+                }
+            }
+
+            foreach (var initializer in settings.Initializers.Where(x => x != null))
+            {
+                var generatedCode = GetCodeGenerator(initializer.GetType()).GenerateCapacityEstimationCode(initializer);
+                if (!string.IsNullOrWhiteSpace(generatedCode))
+                {
+                    code.AppendLine("            {");
+                    code.AppendLine($"                {generatedCode}");
+                    code.AppendLine("            }");
+                }
+            }
 
             return code.ToString();
         }

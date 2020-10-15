@@ -78,5 +78,10 @@ namespace Parme.CSharp.CodeGen.Initializers
                         particle.Size = new Vector2((float) x, (float) y);
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            return string.Empty;
+        }
     }
 }

@@ -28,5 +28,10 @@ namespace Parme.CSharp.CodeGen.Initializers
                         particle.Position = new Vector2(StaticPositionXOffset, StaticPositionYOffset);
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            return string.Empty;
+        }
     }
 }

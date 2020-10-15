@@ -37,5 +37,10 @@ namespace Parme.CSharp.CodeGen.Initializers
                         particle.CurrentAlpha = StaticColorStartingAlpha;
             ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            return string.Empty;
+        }
     }
 }

@@ -23,5 +23,10 @@ namespace Parme.CSharp.CodeGen.Initializers
                         particle.TextureSectionIndex = 0;
 ";
         }
+
+        public string GenerateCapacityEstimationCode(object obj)
+        {
+            return string.Empty;
+        }
     }
 }
