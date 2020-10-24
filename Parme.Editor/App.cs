@@ -63,6 +63,7 @@ namespace Parme.Editor
             _emitterRenderGroup = new MonoGameEmitterRenderGroup(GraphicsDevice);
             
             ResetCamera();
+            _applicationState.Zoom = 1;
 
             var monoGameImGuiRenderer = new MonoGameImGuiRenderer(this);
             _imGuiManager = new ImGuiManager(monoGameImGuiRenderer);
@@ -215,7 +216,13 @@ namespace Parme.Editor
                 _emitter = new MonoGameEmitter(logicClass, _particlePool, GraphicsDevice, _textureFileLoader);
                 _emitterRenderGroup.AddEmitter(_emitter);
                 _emitter.IsEmittingNewParticles = true;
-                ResetCamera();
+                
+                // Don't reset the camera if we don't have a moving emitter.  Without a moving emitter then this will
+                // just frustrate the user, as they've positioned the camera in that spot for a reason
+                if (_uiController.EmitterVelocity != Vector2.Zero)
+                {
+                    ResetCamera();
+                }
             }
 
             if (_applicationState.AutoSaveOnChange)
@@ -237,7 +244,6 @@ namespace Parme.Editor
             _camera.PositiveYAxisPointsUp = true;
             _camera.PixelWidth = GraphicsDevice.Viewport.Width;
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
-            _applicationState.Zoom = 1;
 
             if (resetEmitterPosition && _emitter != null)
             {
