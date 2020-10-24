@@ -46,7 +46,9 @@ namespace Parme.Editor
         {
             // All file names should be relative to the emitter
             var emitterPath = Path.GetDirectoryName(_applicationState.ActiveFileName);
-            var fullPath = Path.Combine(emitterPath!, path);
+            
+            // NOTE: GetFullPath guarantees combined relative paths are properly absolute
+            var fullPath = Path.GetFullPath(Path.Combine(emitterPath!, path));
 
             var isRequestingCachedTexture = _cachedTexture != null && fullPath == _cachedTexturePath;
             
