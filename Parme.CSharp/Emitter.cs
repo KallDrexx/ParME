@@ -21,6 +21,7 @@ namespace Parme.CSharp
             EmitterLogic = emitterLogic ?? throw new ArgumentNullException(nameof(emitterLogic));
 
             var initialCapacity = emitterLogic.GetEstimatedCapacity();
+            initialCapacity = Math.Max(1, initialCapacity);
             ParticleBuffer = new ParticleBuffer(particlePool, initialCapacity);
         }
 
