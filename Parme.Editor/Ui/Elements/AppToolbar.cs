@@ -90,8 +90,14 @@ namespace Parme.Editor.Ui.Elements
                 }
                 
                 ImGui.Separator();
-                
-                ImGui.MenuItem("Quit", false);
+
+                if (ImGui.MenuItem("Auto Save", null, _applicationState.AutoSaveOnChange))
+                {
+                    _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
+                    {
+                        UpdatedAutoSave = !_applicationState.AutoSaveOnChange,
+                    });
+                }
                 
                 ImGui.EndMenu();
             }
@@ -104,7 +110,7 @@ namespace Parme.Editor.Ui.Elements
                 var color = _applicationState.BackgroundColor;
                 if (ImGui.ColorEdit3("Background Color", ref color))
                 {
-                    _appOperationQueue.Enqueue(new UpdateViewOptionsRequested
+                    _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
                     {
                         UpdatedBackgroundColor = color,
                     });
@@ -112,7 +118,7 @@ namespace Parme.Editor.Ui.Elements
 
                 if (ImGui.Button("-##DecreaseZoom"))
                 {
-                    _appOperationQueue.Enqueue(new UpdateViewOptionsRequested
+                    _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
                     {
                         UpdatedZoomLevel = _applicationState.Zoom - 0.1m,
                     });
@@ -124,7 +130,7 @@ namespace Parme.Editor.Ui.Elements
                 ImGui.SameLine();
                 if (ImGui.Button("+##IncreaseZoom"))
                 {
-                    _appOperationQueue.Enqueue(new UpdateViewOptionsRequested
+                    _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
                     {
                         UpdatedZoomLevel = _applicationState.Zoom + 0.1m,
                     });
@@ -141,7 +147,7 @@ namespace Parme.Editor.Ui.Elements
                     _samplerStateNames,
                     _samplerStateNames.Length))
                 {
-                    _appOperationQueue.Enqueue(new UpdateViewOptionsRequested
+                    _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
                     {
                         UpdatedSamplerState = _samplerStates[_selectedSamplerStateIndex],
                     });
@@ -150,7 +156,7 @@ namespace Parme.Editor.Ui.Elements
                 var gridSize = _applicationState.GridSize;
                 if (ImGui.InputInt("Grid Size (pixels)", ref gridSize, 1))
                 {
-                    _appOperationQueue.Enqueue(new UpdateViewOptionsRequested
+                    _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
                     {
                         UpdatedGridSize = gridSize,
                     });

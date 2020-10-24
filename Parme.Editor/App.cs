@@ -79,7 +79,7 @@ namespace Parme.Editor
             ImGui.GetIO().FontGlobalScale = 1.2f;
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             
-            _appOperationQueue.Enqueue(new UpdateViewOptionsRequested
+            _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
             {
                 UpdatedSamplerState = SamplerState.PointClamp,
             });
@@ -216,6 +216,11 @@ namespace Parme.Editor
                 _emitterRenderGroup.AddEmitter(_emitter);
                 _emitter.IsEmittingNewParticles = true;
                 ResetCamera();
+            }
+
+            if (_applicationState.AutoSaveOnChange)
+            {
+                _appOperationQueue.Enqueue(new SaveEmitterRequested(_applicationState.ActiveFileName, settings));
             }
         }
 

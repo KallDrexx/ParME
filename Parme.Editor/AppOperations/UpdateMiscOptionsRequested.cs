@@ -3,12 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Parme.Editor.AppOperations
 {
-    public class UpdateViewOptionsRequested : IAppOperation
+    public class UpdateMiscOptionsRequested : IAppOperation
     {
         public decimal? UpdatedZoomLevel { get; set; }
         public Vector3? UpdatedBackgroundColor { get; set; }
         public SamplerState UpdatedSamplerState { get; set; }
         public int? UpdatedGridSize { get; set; }
+        public bool? UpdatedAutoSave { get; set; }
         
         public AppOperationResult Run()
         {
@@ -17,7 +18,8 @@ namespace Parme.Editor.AppOperations
                 UpdatedZoomLevel = UpdatedZoomLevel,
                 UpdatedBackgroundColor = UpdatedBackgroundColor,
                 UpdatedSamplerState = UpdatedSamplerState,
-                UpdatedGridSize = UpdatedGridSize
+                UpdatedGridSize = UpdatedGridSize,
+                UpdatedAutoSave = UpdatedAutoSave,
             };
         }
     }

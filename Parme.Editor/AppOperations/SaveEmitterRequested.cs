@@ -8,7 +8,7 @@ namespace Parme.Editor.AppOperations
     {
         public string FileName { get; }
         public EmitterSettings EmitterSettings { get; }
-        
+
         public SaveEmitterRequested(string fileName, EmitterSettings emitterSettings)
         {
             FileName = fileName;
