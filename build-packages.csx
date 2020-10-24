@@ -1,3 +1,5 @@
+// Requires `dotnet script` tool.  `dotnet tool install -g dotnet-script`
+
 using System.Runtime.CompilerServices;
 using System.IO;
 using System.Xml;
@@ -51,6 +53,10 @@ static void MoveNugetArtifacts(string project) {
 }
 
 static void CreateZipArchive(string project, string version) {
+    if (!Directory.Exists(ArtifactsFolder)) {
+        Directory.CreateDirectory(ArtifactsFolder);
+    }
+
     var projectPath = Path.GetDirectoryName(project);
     var folderToZip = Path.Combine(projectPath, "bin", "Release", "netcoreapp3.1");
     var resultingZip = Path.Combine(ArtifactsFolder, $"Parme.Editor.{version}.zip");
@@ -63,6 +69,10 @@ static void CreateZipArchive(string project, string version) {
 }
 
 static void RemoveCurrentArtifacts() {
+    if (!Directory.Exists(ArtifactsFolder)) {
+        return;
+    }
+
     var files = Directory.GetFiles(ArtifactsFolder);
     foreach (var file in files) {
         File.Delete(file);
