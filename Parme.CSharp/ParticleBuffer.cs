@@ -65,7 +65,7 @@ namespace Parme.CSharp
             
             // If we got here there's no room left
             var additionalRequested = _particles.Slice.Length * ScaleFactor - _particles.Slice.Length;
-            _particles.IncreaseSize((int) additionalRequested);
+            _particles.IncreaseSize((int) Math.Ceiling(additionalRequested));
             
             _lastActiveIndex++;
             _particles.Slice.Span[_lastActiveIndex] = particle;
