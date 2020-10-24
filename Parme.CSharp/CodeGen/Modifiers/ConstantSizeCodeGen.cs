@@ -7,7 +7,7 @@ namespace Parme.CSharp.CodeGen.Modifiers
     {
         public Type ParmeObjectType => typeof(ConstantSizeModifier);
 
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
             var modifier = (ConstantSizeModifier) obj;
             
@@ -17,18 +17,18 @@ namespace Parme.CSharp.CodeGen.Modifiers
 ";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
-            return @"particle.Size += timeSinceLastFrame * new Vector2(ConstantSizeWidthChangePerSecond, ConstantSizeHeightChangePerSecond);
+            return $@"particle.Size += timeSinceLastFrame * new Vector2(ConstantSizeWidthChangePerSecond, ConstantSizeHeightChangePerSecond);
 ";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
             throw new NotImplementedException();
         }

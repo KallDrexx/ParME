@@ -7,35 +7,35 @@ namespace Parme.CSharp.CodeGen.Triggers
     {
         public Type ParmeObjectType => typeof(DistanceBasedTrigger);
         
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
             var trigger = (DistanceBasedTrigger) obj;
 
             return $@"public float DistanceBasedTriggerUnitsPerEmission {{ get; set; }} = {trigger.UnitsPerEmission}f;";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return @"private Vector2 _lastEmittedPosition;";
+            return $@"private Vector2 _lastEmittedPosition;";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
-            return @"
+            return $@"
             shouldCreateNewParticle = false;
             var distance = Math.Abs(Vector2.Distance(_lastEmittedPosition, parent.WorldCoordinates));
             if (DistanceBasedTriggerUnitsPerEmission > 0 && distance >= DistanceBasedTriggerUnitsPerEmission)
-            {
+            {{
                 shouldCreateNewParticle = true;
                 _lastEmittedPosition = parent.WorldCoordinates;
-            }
+            }}
 ";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
             // Impossible to predict, so just assume it will max at 3
-            return "triggersPerSecond = 3;";
+            return $"triggersPerSecond = 3;";
         }
     }
 }

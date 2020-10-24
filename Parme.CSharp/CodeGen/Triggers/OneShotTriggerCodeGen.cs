@@ -7,28 +7,28 @@ namespace Parme.CSharp.CodeGen.Triggers
     {
         public Type ParmeObjectType => typeof(OneShotTrigger);
 
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
-            return @"if (parent.IsEmittingNewParticles)
-                {
+            return $@"if (parent.IsEmittingNewParticles)
+                {{
                     shouldCreateNewParticle = true;
                     stopEmittingAfterUpdate = true;
-                }";
+                }}";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
-            return "triggersPerSecond = 1 / MaxParticleLifeTime;";
+            return $"triggersPerSecond = 1 / MaxParticleLifeTime;";
         }
     }
 }

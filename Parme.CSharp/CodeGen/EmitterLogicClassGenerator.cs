@@ -181,7 +181,7 @@ using Parme.CSharp;
                 settings.MaxParticleLifeTime,
                 properties,
                 modifiers,
-                triggerGenerator?.GenerateExecutionCode(settings.Trigger),
+                ToInvariant(triggerGenerator?.GenerateExecutionCode(settings.Trigger)),
                 particleCountCode,
                 initializers,
                 generateScriptCode 
@@ -200,19 +200,19 @@ using Parme.CSharp;
             if (settings.Trigger != null)
             {
                 var triggerCodeGenerator = GetCodeGenerator(settings.Trigger.GetType());
-                fieldDefinitions.Append(triggerCodeGenerator.GenerateFields(settings.Trigger));
+                fieldDefinitions.Append(ToInvariant(triggerCodeGenerator.GenerateFields(settings.Trigger)));
             }
 
             foreach (var initializer in settings.Initializers.Where(x => x != null))
             {
                 var codeGenerator = GetCodeGenerator(initializer.GetType());
-                fieldDefinitions.Append(codeGenerator.GenerateFields(initializer));
+                fieldDefinitions.Append(ToInvariant(codeGenerator.GenerateFields(initializer)));
             }
 
             foreach (var modifier in settings.Modifiers.Where(x => x != null))
             {
                 var codeGenerator = GetCodeGenerator(modifier.GetType());
-                fieldDefinitions.Append(codeGenerator.GenerateFields(modifier));
+                fieldDefinitions.Append(ToInvariant(codeGenerator.GenerateFields(modifier)));
             }
 
             return fieldDefinitions.ToString();
@@ -225,19 +225,19 @@ using Parme.CSharp;
             if (settings.Trigger != null)
             {
                 var triggerCodeGenerator = GetCodeGenerator(settings.Trigger.GetType());
-                properties.Append(triggerCodeGenerator.GenerateProperties(settings.Trigger));
+                properties.Append(ToInvariant(triggerCodeGenerator.GenerateProperties(settings.Trigger)));
             }
 
             foreach (var initializer in settings.Initializers.Where(x => x != null))
             {
                 var codeGenerator = GetCodeGenerator(initializer.GetType());
-                properties.Append(codeGenerator.GenerateProperties(initializer));
+                properties.Append(ToInvariant(codeGenerator.GenerateProperties(initializer)));
             }
 
             foreach (var modifier in settings.Modifiers.Where(x => x != null))
             {
                 var codeGenerator = GetCodeGenerator(modifier.GetType());
-                properties.Append(codeGenerator.GenerateProperties(modifier));
+                properties.Append(ToInvariant(codeGenerator.GenerateProperties(modifier)));
             }
 
             return properties.ToString();
@@ -254,7 +254,7 @@ using Parme.CSharp;
 
                 modifierCode.AppendLine("                {");
                 modifierCode.Append("                        ");
-                modifierCode.Append(codeGenerator.GenerateExecutionCode(modifier));
+                modifierCode.Append(ToInvariant(codeGenerator.GenerateExecutionCode(modifier)));
                 modifierCode.AppendLine("                }");
             }
 
@@ -274,7 +274,7 @@ using Parme.CSharp;
 
                 initializerCode.AppendLine("                    {");
                 initializerCode.Append("                        ");
-                initializerCode.Append(codeGenerator.GenerateExecutionCode(initializer));
+                initializerCode.Append(ToInvariant(codeGenerator.GenerateExecutionCode(initializer)));
                 initializerCode.AppendLine("                    }");
             }
 
@@ -294,7 +294,7 @@ using Parme.CSharp;
 
                 initializerCode.AppendLine("                    {");
                 initializerCode.Append("                        ");
-                initializerCode.Append(codeGenerator.GenerateExecutionCode(initializer));
+                initializerCode.Append(ToInvariant(codeGenerator.GenerateExecutionCode(initializer)));
                 initializerCode.AppendLine("                    }");
             }
 
@@ -322,8 +322,8 @@ using Parme.CSharp;
             
             if (settings.Trigger != null)
             {
-                var triggerCode = GetCodeGenerator(settings.Trigger.GetType())
-                    .GenerateCapacityEstimationCode(settings.Trigger);
+                var triggerCode = ToInvariant(GetCodeGenerator(settings.Trigger.GetType())
+                    .GenerateCapacityEstimationCode(settings.Trigger));
 
                 if (!string.IsNullOrWhiteSpace(triggerCode))
                 {
@@ -335,7 +335,9 @@ using Parme.CSharp;
 
             foreach (var initializer in settings.Initializers.Where(x => x != null))
             {
-                var generatedCode = GetCodeGenerator(initializer.GetType()).GenerateCapacityEstimationCode(initializer);
+                var generatedCode = ToInvariant(GetCodeGenerator(initializer.GetType())
+                    .GenerateCapacityEstimationCode(initializer));
+
                 if (!string.IsNullOrWhiteSpace(generatedCode))
                 {
                     code.AppendLine("            {");
@@ -361,6 +363,11 @@ using Parme.CSharp;
             }
 
             return codeGenerator;
+        }
+
+        private static string ToInvariant(FormattableString formattableString)
+        {
+            return FormattableString.Invariant(formattableString ?? $"");
         }
     }
 }

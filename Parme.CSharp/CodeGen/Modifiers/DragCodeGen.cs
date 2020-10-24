@@ -7,7 +7,7 @@ namespace Parme.CSharp.CodeGen.Modifiers
     {
         public Type ParmeObjectType => typeof(DragModifier);
         
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
             var modifier = (DragModifier) obj;
 
@@ -16,17 +16,17 @@ namespace Parme.CSharp.CodeGen.Modifiers
 ";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
-            return @"particle.Velocity -= DragFactor * particle.Velocity * timeSinceLastFrame;";
+            return $@"particle.Velocity -= DragFactor * particle.Velocity * timeSinceLastFrame;";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
             throw new NotImplementedException();
         }

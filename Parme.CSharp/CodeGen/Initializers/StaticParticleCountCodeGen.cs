@@ -7,7 +7,7 @@ namespace Parme.CSharp.CodeGen.Initializers
     {
         public Type ParmeObjectType => typeof(StaticParticleCountInitializer);
 
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
             var initializer = (StaticParticleCountInitializer) obj;
             
@@ -16,20 +16,20 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
-            return @"newParticleCount = StaticParticleSpawnCount;
+            return $@"newParticleCount = StaticParticleSpawnCount;
 ";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
-            return "particlesPerTrigger = StaticParticleSpawnCount;";
+            return $"particlesPerTrigger = StaticParticleSpawnCount;";
         }
     }
 }
