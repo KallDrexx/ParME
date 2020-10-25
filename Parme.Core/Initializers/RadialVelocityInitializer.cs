@@ -6,7 +6,7 @@ namespace Parme.Core.Initializers
     {
         public InitializerType InitializerType => InitializerType.Velocity;
         public string EditorShortName => "Wedge";
-        public string EditorShortValue => $"({MaxMagnitude} - {MinMagnitude}) angle {MinDegrees}° - {MaxDegrees}°";
+        public string EditorShortValue => $"({MinMagnitude} - {MaxMagnitude}) at {MinDegrees}° - {MaxDegrees}°";
 
         [Obsolete("Replaced with min and max magnitude")]
         public float Magnitude
