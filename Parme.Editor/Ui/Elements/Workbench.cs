@@ -154,6 +154,21 @@ namespace Parme.Editor.Ui.Elements
             }
         }
 
+        public IParticleInitializer RotationalOrientationInitializer
+        {
+            get => Get<IParticleInitializer>();
+            set
+            {
+                if (value != null && value.InitializerType != InitializerType.RotationalOrientation)
+                {
+                    throw new InvalidOperationException($"Initializer type of {value.InitializerType} passed in, " +
+                                                        "but only rotational orientation initializers were expected");
+                }
+                
+                Set(value);
+            }
+        }
+
         public ObservableCollection<IParticleModifier> Modifiers { get; }
         public ObservableCollection<TextureSectionCoords> TextureSections { get; }
 
@@ -364,6 +379,13 @@ namespace Parme.Editor.Ui.Elements
             ImGui.NextColumn();
             Selectable(EditorObjectNameAndValue(RotationalVelocityInitializer),
                 new EditorItem(EditorItemType.Initializer, InitializerType.RotationalVelocity));
+            
+            ImGui.NextColumn();
+            RightAlignText("Initial Rotation");
+            
+            ImGui.NextColumn();
+            Selectable(EditorObjectNameAndValue(RotationalOrientationInitializer),
+                new EditorItem(EditorItemType.Initializer, InitializerType.RotationalOrientation));
             
             ImGui.Columns(1);
             ImGui.EndChild();
