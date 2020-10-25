@@ -266,9 +266,12 @@ using Parme.CSharp;
             var initializerCode = new StringBuilder();
             initializerCode.AppendLine();
 
+            // We want to ensure texture section initializer is first, in case any other initializers are
+            // dependent on the selected texture (i.e. texture based sizing)
             foreach (var initializer in settings.Initializers
                 .Where(x => x != null)
-                .Where(x => x.InitializerType != InitializerType.ParticleCount))
+                .Where(x => x.InitializerType != InitializerType.ParticleCount)
+                .OrderByDescending(x => x.InitializerType == InitializerType.TextureSectionIndex))
             {
                 var codeGenerator = GetCodeGenerator(initializer.GetType());
 

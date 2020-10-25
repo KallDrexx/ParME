@@ -8,7 +8,11 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
     public class SizeEditor : TypeSelectorEditor
     {
         public SizeEditor() 
-            : base(new []{typeof(StaticSizeInitializer), typeof(RandomSizeInitializer)})
+            : base(new []{
+                typeof(StaticSizeInitializer), 
+                typeof(RandomSizeInitializer),
+                typeof(TextureBasedSizeInitializer),
+            })
         {
         }
 
