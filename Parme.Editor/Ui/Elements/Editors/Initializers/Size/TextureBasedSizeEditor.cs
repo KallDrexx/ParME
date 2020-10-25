@@ -17,8 +17,8 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
         
         protected override void CustomRender()
         {
-            ImGui.TextWrapped("Sets the initial particle size based on the actual size of the texture, modified" +
-                              "by the specified percentage. \n\n Warning: If no texture sections have been defined then" +
+            ImGui.TextWrapped("Sets the initial particle size based on the actual size of the texture, modified " +
+                              "by the specified percentage. \n\nWarning: If no texture sections have been defined then " +
                               "the particle won't show up");
             
             InputInt(nameof(Percentage), "%");
