@@ -178,7 +178,7 @@ using Parme.CSharp;
                 generateScriptCode ? string.Empty : $"namespace {namespaceName}{Environment.NewLine}{{{Environment.NewLine}",
                 className,
                 fieldDefinitions,
-                settings.MaxParticleLifeTime,
+                ToInvariant($"{settings.MaxParticleLifeTime}"),
                 properties,
                 modifiers,
                 ToInvariant(triggerGenerator?.GenerateExecutionCode(settings.Trigger)),

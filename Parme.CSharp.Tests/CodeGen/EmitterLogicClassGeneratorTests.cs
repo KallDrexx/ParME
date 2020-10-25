@@ -117,6 +117,7 @@ namespace Parme.CSharp.Tests.CodeGen
             {
                 var emitter = new EmitterSettings
                 {
+                    MaxParticleLifeTime = 1.1f,
                     Trigger = new OneShotTrigger(),
                     Initializers = new IParticleInitializer[]
                     {
