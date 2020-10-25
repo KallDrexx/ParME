@@ -45,7 +45,7 @@ namespace Parme.Frb
             _particleCamera.HorizontalZoomFactor = camera.DestinationRectangle.Width / camera.OrthogonalWidth;
             _particleCamera.VerticalZoomFactor = camera.DestinationRectangle.Height / camera.OrthogonalHeight;
             
-            _emitterRenderGroup.Render(_particleCamera);
+            _emitterRenderGroup.Render(_particleCamera, FlatRedBallServices.GraphicsDevice.SamplerStates[0]);
         }
 
         public void Update()

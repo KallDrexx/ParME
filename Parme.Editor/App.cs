@@ -104,11 +104,6 @@ namespace Parme.Editor
                 _applicationState.Apply(operationResult);
             }
 
-            if (_applicationState.RenderSamplerState != null)
-            {
-                GraphicsDevice.SamplerStates[0] = _applicationState.RenderSamplerState;
-            }
-
             if (_gridTexture.Width != _applicationState.GridSize)
             {
                 _gridTexture = SetupGridTexture(GraphicsDevice, _applicationState.GridSize);
@@ -173,7 +168,7 @@ namespace Parme.Editor
             GraphicsDevice.Clear(backgroundColor);
             RenderGrid(backgroundColor);
 
-            _emitterRenderGroup.Render(_camera);
+            _emitterRenderGroup.Render(_camera, _applicationState.RenderSamplerState ?? SamplerState.PointClamp);
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
             base.Draw(gameTime);

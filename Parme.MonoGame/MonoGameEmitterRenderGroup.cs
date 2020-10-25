@@ -10,11 +10,13 @@ namespace Parme.MonoGame
         private readonly List<MonoGameEmitter> _emitters = new List<MonoGameEmitter>();
         private readonly SpriteBatch _spriteBatch;
         private readonly BasicEffect _basicEffect;
+        private readonly GraphicsDevice _graphicsDevice;
 
         public MonoGameEmitterRenderGroup(GraphicsDevice graphicsDevice)
         {
             _spriteBatch = new SpriteBatch(graphicsDevice);
             _basicEffect = new BasicEffect(graphicsDevice);
+            _graphicsDevice = graphicsDevice;
         }
 
         public void AddEmitter(MonoGameEmitter emitter)
@@ -30,7 +32,7 @@ namespace Parme.MonoGame
             _emitters.Remove(emitter);
         }
 
-        public void Render(ParticleCamera camera)
+        public void Render(ParticleCamera camera, SamplerState samplerState)
         {
             var totalHorizontalZoomFactor = camera.HorizontalZoomFactor;
             var totalVerticalZoomFactor = camera.VerticalZoomFactor;
@@ -48,7 +50,9 @@ namespace Parme.MonoGame
                     0) *
                 Matrix.CreateScale(totalHorizontalZoomFactor, totalVerticalZoomFactor, 1);
 
-            _spriteBatch.Begin(blendState: BlendState.NonPremultiplied, effect: _basicEffect);
+            _spriteBatch.Begin(blendState: BlendState.NonPremultiplied, 
+                effect: _basicEffect, 
+                samplerState: samplerState);
 
             foreach (var emitter in _emitters)
             {
