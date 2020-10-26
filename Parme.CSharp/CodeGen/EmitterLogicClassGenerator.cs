@@ -88,20 +88,24 @@ using Parme.CSharp;
                         RotationInRadians = 0,
                         Position = Vector2.Zero,
                         RotationalVelocityInRadians = 0f,
-                        InitialRed = 255,
-                        InitialGreen = 255,
-                        InitialBlue = 255,
-                        InitialAlpha = 255,
                         CurrentRed = 255,
                         CurrentGreen = 255,
                         CurrentBlue = 255,
                         CurrentAlpha = 255,
                         Size = Vector2.Zero,
+                        InitialSize = Vector2.Zero,
                         Velocity = Vector2.Zero,
                     }};
                     
                     // Initializers
                     {8}
+
+                    // Set the initial values to their current equivalents
+                    particle.InitialRed = particle.CurrentRed;
+                    particle.InitialGreen = particle.CurrentGreen;
+                    particle.InitialBlue = particle.CurrentBlue;
+                    particle.InitialAlpha = particle.CurrentAlpha;
+                    particle.InitialSize = particle.Size;
 
                     // Adjust the particle's rotation, position, and velocity by the emitter's rotation
                     RotateVector(ref particle.Position, parent.RotationInRadians);

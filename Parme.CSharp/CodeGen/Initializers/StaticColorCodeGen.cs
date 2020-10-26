@@ -27,13 +27,9 @@ namespace Parme.CSharp.CodeGen.Initializers
         public FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
-                        particle.InitialRed = StaticColorStartingRed;
                         particle.CurrentRed = StaticColorStartingRed;
-                        particle.InitialGreen = StaticColorStartingGreen;
                         particle.CurrentGreen = StaticColorStartingGreen;
-                        particle.InitialBlue = StaticColorStartingBlue;
                         particle.CurrentBlue = StaticColorStartingBlue;
-                        particle.InitialAlpha = StaticColorStartingAlpha;
                         particle.CurrentAlpha = StaticColorStartingAlpha;
             ";
         }
