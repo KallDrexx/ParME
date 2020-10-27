@@ -29,8 +29,6 @@ namespace Parme.Frb
             } 
         }
 
-        public IReadOnlyDictionary<string, ParmeEmitterGroup> EmitterGroups => _emitterGroups;
-
         private ParmeEmitterManager()
         {
         }
@@ -65,7 +63,7 @@ namespace Parme.Frb
             _emitterToGroupMap.Remove(emitter);
         }
 
-        private ParmeEmitterGroup GetEmitterGroup(string name)
+        public ParmeEmitterGroup GetEmitterGroup(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
             
