@@ -69,6 +69,7 @@
     <Compile Include="GlobalContent.Generated.cs" />
     <Compile Include="GlueControl\GlueControlManager.Generated.cs" />
     <Compile Include="Particles\ContrailsEmitterLogic.generated.cs" />
+    <Compile Include="Particles\DirectiontestEmitterLogic.generated.cs" />
     <Compile Include="Particles\ExplosionEmitterLogic.generated.cs" />
     <Compile Include="Particles\TestEmitterLogic.generated.cs" />
     <Compile Include="Performance\IEntityFactory.Generated.cs" />
@@ -190,6 +191,14 @@
     <None Include="content\globalcontent\contrails.emlogic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Name>contrails</Name>
+    </None>
+    <None Include="content\globalcontent\direction.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>direction</Name>
+    </None>
+    <None Include="content\globalcontent\directiontest.emlogic">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Name>directiontest</Name>
     </None>
     <None Include="content\globalcontent\explosion.emlogic">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

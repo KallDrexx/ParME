@@ -34,7 +34,8 @@ namespace Parme.Frb.Example
         public int StaticSizeWidth { get; set; } = 30;
         public int StaticSizeHeight { get; set; } = 30;
 
-        public float RadialVelocityMagnitude { get; set; } = 50f;
+        public float RadialVelocityMinMagnitude { get; set; } = 50f;
+        public float RadialVelocityMaxMagnitude { get; set; } = 50f;
         public float RadialVelocityMinRadians { get; set; } = 0f;
         public float RadialVelocityMaxRadians { get; set; } = 6.283185307179586f; 
 
@@ -106,15 +107,12 @@ namespace Parme.Frb.Example
                         RotationInRadians = 0,
                         Position = Vector2.Zero,
                         RotationalVelocityInRadians = 0f,
-                        InitialRed = 255,
-                        InitialGreen = 255,
-                        InitialBlue = 255,
-                        InitialAlpha = 255,
                         CurrentRed = 255,
                         CurrentGreen = 255,
                         CurrentBlue = 255,
                         CurrentAlpha = 255,
                         Size = Vector2.Zero,
+                        InitialSize = Vector2.Zero,
                         Velocity = Vector2.Zero,
                     };
                     
@@ -122,13 +120,9 @@ namespace Parme.Frb.Example
                     
                     {
                         
-                        particle.InitialRed = StaticColorStartingRed;
                         particle.CurrentRed = StaticColorStartingRed;
-                        particle.InitialGreen = StaticColorStartingGreen;
                         particle.CurrentGreen = StaticColorStartingGreen;
-                        particle.InitialBlue = StaticColorStartingBlue;
                         particle.CurrentBlue = StaticColorStartingBlue;
-                        particle.InitialAlpha = StaticColorStartingAlpha;
                         particle.CurrentAlpha = StaticColorStartingAlpha;
                                 }
                     {
@@ -137,13 +131,21 @@ namespace Parme.Frb.Example
                     {
                         
                         var radians = RadialVelocityMaxRadians - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
+                        var magnitude = RadialVelocityMaxMagnitude - _random.NextDouble() * (RadialVelocityMaxMagnitude - RadialVelocityMinMagnitude);
                 
                         // convert from polar coordinates to cartesian coordinates
-                        var x = RadialVelocityMagnitude * Math.Cos(radians);
-                        var y = RadialVelocityMagnitude * Math.Sin(radians);
+                        var x = magnitude * Math.Cos(radians);
+                        var y = magnitude * Math.Sin(radians);
                         particle.Velocity = new Vector2((float) x, (float) y);
                     }
 
+
+                    // Set the initial values to their current equivalents
+                    particle.InitialRed = particle.CurrentRed;
+                    particle.InitialGreen = particle.CurrentGreen;
+                    particle.InitialBlue = particle.CurrentBlue;
+                    particle.InitialAlpha = particle.CurrentAlpha;
+                    particle.InitialSize = particle.Size;
 
                     // Adjust the particle's rotation, position, and velocity by the emitter's rotation
                     RotateVector(ref particle.Position, parent.RotationInRadians);

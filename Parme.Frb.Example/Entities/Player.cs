@@ -23,6 +23,7 @@ namespace Parme.Frb.Example.Entities
         {
             LineInstance.RelativePoint1 = new Point3D(0, 0);
             LineInstance.RelativePoint2 = new Point3D(20, 0);
+            TestEmitter.RotationOffsetInRadians = (float) (90 * (Math.PI / 180f));
         }
 
         private void CustomActivity()
