@@ -16,7 +16,7 @@ namespace Parme.Editor.Ui
 {
     public class EmitterSettingsController
     {
-        private const float WorkbenchHeight = 300f;
+        private const float WorkbenchHeight = 315f;
         private const float MenuBarSize = 20f;
 
         private readonly SettingsCommandHandler _commandHandler;
@@ -153,6 +153,9 @@ namespace Parme.Editor.Ui
 
             _workbench.RotationalVelocityInitializer = (settings.Initializers ?? Array.Empty<IParticleInitializer>())
                 .FirstOrDefault(x => x.InitializerType == InitializerType.RotationalVelocity);
+
+            _workbench.RotationalOrientationInitializer = (settings.Initializers ?? Array.Empty<IParticleInitializer>())
+                .FirstOrDefault(x => x.InitializerType == InitializerType.RotationalOrientation);
 
             _workbench.Modifiers.Clear();
             foreach (var modifier in settings.Modifiers ?? Array.Empty<IParticleModifier>())

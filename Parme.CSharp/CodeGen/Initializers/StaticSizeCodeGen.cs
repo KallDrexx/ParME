@@ -7,7 +7,7 @@ namespace Parme.CSharp.CodeGen.Initializers
     {
         public Type ParmeObjectType => typeof(StaticSizeInitializer);
 
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
             var initializer = (StaticSizeInitializer) obj;
             
@@ -17,20 +17,20 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
-            return @"particle.Size = new Vector2(StaticSizeWidth, StaticSizeHeight);
+            return $@"particle.Size = new Vector2(StaticSizeWidth, StaticSizeHeight);
 ";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
-            return string.Empty;
+            return $"";
         }
     }
 }

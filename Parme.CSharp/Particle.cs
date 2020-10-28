@@ -11,6 +11,8 @@ namespace Parme.CSharp
         /// The standard (non-zoomed) width and height of the particle, in pixels
         /// </summary>
         public Vector2 Size;
+
+        public Vector2 InitialSize;
         
         /// <summary>
         /// The center position of the particle in world space

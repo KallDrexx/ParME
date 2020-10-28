@@ -8,6 +8,7 @@ using Parme.Editor.Ui.Elements.Editors;
 using Parme.Editor.Ui.Elements.Editors.Initializers.ColorMultiplier;
 using Parme.Editor.Ui.Elements.Editors.Initializers.ParticleCount;
 using Parme.Editor.Ui.Elements.Editors.Initializers.Position;
+using Parme.Editor.Ui.Elements.Editors.Initializers.RotationalOrientation;
 using Parme.Editor.Ui.Elements.Editors.Initializers.RotationalVelocity;
 using Parme.Editor.Ui.Elements.Editors.Initializers.Size;
 using Parme.Editor.Ui.Elements.Editors.Initializers.TextureSectionIndex;
@@ -79,6 +80,9 @@ namespace Parme.Editor.Ui
                 
                 case InitializerType.RotationalVelocity:
                     return new RotationalVelocityEditor();
+                
+                case InitializerType.RotationalOrientation:
+                    return new RotationalOrientationEditor();
 
                 case InitializerType.Unspecified:
                 case null:

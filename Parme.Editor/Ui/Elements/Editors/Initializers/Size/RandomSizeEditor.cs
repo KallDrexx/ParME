@@ -61,7 +61,7 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
                 InputInt(nameof(MinHeight), "Min Height");
             
                 ImGui.NewLine();
-            
+                
                 InputInt(nameof(MaxWidth), "Max Width");
                 InputInt(nameof(MaxHeight), "Max Height");
             }
@@ -69,17 +69,20 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
             {
                 if (RandomizedAxis == RandomSizeInitializer.Axis.Y)
                 {
-                    InputInt(nameof(MinHeight), "Min Height");
-                    InputInt(nameof(MaxHeight), "Max Height");
+                    ImGui.Text("Height:");
+                    InputInt(nameof(MinHeight), "Min##MinHeight");
+                    InputInt(nameof(MaxHeight), "Max##MaxHeight");
                 }
                 else
                 {
-                    InputInt(nameof(MinWidth), "Min Width");
-                    InputInt(nameof(MaxWidth), "Max Width");
+                    ImGui.Text("Width:");
+                    InputInt(nameof(MinWidth), "Min##MinWidth");
+                    InputInt(nameof(MaxWidth), "Max##MaxWidth");
                 }
                 
                 ImGui.NewLine();
-                if (ImGui.Combo("Axis To Randomize", ref _selectedAxisLabelIndex, _axisLabels, _axisLabels.Length))
+                ImGui.Text("Axis To Randomize:");
+                if (ImGui.Combo("##Axis", ref _selectedAxisLabelIndex, _axisLabels, _axisLabels.Length))
                 {
                     RandomizedAxis = _selectedAxisLabelIndex == 1
                         ? RandomSizeInitializer.Axis.Y

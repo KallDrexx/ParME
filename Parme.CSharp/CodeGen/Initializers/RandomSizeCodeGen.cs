@@ -8,7 +8,7 @@ namespace Parme.CSharp.CodeGen.Initializers
     {
         public Type ParmeObjectType => typeof(RandomSizeInitializer);
 
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
             var initializer = (RandomSizeInitializer) obj;
 
@@ -28,12 +28,12 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
             var initializer = (RandomSizeInitializer) obj;
 
@@ -68,20 +68,20 @@ namespace Parme.CSharp.CodeGen.Initializers
                 }
 
                 result.AppendLine("                        particle.Size = new Vector2((float) width, (float) height);");
-                
-                return result.ToString();
+
+                return $"{result}";
             }
             
-            return @"
+            return $@"
                         var x = RandomSizeMaxWidth - _random.NextDouble() * (RandomSizeMaxWidth - RandomSizeMinWidth);
                         var y = RandomSizeMaxHeight - _random.NextDouble() * (RandomSizeMaxHeight - RandomSizeMinHeight);
                         particle.Size = new Vector2((float) x, (float) y);
 ";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
-            return string.Empty;
+            return $"";
         }
     }
 }

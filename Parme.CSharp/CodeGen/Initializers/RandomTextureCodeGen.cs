@@ -7,26 +7,26 @@ namespace Parme.CSharp.CodeGen.Initializers
     {
         public Type ParmeObjectType => typeof(RandomTextureInitializer);
         
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
-            return @"
+            return $@"
                         particle.TextureSectionIndex = (byte) _random.Next(0, TextureSections.Length);
 ";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
-            return string.Empty;
+            return $"";
         }
     }
 }

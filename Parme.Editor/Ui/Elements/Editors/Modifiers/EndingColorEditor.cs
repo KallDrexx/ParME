@@ -88,7 +88,7 @@ namespace Parme.Editor.Ui.Elements.Editors.Modifiers
                 Red = (byte) RedMultiplier,
                 Green = (byte) GreenMultiplier,
                 Blue = (byte) BlueMultiplier,
-                Alpha = (byte) AlphaMultiplier,
+                Alpha = AlphaMultiplier,
             };
             
             CommandHandler.Execute(new UpdateModifierCommand(modifier));

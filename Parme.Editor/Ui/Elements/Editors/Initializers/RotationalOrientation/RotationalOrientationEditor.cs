@@ -3,15 +3,14 @@ using System.Linq;
 using Parme.Core.Initializers;
 using Parme.Editor.Commands;
 
-namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
+namespace Parme.Editor.Ui.Elements.Editors.Initializers.RotationalOrientation
 {
-    public class SizeEditor : TypeSelectorEditor
+    public class RotationalOrientationEditor : TypeSelectorEditor
     {
-        public SizeEditor() 
-            : base(new []{
-                typeof(StaticSizeInitializer), 
-                typeof(RandomSizeInitializer),
-                typeof(TextureBasedSizeInitializer),
+        public RotationalOrientationEditor() : 
+            base(new[]
+            {
+                typeof(RandomRotationInitializer),
             })
         {
         }
@@ -20,7 +19,7 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
         {
             SelectedType = (EmitterSettings.Initializers ?? Array.Empty<IParticleInitializer>())
                 .Where(x => x != null)
-                .Where(x => x.InitializerType == InitializerType.Size)
+                .Where(x => x.InitializerType == InitializerType.RotationalOrientation)
                 .Select(x => x.GetType())
                 .FirstOrDefault();
         }
@@ -29,12 +28,12 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Size
         {
             if (SelectedType == null)
             {
-                CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.Size, null));
+                CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.RotationalOrientation, null));
             }
             else
             {
                 var initializer = (IParticleInitializer) Activator.CreateInstance(SelectedType);
-                CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.Size, initializer));
+                CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.RotationalOrientation, initializer));
             }
         }
     }

@@ -153,6 +153,15 @@ namespace Parme.Editor.Ui.Elements.Editors
                     RemoveCurrentSection();
                 }
                 
+                ImGui.SameLine();
+                if (ImGui.Button("Duplicate"))
+                {
+                    AddNewSection(new TextureSectionCoords(_currentSection.Coords.LeftX,
+                        _currentSection.Coords.TopY,
+                        _currentSection.Coords.RightX,
+                        _currentSection.Coords.BottomY));
+                }
+                
                 var left = _currentSection.Coords.LeftX;
                 var top = _currentSection.Coords.TopY;
                 var width = _currentSection.Coords.RightX - _currentSection.Coords.LeftX;
@@ -188,11 +197,11 @@ namespace Parme.Editor.Ui.Elements.Editors
             ImGui.EndChild();
         }
 
-        private void AddNewSection()
+        private void AddNewSection(TextureSectionCoords? coords = null)
         {
             var newSections = _textureSections.Concat(new[]
             {
-                new TextureSectionCoords(0, 0, _texture.Width, _texture.Height)
+                coords ?? new TextureSectionCoords(0, 0, _texture.Width, _texture.Height),
             }).ToList();
             
             CommandHandler.Execute(new UpdateTextureSectionsCommand(newSections));

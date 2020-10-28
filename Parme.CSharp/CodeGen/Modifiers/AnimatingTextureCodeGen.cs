@@ -7,25 +7,25 @@ namespace Parme.CSharp.CodeGen.Modifiers
     {
         public Type ParmeObjectType => typeof(AnimatingTextureModifier);
         
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
-            return @"
+            return $@"
                         particle.TextureSectionIndex = (byte) ((particle.TimeAlive / MaxParticleLifeTime) * 
                                                                TextureSections.Length);
 ";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
             throw new NotImplementedException();
         }

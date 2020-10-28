@@ -7,7 +7,7 @@ namespace Parme.CSharp.CodeGen.Initializers
     {
         public Type ParmeObjectType => typeof(StaticColorInitializer);
 
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
             var initializer = (StaticColorInitializer) obj;
             
@@ -19,28 +19,24 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
-            return @"
-                        particle.InitialRed = StaticColorStartingRed;
+            return $@"
                         particle.CurrentRed = StaticColorStartingRed;
-                        particle.InitialGreen = StaticColorStartingGreen;
                         particle.CurrentGreen = StaticColorStartingGreen;
-                        particle.InitialBlue = StaticColorStartingBlue;
                         particle.CurrentBlue = StaticColorStartingBlue;
-                        particle.InitialAlpha = StaticColorStartingAlpha;
                         particle.CurrentAlpha = StaticColorStartingAlpha;
             ";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
-            return string.Empty;
+            return $"";
         }
     }
 }

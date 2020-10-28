@@ -9,7 +9,14 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
     public class RadialVelocityEditor : SettingsEditorBase
     {
         [SelfManagedProperty]
-        public float Magnitude
+        public float MinMagnitude
+        {
+            get => Get<float>();
+            set => Set(value);
+        }
+        
+        [SelfManagedProperty]
+        public float MaxMagnitude
         {
             get => Get<float>();
             set => Set(value);
@@ -31,16 +38,20 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
 
         protected override void CustomRender()
         {
-            InputFloat(nameof(Magnitude), "Magnitude");
-
+            ImGui.Text("Magnitude");
+            InputFloat(nameof(MinMagnitude), "Min##Magnitude");
+            InputFloat(nameof(MaxMagnitude), "Max##Magnitude");
+            
+            ImGui.NewLine();
+            ImGui.Text("Angles (degrees)");
             var min = MinDegrees;
-            if (ImGui.InputInt("Min Degrees", ref min) && min >= 0 && min <= 360)
+            if (ImGui.InputInt("Min##Degrees", ref min) && min >= 0 && min <= 360)
             {
                 MinDegrees = min;
             }
             
             var max = MaxDegrees;
-            if (ImGui.InputInt("Max Degrees", ref max) && max >= 0 && max <= 360)
+            if (ImGui.InputInt("Max##Degrees", ref max) && max >= 0 && max <= 360)
             {
                 MaxDegrees = max;
             }
@@ -52,7 +63,8 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
                 .OfType<RadialVelocityInitializer>()
                 .First();
 
-            Magnitude = initializer.Magnitude;
+            MinMagnitude = initializer.MinMagnitude;
+            MaxMagnitude = initializer.MaxMagnitude;
             MinDegrees = (int) initializer.MinDegrees;
             MaxDegrees = (int) initializer.MaxDegrees;
         }
@@ -61,7 +73,8 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
         {
             var initializer = new RadialVelocityInitializer
             {
-                Magnitude = Magnitude,
+                MinMagnitude = MinMagnitude,
+                MaxMagnitude = MaxMagnitude,
                 MinDegrees = MinDegrees,
                 MaxDegrees = MaxDegrees,
             };

@@ -154,6 +154,21 @@ namespace Parme.Editor.Ui.Elements
             }
         }
 
+        public IParticleInitializer RotationalOrientationInitializer
+        {
+            get => Get<IParticleInitializer>();
+            set
+            {
+                if (value != null && value.InitializerType != InitializerType.RotationalOrientation)
+                {
+                    throw new InvalidOperationException($"Initializer type of {value.InitializerType} passed in, " +
+                                                        "but only rotational orientation initializers were expected");
+                }
+                
+                Set(value);
+            }
+        }
+
         public ObservableCollection<IParticleModifier> Modifiers { get; }
         public ObservableCollection<TextureSectionCoords> TextureSections { get; }
 
@@ -203,7 +218,8 @@ namespace Parme.Editor.Ui.Elements
                 var magnitude = (float) Math.Sqrt(Math.Pow(EmitterVelocity.X, 2) + Math.Pow(EmitterVelocity.Y, 2));
                 var angleRadians = Math.Atan2(EmitterVelocity.Y, EmitterVelocity.X);
                 var angleDegrees = (int) (angleRadians * (180 / Math.PI));
-                
+                angleDegrees = ClampAngle(angleDegrees);
+
                 ImGui.SameLine();
                 ImGui.SetNextItemWidth(100);
                 var magnitudeChanged = ImGui.InputFloat("Speed", ref magnitude);
@@ -214,6 +230,14 @@ namespace Parme.Editor.Ui.Elements
 
                 if (magnitudeChanged || angleChanged)
                 {
+                    if (magnitude < 0)
+                    {
+                        magnitude *= -1;
+                        angleDegrees += 180;
+                    }
+                    
+                    angleDegrees = ClampAngle(angleDegrees);
+                    
                     var radians = angleDegrees * (Math.PI / 180);
                     var x = magnitude * Math.Cos(radians);
                     var y = magnitude * Math.Sin(radians);
@@ -248,6 +272,21 @@ namespace Parme.Editor.Ui.Elements
             return initializer == null 
                 ? "<None>" 
                 : $"{initializer.EditorShortName} {initializer.EditorShortValue}";
+        }
+
+        private static int ClampAngle(int angleInDegrees)
+        {
+            while (angleInDegrees < 0)
+            {
+                angleInDegrees += 360;
+            }
+
+            while (angleInDegrees >= 360)
+            {
+                angleInDegrees -= 360;
+            }
+
+            return angleInDegrees;
         }
 
         private void RenderInitializersSection()
@@ -340,6 +379,13 @@ namespace Parme.Editor.Ui.Elements
             ImGui.NextColumn();
             Selectable(EditorObjectNameAndValue(RotationalVelocityInitializer),
                 new EditorItem(EditorItemType.Initializer, InitializerType.RotationalVelocity));
+            
+            ImGui.NextColumn();
+            RightAlignText("Initial Rotation");
+            
+            ImGui.NextColumn();
+            Selectable(EditorObjectNameAndValue(RotationalOrientationInitializer),
+                new EditorItem(EditorItemType.Initializer, InitializerType.RotationalOrientation));
             
             ImGui.Columns(1);
             ImGui.EndChild();

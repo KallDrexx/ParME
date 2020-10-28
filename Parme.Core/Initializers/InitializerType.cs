@@ -40,6 +40,11 @@
         /// <summary>
         /// An initializer that determines the initial rotational speed of particles
         /// </summary>
-        RotationalVelocity = 7
+        RotationalVelocity = 7,
+        
+        /// <summary>
+        /// An initializer that determines the initial rotational orientation of new particles
+        /// </summary>
+        RotationalOrientation = 8,
     }
 }

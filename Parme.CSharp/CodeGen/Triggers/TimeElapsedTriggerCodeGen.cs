@@ -7,7 +7,7 @@ namespace Parme.CSharp.CodeGen.Triggers
     {
         public Type ParmeObjectType => typeof(TimeElapsedTrigger);
 
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
             var trigger = (TimeElapsedTrigger) obj;
             
@@ -15,12 +15,12 @@ namespace Parme.CSharp.CodeGen.Triggers
 ";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return @"private float _timeSinceLastTrigger;";
+            return $@"private float _timeSinceLastTrigger;";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
             shouldCreateNewParticle = false;
@@ -33,9 +33,9 @@ namespace Parme.CSharp.CodeGen.Triggers
 ";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
-            return "triggersPerSecond = 1 / TimeElapsedTriggerFrequency;";
+            return $"triggersPerSecond = 1 / TimeElapsedTriggerFrequency;";
         }
     }
 }

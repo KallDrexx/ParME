@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using System.Reflection;
@@ -26,6 +25,7 @@ namespace Parme.Editor
         public Vector3 BackgroundColor { get; private set; }
         public SamplerState RenderSamplerState { get; private set; }
         public int GridSize { get; private set; }
+        public bool AutoSaveOnChange { get; private set; } = true;
 
         public ApplicationState()
         {
@@ -102,6 +102,11 @@ namespace Parme.Editor
             if (operationResult.ModalToClose != null)
             {
                 _openModals.Remove(operationResult.ModalToClose.Value);
+            }
+
+            if (operationResult.UpdatedAutoSave != null)
+            {
+                AutoSaveOnChange = operationResult.UpdatedAutoSave.Value;
             }
         }
 

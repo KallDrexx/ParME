@@ -7,7 +7,7 @@ namespace Parme.CSharp.CodeGen.Initializers
     {
         public Type ParmeObjectType => typeof(RandomRotationalVelocityInitializer);
         
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
             var initializer = (RandomRotationalVelocityInitializer) obj;
 
@@ -17,22 +17,22 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
-            return @"
+            return $@"
                         var speed = RandomRotationalSpeedMaxDegrees - _random.NextDouble() * (RandomRotationalSpeedMaxDegrees - RandomRotationalSpeedMinDegrees);
                         particle.RotationalVelocityInRadians = (float) (speed * Math.PI / 180f);
 ";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
-            return string.Empty;
+            return $"";
         }
     }
 }

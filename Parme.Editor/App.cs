@@ -63,6 +63,7 @@ namespace Parme.Editor
             _emitterRenderGroup = new MonoGameEmitterRenderGroup(GraphicsDevice);
             
             ResetCamera();
+            _applicationState.Zoom = 1;
 
             var monoGameImGuiRenderer = new MonoGameImGuiRenderer(this);
             _imGuiManager = new ImGuiManager(monoGameImGuiRenderer);
@@ -79,7 +80,7 @@ namespace Parme.Editor
             ImGui.GetIO().FontGlobalScale = 1.2f;
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             
-            _appOperationQueue.Enqueue(new UpdateViewOptionsRequested
+            _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
             {
                 UpdatedSamplerState = SamplerState.PointClamp,
             });
@@ -101,11 +102,6 @@ namespace Parme.Editor
             {
                 var operationResult = appOperation.Run();
                 _applicationState.Apply(operationResult);
-            }
-
-            if (_applicationState.RenderSamplerState != null)
-            {
-                GraphicsDevice.SamplerStates[0] = _applicationState.RenderSamplerState;
             }
 
             if (_gridTexture.Width != _applicationState.GridSize)
@@ -172,7 +168,7 @@ namespace Parme.Editor
             GraphicsDevice.Clear(backgroundColor);
             RenderGrid(backgroundColor);
 
-            _emitterRenderGroup.Render(_camera);
+            _emitterRenderGroup.Render(_camera, _applicationState.RenderSamplerState ?? SamplerState.PointClamp);
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
             base.Draw(gameTime);
@@ -215,7 +211,18 @@ namespace Parme.Editor
                 _emitter = new MonoGameEmitter(logicClass, _particlePool, GraphicsDevice, _textureFileLoader);
                 _emitterRenderGroup.AddEmitter(_emitter);
                 _emitter.IsEmittingNewParticles = true;
-                ResetCamera();
+                
+                // Don't reset the camera if we don't have a moving emitter.  Without a moving emitter then this will
+                // just frustrate the user, as they've positioned the camera in that spot for a reason
+                if (_uiController.EmitterVelocity != Vector2.Zero)
+                {
+                    ResetCamera();
+                }
+            }
+
+            if (_applicationState.AutoSaveOnChange)
+            {
+                _appOperationQueue.Enqueue(new SaveEmitterRequested(_applicationState.ActiveFileName, settings));
             }
         }
 
@@ -232,7 +239,6 @@ namespace Parme.Editor
             _camera.PositiveYAxisPointsUp = true;
             _camera.PixelWidth = GraphicsDevice.Viewport.Width;
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
-            _applicationState.Zoom = 1;
 
             if (resetEmitterPosition && _emitter != null)
             {

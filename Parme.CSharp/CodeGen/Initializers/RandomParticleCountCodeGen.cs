@@ -7,7 +7,7 @@ namespace Parme.CSharp.CodeGen.Initializers
     {
         public Type ParmeObjectType => typeof(RandomParticleCountInitializer);
 
-        public string GenerateProperties(object obj)
+        public FormattableString GenerateProperties(object obj)
         {
             var initializer = (RandomParticleCountInitializer) obj;
 
@@ -22,20 +22,20 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public string GenerateFields(object obj)
+        public FormattableString GenerateFields(object obj)
         {
-            return string.Empty;
+            return $"";
         }
 
-        public string GenerateExecutionCode(object obj)
+        public FormattableString GenerateExecutionCode(object obj)
         {
-            return @"newParticleCount = _random.Next(RandomParticleCountMinToSpawn, RandomParticleCountMaxToSpawn + 1);
+            return $@"newParticleCount = _random.Next(RandomParticleCountMinToSpawn, RandomParticleCountMaxToSpawn + 1);
 ";
         }
 
-        public string GenerateCapacityEstimationCode(object obj)
+        public FormattableString GenerateCapacityEstimationCode(object obj)
         {
-            return @"var difference = RandomParticleCountMaxToSpawn - RandomParticleCountMinToSpawn;
+            return $@"var difference = RandomParticleCountMaxToSpawn - RandomParticleCountMinToSpawn;
                 var twoThirds = difference * 0.65f;
                 particlesPerTrigger = RandomParticleCountMaxToSpawn - twoThirds;";
         }
