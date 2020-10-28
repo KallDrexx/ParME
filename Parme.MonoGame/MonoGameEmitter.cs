@@ -68,7 +68,7 @@ namespace Parme.MonoGame
                         destinationRectangle,
                         sourceRectangle,
                         colorModifier,
-                        particle.RotationInRadians,
+                        -particle.RotationInRadians, // CCW rotations
                         new Vector2(sourceRectangle.Width / 2f, sourceRectangle.Height / 2f), 
                         SpriteEffects.None,
                         0f);
