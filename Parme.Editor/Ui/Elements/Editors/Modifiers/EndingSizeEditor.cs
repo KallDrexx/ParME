@@ -24,7 +24,7 @@ namespace Parme.Editor.Ui.Elements.Editors.Modifiers
         
         protected override void CustomRender()
         {
-            ImGui.TextWrapped("The final size of the particle when it reaches the end of its life.  The color " +
+            ImGui.TextWrapped("The final size of the particle when it reaches the end of its life.  The size " +
                               "will change with a linear interpolation to get from its initial to final size.");
             
             ImGui.NewLine();
