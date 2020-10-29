@@ -59,16 +59,16 @@ namespace Parme.MonoGame
                             section.BottomY - section.TopY);
                     }
 
-                    var colorModifier = new Color(particle.CurrentRed,
-                        particle.CurrentGreen,
-                        particle.CurrentBlue,
-                        particle.CurrentAlpha);
+                    var colorModifier = new Color((byte) particle.CurrentRed,
+                        (byte) particle.CurrentGreen,
+                        (byte) particle.CurrentBlue,
+                        (byte) particle.CurrentAlpha);
 
                     spriteBatch.Draw(_texture,
                         destinationRectangle,
                         sourceRectangle,
                         colorModifier,
-                        particle.RotationInRadians,
+                        -particle.RotationInRadians, // CCW rotations
                         new Vector2(sourceRectangle.Width / 2f, sourceRectangle.Height / 2f), 
                         SpriteEffects.None,
                         0f);

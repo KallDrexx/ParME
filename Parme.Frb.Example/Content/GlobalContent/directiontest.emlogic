@@ -1,0 +1,55 @@
+{
+  "MaxParticleLifeTime": 1.0,
+  "TextureFileName": "direction.png",
+  "TextureSections": [],
+  "Trigger": {
+    "EditorShortName": "Time Elapsed",
+    "EditorShortValue": "every 1 seconds",
+    "Frequency": 1.0,
+    "$ParmeType": "TimeElapsedTrigger"
+  },
+  "Initializers": [
+    {
+      "EditorShortName": "Static",
+      "EditorShortValue": "(32, 32)",
+      "Width": 32,
+      "Height": 32,
+      "$ParmeType": "StaticSizeInitializer"
+    },
+    {
+      "EditorShortName": "Static",
+      "EditorShortValue": "1",
+      "ParticleSpawnCount": 1,
+      "$ParmeType": "StaticParticleCountInitializer"
+    },
+    {
+      "EditorShortName": "Wedge",
+      "EditorShortValue": "(100 - 100) at 180° - 180°",
+      "MinMagnitude": 100.0,
+      "MaxMagnitude": 100.0,
+      "MinDegrees": 180.0,
+      "MaxDegrees": 180.0,
+      "$ParmeType": "RadialVelocityInitializer"
+    },
+    {
+      "EditorShortName": "Static",
+      "EditorShortValue": "255, 255, 255, 0.49",
+      "Red": 255,
+      "Green": 255,
+      "Blue": 255,
+      "Alpha": 0.492,
+      "$ParmeType": "StaticColorInitializer"
+    }
+  ],
+  "Modifiers": [
+    {
+      "EditorShortName": "Ending Color Multiplier",
+      "EditorShortValue": "255, 255, 255, 0.00",
+      "Red": 255,
+      "Green": 255,
+      "Blue": 255,
+      "Alpha": 0.0,
+      "$ParmeType": "EndingColorModifier"
+    }
+  ]
+}

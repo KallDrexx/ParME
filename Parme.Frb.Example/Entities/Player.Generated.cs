@@ -34,6 +34,7 @@ namespace Parme.Frb.Example.Entities
                 mLineInstance = value;
             }
         }
+        private Parme.Frb.ParmeFrbEmitter TestEmitter;
         public int RotationDegreesPerSecond = 360;
         protected FlatRedBall.Graphics.Layer LayerProvidedByContainer = null;
         public Player () 
@@ -55,6 +56,9 @@ namespace Parme.Frb.Example.Entities
             LoadStaticContent(ContentManagerName);
             mLineInstance = new FlatRedBall.Math.Geometry.Line();
             mLineInstance.Name = "mLineInstance";
+            TestEmitter = Parme.Frb.ParmeEmitterManager.Instance
+                .CreateEmitter(new DirectiontestEmitterLogic(), this, "");
+
             
             PostInitialize();
             if (addToManagers)
@@ -89,6 +93,10 @@ namespace Parme.Frb.Example.Entities
             {
                 FlatRedBall.Math.Geometry.ShapeManager.Remove(LineInstance);
             }
+            if (TestEmitter != null)
+            {
+                TestEmitter.Destroy();
+            }
             CustomDestroy();
         }
         public virtual void PostInitialize () 
@@ -112,6 +120,10 @@ namespace Parme.Frb.Example.Entities
             if (LineInstance != null)
             {
                 FlatRedBall.Math.Geometry.ShapeManager.RemoveOneWay(LineInstance);
+            }
+            if (TestEmitter != null)
+            {
+                TestEmitter.Destroy();
             }
         }
         public virtual void AssignCustomVariables (bool callOnContainedElements) 

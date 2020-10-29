@@ -36,7 +36,8 @@ namespace Parme.Frb.Example
         public int StaticSizeWidth { get; set; } = 50;
         public int StaticSizeHeight { get; set; } = 50;
 
-        public float RadialVelocityMagnitude { get; set; } = 50f;
+        public float RadialVelocityMinMagnitude { get; set; } = 50f;
+        public float RadialVelocityMaxMagnitude { get; set; } = 50f;
         public float RadialVelocityMinRadians { get; set; } = 2.356194490192345f;
         public float RadialVelocityMaxRadians { get; set; } = 3.9269908169872414f; 
 
@@ -70,10 +71,10 @@ namespace Parme.Frb.Example
                 // modifiers
                 
                 {
-                        particle.CurrentRed -= (byte) (((particle.InitialRed - EndingColorRed) / MaxParticleLifeTime) * timeSinceLastFrame);
-                        particle.CurrentGreen -= (byte) (((particle.InitialGreen - EndingColorGreen) / MaxParticleLifeTime) * timeSinceLastFrame);
-                        particle.CurrentBlue -= (byte) (((particle.InitialBlue - EndingColorBlue) / MaxParticleLifeTime) * timeSinceLastFrame);
-                        particle.CurrentAlpha -= (byte) (((particle.InitialAlpha - EndingColorAlpha) / MaxParticleLifeTime) * timeSinceLastFrame);
+                        particle.CurrentRed -= (((particle.InitialRed - EndingColorRed) / MaxParticleLifeTime) * timeSinceLastFrame);
+                        particle.CurrentGreen -= (((particle.InitialGreen - EndingColorGreen) / MaxParticleLifeTime) * timeSinceLastFrame);
+                        particle.CurrentBlue -= (((particle.InitialBlue - EndingColorBlue) / MaxParticleLifeTime) * timeSinceLastFrame);
+                        particle.CurrentAlpha -= (((particle.InitialAlpha - EndingColorAlpha) / MaxParticleLifeTime) * timeSinceLastFrame);
                 }
 
                 
@@ -115,15 +116,12 @@ namespace Parme.Frb.Example
                         RotationInRadians = 0,
                         Position = Vector2.Zero,
                         RotationalVelocityInRadians = 0f,
-                        InitialRed = 255,
-                        InitialGreen = 255,
-                        InitialBlue = 255,
-                        InitialAlpha = 255,
                         CurrentRed = 255,
                         CurrentGreen = 255,
                         CurrentBlue = 255,
                         CurrentAlpha = 255,
                         Size = Vector2.Zero,
+                        InitialSize = Vector2.Zero,
                         Velocity = Vector2.Zero,
                     };
                     
@@ -131,36 +129,40 @@ namespace Parme.Frb.Example
                     
                     {
                         
+                        particle.TextureSectionIndex = (byte) _random.Next(0, TextureSections.Length);
+                    }
+                    {
+                        
                         particle.Position = new Vector2(StaticPositionXOffset, StaticPositionYOffset);
                     }
                     {
                         
-                        particle.InitialRed = StaticColorStartingRed;
-                        particle.CurrentRed = StaticColorStartingRed;
-                        particle.InitialGreen = StaticColorStartingGreen;
-                        particle.CurrentGreen = StaticColorStartingGreen;
-                        particle.InitialBlue = StaticColorStartingBlue;
-                        particle.CurrentBlue = StaticColorStartingBlue;
-                        particle.InitialAlpha = StaticColorStartingAlpha;
-                        particle.CurrentAlpha = StaticColorStartingAlpha;
+                        particle.CurrentRed = (float) StaticColorStartingRed;
+                        particle.CurrentGreen = (float) StaticColorStartingGreen;
+                        particle.CurrentBlue = (float) StaticColorStartingBlue;
+                        particle.CurrentAlpha = (float) StaticColorStartingAlpha;
                                 }
                     {
                         particle.Size = new Vector2(StaticSizeWidth, StaticSizeHeight);
                     }
                     {
                         
-                        particle.TextureSectionIndex = (byte) _random.Next(0, TextureSections.Length);
-                    }
-                    {
-                        
                         var radians = RadialVelocityMaxRadians - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
+                        var magnitude = RadialVelocityMaxMagnitude - _random.NextDouble() * (RadialVelocityMaxMagnitude - RadialVelocityMinMagnitude);
                 
                         // convert from polar coordinates to cartesian coordinates
-                        var x = RadialVelocityMagnitude * Math.Cos(radians);
-                        var y = RadialVelocityMagnitude * Math.Sin(radians);
+                        var x = magnitude * Math.Cos(radians);
+                        var y = magnitude * Math.Sin(radians);
                         particle.Velocity = new Vector2((float) x, (float) y);
                     }
 
+
+                    // Set the initial values to their current equivalents
+                    particle.InitialRed = (byte) particle.CurrentRed;
+                    particle.InitialGreen = (byte) particle.CurrentGreen;
+                    particle.InitialBlue = (byte) particle.CurrentBlue;
+                    particle.InitialAlpha = (byte) particle.CurrentAlpha;
+                    particle.InitialSize = particle.Size;
 
                     // Adjust the particle's rotation, position, and velocity by the emitter's rotation
                     RotateVector(ref particle.Position, parent.RotationInRadians);

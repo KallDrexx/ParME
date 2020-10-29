@@ -64,8 +64,9 @@
     },
     {
       "EditorShortName": "Wedge",
-      "EditorShortValue": "50 btw 135° - 225°",
-      "Magnitude": 50.0,
+      "EditorShortValue": "(50 - 50) at 135° - 225°",
+      "MinMagnitude": 50.0,
+      "MaxMagnitude": 50.0,
       "MinDegrees": 135.0,
       "MaxDegrees": 225.0,
       "$ParmeType": "RadialVelocityInitializer"

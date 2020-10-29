@@ -26,9 +26,9 @@ namespace Parme.CSharp
         public byte InitialGreen;
         public byte InitialBlue;
         public byte InitialAlpha;
-        public byte CurrentRed;
-        public byte CurrentGreen;
-        public byte CurrentBlue;
-        public byte CurrentAlpha;
+        public float CurrentRed;
+        public float CurrentGreen;
+        public float CurrentBlue;
+        public float CurrentAlpha;
     }
 }

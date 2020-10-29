@@ -15,7 +15,7 @@ namespace Parme.CSharp.CodeGen.Modifiers
         public byte EndingColorRed {{ get; set; }} = {modifier.Red};
         public byte EndingColorGreen {{ get; set; }} = {modifier.Green};
         public byte EndingColorBlue {{ get; set; }} = {modifier.Blue};
-        public byte EndingColorAlpha {{ get; set; }} = {(byte) modifier.Alpha};
+        public byte EndingColorAlpha {{ get; set; }} = {(byte) (modifier.Alpha * 255)};
 ";
         }
 
@@ -26,10 +26,10 @@ namespace Parme.CSharp.CodeGen.Modifiers
 
         public FormattableString GenerateExecutionCode(object obj)
         {
-            return $@"particle.CurrentRed -= (byte) (((particle.InitialRed - EndingColorRed) / MaxParticleLifeTime) * timeSinceLastFrame);
-                        particle.CurrentGreen -= (byte) (((particle.InitialGreen - EndingColorGreen) / MaxParticleLifeTime) * timeSinceLastFrame);
-                        particle.CurrentBlue -= (byte) (((particle.InitialBlue - EndingColorBlue) / MaxParticleLifeTime) * timeSinceLastFrame);
-                        particle.CurrentAlpha -= (byte) (((particle.InitialAlpha - EndingColorAlpha) / MaxParticleLifeTime) * timeSinceLastFrame);
+            return $@"particle.CurrentRed -= (((particle.InitialRed - EndingColorRed) / MaxParticleLifeTime) * timeSinceLastFrame);
+                        particle.CurrentGreen -= (((particle.InitialGreen - EndingColorGreen) / MaxParticleLifeTime) * timeSinceLastFrame);
+                        particle.CurrentBlue -= (((particle.InitialBlue - EndingColorBlue) / MaxParticleLifeTime) * timeSinceLastFrame);
+                        particle.CurrentAlpha -= (((particle.InitialAlpha - EndingColorAlpha) / MaxParticleLifeTime) * timeSinceLastFrame);
 ";
         }
 
