@@ -55,7 +55,14 @@ namespace Parme.Frb.GluePlugin
                         Name = "IsEmitting",
                         Type = "bool",
                         DefaultValue = "true",
-                    }, 
+                    },
+                    
+                    new VariableDefinition
+                    {
+                        Name = "StopsOnScreenPause",
+                        Type = "bool",
+                        DefaultValue = "true",
+                    },
                     
                     new VariableDefinition
                     {

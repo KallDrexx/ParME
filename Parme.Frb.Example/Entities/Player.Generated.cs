@@ -108,6 +108,7 @@ namespace Parme.Frb.Example.Entities
                 mLineInstance.CopyAbsoluteToRelative();
                 mLineInstance.AttachTo(this, false);
             }
+            TestEmitter.StopsOnScreenPause = false;
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
         }
         public virtual void AddToManagersBottomUp (FlatRedBall.Graphics.Layer layerToAddTo) 
@@ -131,6 +132,7 @@ namespace Parme.Frb.Example.Entities
             if (callOnContainedElements)
             {
             }
+            TestEmitter.StopsOnScreenPause = false;
             RotationDegreesPerSecond = 360;
         }
         public virtual void ConvertToManuallyUpdated () 
