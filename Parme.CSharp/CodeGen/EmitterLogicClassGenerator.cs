@@ -101,10 +101,10 @@ using Parme.CSharp;
                     {8}
 
                     // Set the initial values to their current equivalents
-                    particle.InitialRed = particle.CurrentRed;
-                    particle.InitialGreen = particle.CurrentGreen;
-                    particle.InitialBlue = particle.CurrentBlue;
-                    particle.InitialAlpha = particle.CurrentAlpha;
+                    particle.InitialRed = (byte) particle.CurrentRed;
+                    particle.InitialGreen = (byte) particle.CurrentGreen;
+                    particle.InitialBlue = (byte) particle.CurrentBlue;
+                    particle.InitialAlpha = (byte) particle.CurrentAlpha;
                     particle.InitialSize = particle.Size;
 
                     // Adjust the particle's rotation, position, and velocity by the emitter's rotation

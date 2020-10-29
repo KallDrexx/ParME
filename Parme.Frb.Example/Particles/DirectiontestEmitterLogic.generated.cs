@@ -24,17 +24,22 @@ namespace Parme.Frb.Example
         public int StaticSizeWidth { get; set; } = 32;
         public int StaticSizeHeight { get; set; } = 32;
 
-        public byte StaticColorStartingRed { get; set; } = 255;
-        public byte StaticColorStartingGreen { get; set; } = 255;
-        public byte StaticColorStartingBlue { get; set; } = 255;
-        public byte StaticColorStartingAlpha { get; set; } = 255;
-
         public int StaticParticleSpawnCount { get; set; } = 1;
 
         public float RadialVelocityMinMagnitude { get; set; } = 100f;
         public float RadialVelocityMaxMagnitude { get; set; } = 100f;
-        public float RadialVelocityMinRadians { get; set; } = 0f;
-        public float RadialVelocityMaxRadians { get; set; } = 0f; 
+        public float RadialVelocityMinRadians { get; set; } = 3.141592653589793f;
+        public float RadialVelocityMaxRadians { get; set; } = 3.141592653589793f; 
+
+        public byte StaticColorStartingRed { get; set; } = 255;
+        public byte StaticColorStartingGreen { get; set; } = 255;
+        public byte StaticColorStartingBlue { get; set; } = 255;
+        public byte StaticColorStartingAlpha { get; set; } = 125;
+
+        public byte EndingColorRed { get; set; } = 255;
+        public byte EndingColorGreen { get; set; } = 255;
+        public byte EndingColorBlue { get; set; } = 255;
+        public byte EndingColorAlpha { get; set; } = 0;
 
         
         public void Update(ParticleBuffer particleBuffer, float timeSinceLastFrame, Emitter parent)
@@ -60,6 +65,12 @@ namespace Parme.Frb.Example
                 
                 // modifiers
                 
+                {
+                        particle.CurrentRed -= (((particle.InitialRed - EndingColorRed) / MaxParticleLifeTime) * timeSinceLastFrame);
+                        particle.CurrentGreen -= (((particle.InitialGreen - EndingColorGreen) / MaxParticleLifeTime) * timeSinceLastFrame);
+                        particle.CurrentBlue -= (((particle.InitialBlue - EndingColorBlue) / MaxParticleLifeTime) * timeSinceLastFrame);
+                        particle.CurrentAlpha -= (((particle.InitialAlpha - EndingColorAlpha) / MaxParticleLifeTime) * timeSinceLastFrame);
+                }
 
                 
                 particle.Position += particle.Velocity * timeSinceLastFrame;
@@ -116,13 +127,6 @@ namespace Parme.Frb.Example
                     }
                     {
                         
-                        particle.CurrentRed = StaticColorStartingRed;
-                        particle.CurrentGreen = StaticColorStartingGreen;
-                        particle.CurrentBlue = StaticColorStartingBlue;
-                        particle.CurrentAlpha = StaticColorStartingAlpha;
-                                }
-                    {
-                        
                         var radians = RadialVelocityMaxRadians - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
                         var magnitude = RadialVelocityMaxMagnitude - _random.NextDouble() * (RadialVelocityMaxMagnitude - RadialVelocityMinMagnitude);
                 
@@ -131,13 +135,20 @@ namespace Parme.Frb.Example
                         var y = magnitude * Math.Sin(radians);
                         particle.Velocity = new Vector2((float) x, (float) y);
                     }
+                    {
+                        
+                        particle.CurrentRed = (float) StaticColorStartingRed;
+                        particle.CurrentGreen = (float) StaticColorStartingGreen;
+                        particle.CurrentBlue = (float) StaticColorStartingBlue;
+                        particle.CurrentAlpha = (float) StaticColorStartingAlpha;
+                                }
 
 
                     // Set the initial values to their current equivalents
-                    particle.InitialRed = particle.CurrentRed;
-                    particle.InitialGreen = particle.CurrentGreen;
-                    particle.InitialBlue = particle.CurrentBlue;
-                    particle.InitialAlpha = particle.CurrentAlpha;
+                    particle.InitialRed = (byte) particle.CurrentRed;
+                    particle.InitialGreen = (byte) particle.CurrentGreen;
+                    particle.InitialBlue = (byte) particle.CurrentBlue;
+                    particle.InitialAlpha = (byte) particle.CurrentAlpha;
                     particle.InitialSize = particle.Size;
 
                     // Adjust the particle's rotation, position, and velocity by the emitter's rotation
