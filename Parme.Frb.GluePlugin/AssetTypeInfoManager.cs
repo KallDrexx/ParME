@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using FlatRedBall.Glue.Elements;
 using FlatRedBall.Glue.SaveClasses;
@@ -9,10 +11,10 @@ namespace Parme.Frb.GluePlugin
     {
         private const string LogicVarName = "Emitter Logic";
         private const string GroupVarName = "Emitter Grouping";
+        private readonly List<string> _emitterLogicTypes = new List<string>();
         
         public AssetTypeInfo LogicAssetTypeInfo { get; }
         public AssetTypeInfo FileAssetTypeInfo { get; }
-        public List<string> EmitterLogicTypes { get; } = new List<string>();
 
         public AssetTypeInfoManager()
         {
@@ -39,7 +41,7 @@ namespace Parme.Frb.GluePlugin
                         Name = LogicVarName,
                         Type = "string",
                         UsesCustomCodeGeneration = true,
-                        ForcedOptions = EmitterLogicTypes,
+                        ForcedOptions = _emitterLogicTypes,
                     },
                     
                     new VariableDefinition
@@ -79,6 +81,24 @@ namespace Parme.Frb.GluePlugin
                     },
                 }
             };
+        }
+
+        public void AddEmitterLogicTypeName(string name)
+        {
+            if (_emitterLogicTypes.All(x => !x.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            {
+                _emitterLogicTypes.Add(name);
+            }
+        }
+
+        public void RemoveEmitterLogicTypeName(string name)
+        {
+            _emitterLogicTypes.RemoveAll(x => x.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public void ClearEmitterLogicTypes()
+        {
+            _emitterLogicTypes.Clear();
         }
 
         private static string ConstructorFunc(IElement element, NamedObjectSave namedObject, ReferencedFileSave referencedFile)

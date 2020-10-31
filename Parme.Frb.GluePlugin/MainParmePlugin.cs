@@ -128,7 +128,7 @@ namespace Parme.Frb.GluePlugin
                 return;
             }
             
-            _assetTypeInfoManager.EmitterLogicTypes.Add(className);
+            _assetTypeInfoManager.AddEmitterLogicTypeName(className);
         }
 
         private static void GenerateAndSave(EmitterSettings emitter, string logicClassName, string filename)
@@ -188,12 +188,12 @@ namespace Parme.Frb.GluePlugin
         private void FileRemoved(IElement element, ReferencedFileSave removedFile)
         {
             var name = GetLogicClassName(removedFile.Name);
-            _assetTypeInfoManager.EmitterLogicTypes.Remove(name);
+            _assetTypeInfoManager.RemoveEmitterLogicTypeName(name);
         }
 
         private void GluxUnloaded()
         {
-            _assetTypeInfoManager.EmitterLogicTypes.Clear();
+            _assetTypeInfoManager.ClearEmitterLogicTypes();
         }
 
         private void GluxLoaded()
