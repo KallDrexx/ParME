@@ -129,6 +129,7 @@ namespace Parme.Frb.GluePlugin
             }
             
             _assetTypeInfoManager.AddEmitterLogicTypeName(className);
+            GlueCommands.Self.PrintOutput($"Successfully generated code for the '{className}' emitter");
         }
 
         private static void GenerateAndSave(EmitterSettings emitter, string logicClassName, string filename)

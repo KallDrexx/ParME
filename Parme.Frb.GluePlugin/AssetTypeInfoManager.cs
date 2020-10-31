@@ -89,6 +89,8 @@ namespace Parme.Frb.GluePlugin
             {
                 _emitterLogicTypes.Add(name);
             }
+            
+            _emitterLogicTypes.Sort();
         }
 
         public void RemoveEmitterLogicTypeName(string name)
