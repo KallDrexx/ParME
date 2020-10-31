@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FlatRedBall;
 using FlatRedBall.Graphics;
+using FlatRedBall.Screens;
 using Parme.CSharp;
 using Parme.MonoGame;
 
@@ -50,8 +51,15 @@ namespace Parme.Frb
 
         public void Update()
         {
+            var isPaused = ScreenManager.CurrentScreen?.IsPaused == true;
+            
             foreach (var frbEmitter in _frbEmitters)
             {
+                if (isPaused && frbEmitter.StopsOnScreenPause)
+                {
+                    continue;
+                }
+                
                 frbEmitter.UpdatePosition();
                 frbEmitter.Emitter.Update(TimeManager.SecondDifference);
             }

@@ -34,6 +34,18 @@ namespace Parme.Frb.Example.Screens
                 bullet.RotationZ = PlayerInstance.RotationZ;
                 BulletList.Add(bullet);
             }
+
+            if (InputManager.Keyboard.KeyReleased(Keys.Escape))
+            {
+                if (IsPaused)
+                {
+                    UnpauseThisScreen();
+                }
+                else
+                {
+                    PauseThisScreen();
+                }
+            }
         }
 
         void CustomDestroy()

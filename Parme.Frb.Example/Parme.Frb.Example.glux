@@ -294,6 +294,11 @@
             <Member>Emitter Logic</Member>
             <ValueAsString>DirectiontestEmitterLogic</ValueAsString>
           </CustomProperty>
+          <CustomProperty>
+            <Type>bool</Type>
+            <Member>StopsOnScreenPause</Member>
+            <ValueAsBool>false</ValueAsBool>
+          </CustomProperty>
           <Properties>
             <PropertySave>
               <Name>AssociateWithFactory</Name>

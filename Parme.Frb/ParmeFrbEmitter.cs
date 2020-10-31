@@ -35,6 +35,12 @@ namespace Parme.Frb
             get => Emitter.IsEmittingNewParticles;
             set => Emitter.IsEmittingNewParticles = value;
         }
+
+        /// <summary>
+        /// If true, then the emitter and its particles will no longer be updated while the current FRB screen
+        /// is in a paused state.
+        /// </summary>
+        public bool StopsOnScreenPause { get; set; } = true;
         
         /// <summary>
         /// If true, when this emitter is destroyed all particles will immediately be killed and removed.
