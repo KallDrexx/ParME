@@ -56,10 +56,11 @@ static void CreateZipArchive(string project, string version) {
     if (!Directory.Exists(ArtifactsFolder)) {
         Directory.CreateDirectory(ArtifactsFolder);
     }
-
+    
+    var projectName = Path.GetFileNameWithoutExtension(project);
     var projectPath = Path.GetDirectoryName(project);
     var folderToZip = Path.Combine(projectPath, "bin", "Release", "netcoreapp3.1");
-    var resultingZip = Path.Combine(ArtifactsFolder, $"Parme.Editor.{version}.zip");
+    var resultingZip = Path.Combine(ArtifactsFolder, $"{projectName}.{version}.zip");
     
     if (File.Exists(resultingZip)) {
         File.Delete(resultingZip);
@@ -96,6 +97,7 @@ var nugetProjects = new[] {
 
 var gluePluginProject = Path.Combine(GetScriptFolder(), "Parme.Frb.GluePlugin\\Parme.Frb.GluePlugin.csproj");
 var editorProject = Path.Combine(GetScriptFolder(), "Parme.Editor\\Parme.Editor.csproj");
+var cliProject = Path.Combine(GetScriptFolder(), "Parme.Cli\\Parme.Cli.csproj");
 
 RemoveCurrentArtifacts();
 
@@ -109,6 +111,12 @@ ReplaceVersion(editorProject, version);
 Directory.SetCurrentDirectory(Path.GetDirectoryName(editorProject));
 BuildProject(editorProject);
 CreateZipArchive(editorProject, version);
+
+Console.WriteLine("Building Cli Tool");
+ReplaceVersion(cliProject, version);
+Directory.SetCurrentDirectory(Path.GetDirectoryName(cliProject));
+BuildProject(cliProject);
+CreateZipArchive(cliProject, version);
 
 foreach (var project in nugetProjects)
 {

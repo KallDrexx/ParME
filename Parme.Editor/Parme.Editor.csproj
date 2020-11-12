@@ -4,7 +4,7 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWindowsForms>true</UseWindowsForms>
-        <Version>0.7.4</Version>
+        <Version>0.7.5</Version>
         <Authors>KallDrexx</Authors>
         <PackageProjectUrl>https://github.com/KallDrexx/ParME</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>

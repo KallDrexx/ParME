@@ -4,7 +4,7 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>Parme.Frb</RootNamespace>
         <LangVersion>8</LangVersion>
-        <Version>0.7.4</Version>
+        <Version>0.7.5</Version>
         <Authors>KallDrexx</Authors>
         <PackageProjectUrl>https://github.com/KallDrexx/ParME</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
