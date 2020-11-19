@@ -78,6 +78,26 @@ namespace Parme.Editor.Ui.Elements
                     OpenMenuItemClicked?.Invoke(this, EventArgs.Empty);
                 }
 
+                if (ImGui.BeginMenu("Recent"))
+                {
+                    if (_applicationState.RecentlyOpenedFiles.Any() != true)
+                    {
+                        ImGui.MenuItem("<No Files Recently Opened>");
+                    }
+                    else
+                    {
+                        foreach (var recentFile in _applicationState.RecentlyOpenedFiles)
+                        {
+                            if (ImGui.MenuItem(recentFile))
+                            {
+                                _appOperationQueue.Enqueue(new OpenEmitterRequested(recentFile));
+                            }
+                        }
+                    }
+                    
+                    ImGui.EndMenu();
+                }
+
                 var canSave = !string.IsNullOrWhiteSpace(_applicationState.ActiveFileName);
                 if (ImGui.MenuItem("Save", canSave))
                 {

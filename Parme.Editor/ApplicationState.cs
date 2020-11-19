@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,6 +12,7 @@ namespace Parme.Editor
     public class ApplicationState
     {
         private readonly HashSet<Modal> _openModals = new HashSet<Modal>();
+        private readonly AppSettings _appSettings;
         private float _currentTime;
         
         public string Version { get; }
@@ -26,14 +28,18 @@ namespace Parme.Editor
         public SamplerState RenderSamplerState { get; private set; }
         public int GridSize { get; private set; }
         public bool AutoSaveOnChange { get; private set; } = true;
+        public IReadOnlyList<string> RecentlyOpenedFiles { get; private set; }
 
         public ApplicationState()
         {
+            _appSettings = AppSettings.Load();
+            
             var assembly = Assembly.GetExecutingAssembly();
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             Version = fileVersionInfo.ProductVersion;
             BackgroundColor = new Vector3(48 / 255f, 48 / 255f, 48 / 255f);
             GridSize = 32;
+            RecentlyOpenedFiles = _appSettings.RecentlyOpenedFiles.ToList();
         }
 
         public void UpdateTotalTime(float totalTime)
@@ -51,6 +57,10 @@ namespace Parme.Editor
             if (!string.IsNullOrWhiteSpace(operationResult.UpdatedFileName))
             {
                 ActiveFileName = operationResult.UpdatedFileName;
+                _appSettings.AddOpenedFileName(operationResult.UpdatedFileName);
+                _appSettings.Save();
+                
+                RecentlyOpenedFiles = _appSettings.RecentlyOpenedFiles.ToList();
             }
             
             if (operationResult.UpdatedSettings != null)

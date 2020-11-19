@@ -27,6 +27,10 @@ entries:
       output: web, pdf
       url: /general_editor.html
 
+    - title: Parme Cli Tool
+      output: web, pdf
+      url: /general_cli.html
+
   - title: Integrations
     output: web, pdf
     folderitems:

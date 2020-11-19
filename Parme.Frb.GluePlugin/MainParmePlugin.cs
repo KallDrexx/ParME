@@ -54,9 +54,9 @@ namespace Parme.Frb.GluePlugin
             ReactToUnloadedGlux += GluxUnloaded;
             ReactToFileChangeHandler += FileChangeHandler;
             ReactToNewFileHandler += NewFileHandler;
-            
-            AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.LogicAssetTypeInfo);
+
             AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.FileAssetTypeInfo);
+            AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.LogicAssetTypeInfo);
         }
 
         private static string GenerateEmitterLogic(EmitterSettings settings, string className)
@@ -183,6 +183,9 @@ namespace Parme.Frb.GluePlugin
 
         public override bool ShutDown(PluginShutDownReason shutDownReason)
         {
+            AvailableAssetTypes.Self.RemoveAssetType(_assetTypeInfoManager.FileAssetTypeInfo);
+            AvailableAssetTypes.Self.RemoveAssetType(_assetTypeInfoManager.LogicAssetTypeInfo);
+            
             return true;
         }
 

@@ -20,6 +20,7 @@ namespace Parme.Frb.GluePlugin
         {
             FileAssetTypeInfo = new AssetTypeInfo
             {
+                FriendlyName = "Parme Emlogic ATI",
                 Extension = MainParmePlugin.Extension,
                 CanBeObject = false,
             };
