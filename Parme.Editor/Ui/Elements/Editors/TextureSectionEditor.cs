@@ -19,6 +19,9 @@ namespace Parme.Editor.Ui.Elements.Editors
         private IntPtr _imguiTextureId;
         private TextureSection _currentSection;
 
+        public float ZoomFactor { get; set; } = 1;
+        public int GridSize { get; set; } = 32;
+
         public void Open()
         {
             _openRequested = true;
@@ -185,16 +188,92 @@ namespace Parme.Editor.Ui.Elements.Editors
 
         private void RenderImageSection(Vector2 popupSize)
         {
-            var sectionWindowSize = new Vector2(popupSize.X - 20, popupSize.Y - 325);
-            ImGui.BeginChild("fullImage", sectionWindowSize, true);
+            const int xBuffer = 20;
+            const int yBuffer = 35;
 
-            var scaleHeight = (sectionWindowSize.Y - 20) / _texture.Height;
-            var scaleWidth = (sectionWindowSize.X - 20) / _texture.Width;
-            var scale = Math.Min(scaleHeight, scaleWidth);
+            var sectionWindowSize = new Vector2(popupSize.X - xBuffer, popupSize.Y - 350);
+            ImGui.BeginChild("fullImage", sectionWindowSize, true, ImGuiWindowFlags.HorizontalScrollbar);
+
+            var scaleHeight = (sectionWindowSize.Y - xBuffer) / _texture.Height;
+            var scaleWidth = (sectionWindowSize.X - yBuffer) / _texture.Width;
+            var scale = Math.Min(scaleHeight, scaleWidth) * ZoomFactor;
+            var screenStartPosition = ImGui.GetCursorScreenPos();
 
             ImGui.Image(_imguiTextureId, new Vector2(_texture.Width * scale, _texture.Height * scale));
+            var mouseHoveringImage = ImGui.IsItemHovered();
+            var imageSize = ImGui.GetItemRectSize();
+
+            var drawList = ImGui.GetWindowDrawList();
+            var guideLineColor = ImGui.GetColorU32(new Vector4(1, 1, 1, 1));
+
+            var gridSize = GridSize;
+            var increment = (int) (gridSize * scale);
+            if (increment < 1)
+            {
+                increment = 1;
+            }
+            
+            for (var x = 0; x < imageSize.X; x += increment)
+            {
+                var realX = screenStartPosition.X + x;
+                
+                drawList.AddLine(
+                    new Vector2(realX, screenStartPosition.Y), 
+                    new Vector2(realX, screenStartPosition.Y + imageSize.Y),
+                    guideLineColor,
+                    0.5f);
+            }
+
+            for (var y = 0; y < imageSize.Y; y += increment)
+            {
+                var realY = screenStartPosition.Y + y;
+                
+                drawList.AddLine(
+                    new Vector2(screenStartPosition.X, realY), 
+                    new Vector2(screenStartPosition.X + imageSize.X, realY), 
+                    guideLineColor,
+                    0.25f);
+            }
 
             ImGui.EndChild();
+
+            ImGui.Text("Zoom:");
+            ImGui.SameLine();
+
+            ImGui.SetNextItemWidth(100);
+            var zoom = (int)(ZoomFactor * 100);
+            if (ImGui.InputInt("%##Zoom", ref zoom, 10))
+            {
+                ZoomFactor = (float) zoom / 100;
+            }
+
+            ImGui.SameLine();
+
+            if (ImGui.Button("Reset##ResetZoom"))
+            {
+                ZoomFactor = 1;
+            }
+            
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth(200);
+            if (ImGui.InputInt("Grid Size (pixels)", ref gridSize) && gridSize > 0)
+            {
+                GridSize = gridSize;
+            }
+
+            if (mouseHoveringImage)
+            {
+                // Show the user what pixel coordinates they have hovered
+                var mousePosition = ImGui.GetMousePos();
+                var x = (int) Math.Round((mousePosition.X - screenStartPosition.X) / scale);
+                var y = (int) Math.Round((mousePosition.Y - screenStartPosition.Y) / scale);
+
+                var text = $"({x}, {y})";
+                var textWidth = ImGui.CalcTextSize(text) * ImGui.GetIO().FontGlobalScale;
+
+                ImGui.SameLine(ImGui.GetWindowWidth() - textWidth.X);
+                ImGui.Text(text);
+            }
         }
 
         private void AddNewSection(TextureSectionCoords? coords = null)
