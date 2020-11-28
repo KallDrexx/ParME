@@ -18,9 +18,9 @@ namespace Parme.Editor.Ui.Elements.Editors
         private Texture2D _texture;
         private IntPtr _imguiTextureId;
         private TextureSection _currentSection;
-
-        public float ZoomFactor { get; set; } = 1;
-        public int GridSize { get; set; } = 32;
+        private float _zoomFactor = 1f;
+        private int _gridSize = 32;
+        private bool _showGrid;
 
         public void Open()
         {
@@ -189,50 +189,68 @@ namespace Parme.Editor.Ui.Elements.Editors
         private void RenderImageSection(Vector2 popupSize)
         {
             const int xBuffer = 20;
-            const int yBuffer = 35;
+            const int yBuffer = 55;
+            const int listAndControlHeight = 325;
 
-            var sectionWindowSize = new Vector2(popupSize.X - xBuffer, popupSize.Y - 350);
+            var sectionWindowSize = new Vector2(popupSize.X - xBuffer, popupSize.Y - listAndControlHeight - yBuffer);
             ImGui.BeginChild("fullImage", sectionWindowSize, true, ImGuiWindowFlags.HorizontalScrollbar);
 
             var scaleHeight = (sectionWindowSize.Y - xBuffer) / _texture.Height;
             var scaleWidth = (sectionWindowSize.X - yBuffer) / _texture.Width;
-            var scale = Math.Min(scaleHeight, scaleWidth) * ZoomFactor;
+            var scale = Math.Min(scaleHeight, scaleWidth) * _zoomFactor;
             var screenStartPosition = ImGui.GetCursorScreenPos();
 
             ImGui.Image(_imguiTextureId, new Vector2(_texture.Width * scale, _texture.Height * scale));
+            
             var mouseHoveringImage = ImGui.IsItemHovered();
             var imageSize = ImGui.GetItemRectSize();
 
             var drawList = ImGui.GetWindowDrawList();
             var guideLineColor = ImGui.GetColorU32(new Vector4(1, 1, 1, 1));
 
-            var gridSize = GridSize;
-            var increment = (int) (gridSize * scale);
-            if (increment < 1)
+            if (_showGrid)
             {
-                increment = 1;
-            }
-            
-            for (var x = 0; x < imageSize.X; x += increment)
-            {
-                var realX = screenStartPosition.X + x;
-                
-                drawList.AddLine(
-                    new Vector2(realX, screenStartPosition.Y), 
-                    new Vector2(realX, screenStartPosition.Y + imageSize.Y),
-                    guideLineColor,
-                    0.5f);
+                var increment = (int) (_gridSize * scale);
+                if (increment < 1)
+                {
+                    increment = 1;
+                }
+
+                for (var x = 0; x <= imageSize.X; x += increment)
+                {
+                    var realX = screenStartPosition.X + x;
+
+                    drawList.AddLine(
+                        new Vector2(realX, screenStartPosition.Y),
+                        new Vector2(realX, screenStartPosition.Y + imageSize.Y),
+                        guideLineColor,
+                        0.5f);
+                }
+
+                for (var y = 0; y <= imageSize.Y; y += increment)
+                {
+                    var realY = screenStartPosition.Y + y;
+
+                    drawList.AddLine(
+                        new Vector2(screenStartPosition.X, realY),
+                        new Vector2(screenStartPosition.X + imageSize.X, realY),
+                        guideLineColor,
+                        0.25f);
+                }
             }
 
-            for (var y = 0; y < imageSize.Y; y += increment)
+            if (_currentSection != null)
             {
-                var realY = screenStartPosition.Y + y;
-                
-                drawList.AddLine(
-                    new Vector2(screenStartPosition.X, realY), 
-                    new Vector2(screenStartPosition.X + imageSize.X, realY), 
-                    guideLineColor,
-                    0.25f);
+                var top = screenStartPosition.Y + Math.Min(_currentSection.Coords.TopY, _currentSection.Coords.BottomY) * scale;
+                var bottom = screenStartPosition.Y + Math.Max(_currentSection.Coords.TopY, _currentSection.Coords.BottomY) * scale;
+                var left = screenStartPosition.X + Math.Min(_currentSection.Coords.LeftX, _currentSection.Coords.RightX) * scale;
+                var right = screenStartPosition.X + Math.Max(_currentSection.Coords.LeftX, _currentSection.Coords.RightX) * scale;
+
+                if (right <= imageSize.X || bottom <= imageSize.Y)
+                {
+                    var color = ImGui.GetColorU32(new Vector4(1f, 1f, 0.4f, 1f));
+                    drawList.AddRect(new Vector2(left, top), new Vector2(right, bottom), color);
+                }
             }
 
             ImGui.EndChild();
@@ -241,25 +259,31 @@ namespace Parme.Editor.Ui.Elements.Editors
             ImGui.SameLine();
 
             ImGui.SetNextItemWidth(100);
-            var zoom = (int)(ZoomFactor * 100);
-            if (ImGui.InputInt("%##Zoom", ref zoom, 10))
+            var zoom = (int)(_zoomFactor * 100);
+            if (ImGui.InputInt("%##Zoom", ref zoom, 10) && zoom > 0)
             {
-                ZoomFactor = (float) zoom / 100;
+                _zoomFactor = (float) zoom / 100;
             }
 
             ImGui.SameLine();
 
             if (ImGui.Button("Reset##ResetZoom"))
             {
-                ZoomFactor = 1;
+                _zoomFactor = 1;
             }
+            
+            ImGui.Text("Grid Size:");
             
             ImGui.SameLine();
             ImGui.SetNextItemWidth(200);
-            if (ImGui.InputInt("Grid Size (pixels)", ref gridSize) && gridSize > 0)
+            var gridSize = _gridSize;
+            if (ImGui.InputInt("##GridSize", ref gridSize) && gridSize > 0)
             {
-                GridSize = gridSize;
+                _gridSize = gridSize;
             }
+
+            ImGui.SameLine();
+            ImGui.Checkbox("Show", ref _showGrid);
 
             if (mouseHoveringImage)
             {
