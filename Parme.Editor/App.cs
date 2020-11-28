@@ -26,6 +26,7 @@ namespace Parme.Editor
         private readonly ParticlePool _particlePool = new ParticlePool();
         private readonly AppOperationQueue _appOperationQueue;
         private readonly SettingsCommandHandler _commandHandler;
+        private readonly GraphicsDeviceManager _graphicsDeviceManager;
         private TextureFileLoader _textureFileLoader;
         private MonoGameEmitter _emitter;
         private MonoGameEmitterRenderGroup _emitterRenderGroup;
@@ -41,13 +42,7 @@ namespace Parme.Editor
             _appOperationQueue = new AppOperationQueue();
             _commandHandler = new SettingsCommandHandler(_appOperationQueue);
             
-            // ReSharper disable once ObjectCreationAsStatement
-            new GraphicsDeviceManager(this)
-            {
-                PreferredBackBufferWidth = 1024,
-                PreferredBackBufferHeight = 768,
-                PreferMultiSampling = true
-            };
+            _graphicsDeviceManager = new GraphicsDeviceManager(this);
 
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
@@ -56,6 +51,10 @@ namespace Parme.Editor
 
         protected override void Initialize()
         {
+            _graphicsDeviceManager.PreferredBackBufferWidth = 1024;
+            _graphicsDeviceManager.PreferredBackBufferHeight = 786;
+            _graphicsDeviceManager.ApplyChanges();
+            
             _gridTexture = SetupGridTexture(GraphicsDevice,32);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             
@@ -84,7 +83,7 @@ namespace Parme.Editor
             {
                 UpdatedSamplerState = SamplerState.PointClamp,
             });
-            
+
             base.Initialize();
         }
 
