@@ -190,7 +190,7 @@ namespace Parme.Editor.Ui.Elements.Editors
         {
             const int xBuffer = 20;
             const int yBuffer = 55;
-            const int listAndControlHeight = 325;
+            const int listAndControlHeight = 300;
 
             var sectionWindowSize = new Vector2(popupSize.X - xBuffer, popupSize.Y - listAndControlHeight - yBuffer);
             ImGui.BeginChild("fullImage", sectionWindowSize, true, ImGuiWindowFlags.HorizontalScrollbar);
@@ -293,9 +293,9 @@ namespace Parme.Editor.Ui.Elements.Editors
                 var y = (int) Math.Round((mousePosition.Y - screenStartPosition.Y) / scale);
 
                 var text = $"({x}, {y})";
-                var textWidth = ImGui.CalcTextSize(text) * ImGui.GetIO().FontGlobalScale;
+                var textWidth = ImGui.CalcTextSize(text);
 
-                ImGui.SameLine(ImGui.GetWindowWidth() - textWidth.X);
+                ImGui.SameLine(ImGui.GetWindowWidth() - textWidth.X - 5);
                 ImGui.Text(text);
             }
         }

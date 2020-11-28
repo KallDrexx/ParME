@@ -75,8 +75,7 @@ namespace Parme.Editor
             
             _inputHandler = new InputHandler(_uiController, _camera, _commandHandler, _appOperationQueue, _applicationState);
             _inputHandler.ResetCameraAndEmitterRequested += (sender, args) => ResetCamera(true);
-
-            ImGui.GetIO().FontGlobalScale = 1.2f;
+            
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             
             _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
