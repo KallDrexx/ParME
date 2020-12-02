@@ -210,32 +210,24 @@ namespace Parme.Editor.Ui.Elements.Editors
 
             if (_showGrid)
             {
-                var increment = (int) (_gridSize * scale);
-                if (increment < 1)
+                for (var i = 0; i <= _texture.Width; i+= _gridSize)
                 {
-                    increment = 1;
-                }
-
-                for (var x = 0; x <= imageSize.X; x += increment)
-                {
-                    var realX = screenStartPosition.X + x;
-
+                    var x = i * scale + screenStartPosition.X;
                     drawList.AddLine(
-                        new Vector2(realX, screenStartPosition.Y),
-                        new Vector2(realX, screenStartPosition.Y + imageSize.Y),
+                        new Vector2(x, screenStartPosition.Y),
+                        new Vector2(x, screenStartPosition.Y + imageSize.Y),
                         guideLineColor,
                         0.5f);
                 }
 
-                for (var y = 0; y <= imageSize.Y; y += increment)
+                for (var i = 0; i <= _texture.Height; i+= _gridSize)
                 {
-                    var realY = screenStartPosition.Y + y;
-
+                    var y = i * scale + screenStartPosition.Y;
                     drawList.AddLine(
-                        new Vector2(screenStartPosition.X, realY),
-                        new Vector2(screenStartPosition.X + imageSize.X, realY),
+                        new Vector2(screenStartPosition.X, y),
+                        new Vector2(screenStartPosition.X + imageSize.X, y), 
                         guideLineColor,
-                        0.25f);
+                        0.5f);
                 }
             }
 
