@@ -13,12 +13,6 @@ namespace Parme.Editor.Ui.Elements.Editors
     {
         private const string PopupLabel = "Texture Sections";
 
-        private static readonly float[] _zoomLevels = {0.5f, 0.666f, 1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 12f, 16f, 32f};
-        private static readonly string[] _zoomLevelNames =
-        {
-            "50%", "66.6%", "100%", "200%", "300%", "400%", "500%", "600%", "700%", "800%", "1200%", "1600%", "3200%"
-        };
-        
         private readonly List<TextureSectionCoords> _textureSections = new List<TextureSectionCoords>();
         private bool _isOpen, _openRequested;
         private Texture2D _texture;
@@ -27,8 +21,6 @@ namespace Parme.Editor.Ui.Elements.Editors
         private float _zoomFactor = 1f;
         private int _gridSize = 32;
         private bool _showGrid;
-        private bool _customZoom;
-        private int _selectedZoomIndex = 2;
 
         public void Open()
         {
@@ -258,39 +250,23 @@ namespace Parme.Editor.Ui.Elements.Editors
             ImGui.Text("Zoom:");
             ImGui.SameLine();
 
-            ImGui.SetNextItemWidth(100);
-            if (_customZoom)
+            ImGui.SetNextItemWidth(50);
+            var zoom = (int)(_zoomFactor * 100);
+            if (ImGui.InputInt("%##Zoom", ref zoom, 0) && zoom > 0)
             {
-                var zoom = (int)(_zoomFactor * 100);
-                if (ImGui.InputInt("%##Zoom", ref zoom, 25) && zoom > 0)
-                {
-                    _zoomFactor = (float) zoom / 100;
-                }
-            }
-            else
-            {
-                if (ImGui.Combo("##SelectableZoom", ref _selectedZoomIndex, _zoomLevelNames, _zoomLevelNames.Length))
-                {
-                    _zoomFactor = _zoomLevels[_selectedZoomIndex];
-                }
+                _zoomFactor = (float) zoom / 100;
             }
 
             ImGui.SameLine();
-
-            if (ImGui.Checkbox("Custom", ref _customZoom))
+            if (ImGui.Button("-##ZoomOut"))
             {
-                if (!_customZoom)
-                {
-                    // Since we are transitioning from a custom zoom level to a predefined one, we need to default
-                    // to the closest one
-                    _selectedZoomIndex = _zoomLevels
-                        .Select((zoom, index) => new {Index = index, Diff = Math.Abs(zoom - _zoomFactor)})
-                        .OrderBy(x => x.Diff)
-                        .Select(x => x.Index)
-                        .First();
-
-                    _zoomFactor = _zoomLevels[_selectedZoomIndex];
-                }
+                _zoomFactor /= 1.2f;
+            }
+            
+            ImGui.SameLine();
+            if (ImGui.Button("+##ZoomIn"))
+            {
+                _zoomFactor *= 1.2f;
             }
             
             ImGui.Text("Grid Size:");
@@ -314,9 +290,9 @@ namespace Parme.Editor.Ui.Elements.Editors
                 var y = (int) Math.Round((mousePosition.Y - screenStartPosition.Y) / scale);
 
                 var text = $"({x}, {y})";
-                var textWidth = ImGui.CalcTextSize(text);
+                var textWidth = ImGui.CalcTextSize(text) * 1.1f;
 
-                ImGui.SameLine(ImGui.GetWindowWidth() - textWidth.X - 5);
+                ImGui.SameLine(ImGui.GetWindowWidth() - textWidth.X);
                 ImGui.Text(text);
             }
         }
