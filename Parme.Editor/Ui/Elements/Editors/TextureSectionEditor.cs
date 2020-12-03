@@ -12,6 +12,12 @@ namespace Parme.Editor.Ui.Elements.Editors
     public class TextureSectionEditor : SettingsEditorBase
     {
         private const string PopupLabel = "Texture Sections";
+
+        private static readonly float[] _zoomLevels = {0.5f, 0.666f, 1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 12f, 16f, 32f};
+        private static readonly string[] _zoomLevelNames =
+        {
+            "50%", "66.6%", "100%", "200%", "300%", "400%", "500%", "600%", "700%", "800%", "1200%", "1600%", "3200%"
+        };
         
         private readonly List<TextureSectionCoords> _textureSections = new List<TextureSectionCoords>();
         private bool _isOpen, _openRequested;
@@ -21,6 +27,8 @@ namespace Parme.Editor.Ui.Elements.Editors
         private float _zoomFactor = 1f;
         private int _gridSize = 32;
         private bool _showGrid;
+        private bool _customZoom;
+        private int _selectedZoomIndex = 2;
 
         public void Open()
         {
@@ -251,17 +259,38 @@ namespace Parme.Editor.Ui.Elements.Editors
             ImGui.SameLine();
 
             ImGui.SetNextItemWidth(100);
-            var zoom = (int)(_zoomFactor * 100);
-            if (ImGui.InputInt("%##Zoom", ref zoom, 10) && zoom > 0)
+            if (_customZoom)
             {
-                _zoomFactor = (float) zoom / 100;
+                var zoom = (int)(_zoomFactor * 100);
+                if (ImGui.InputInt("%##Zoom", ref zoom, 25) && zoom > 0)
+                {
+                    _zoomFactor = (float) zoom / 100;
+                }
+            }
+            else
+            {
+                if (ImGui.Combo("##SelectableZoom", ref _selectedZoomIndex, _zoomLevelNames, _zoomLevelNames.Length))
+                {
+                    _zoomFactor = _zoomLevels[_selectedZoomIndex];
+                }
             }
 
             ImGui.SameLine();
 
-            if (ImGui.Button("Reset##ResetZoom"))
+            if (ImGui.Checkbox("Custom", ref _customZoom))
             {
-                _zoomFactor = 1;
+                if (!_customZoom)
+                {
+                    // Since we are transitioning from a custom zoom level to a predefined one, we need to default
+                    // to the closest one
+                    _selectedZoomIndex = _zoomLevels
+                        .Select((zoom, index) => new {Index = index, Diff = Math.Abs(zoom - _zoomFactor)})
+                        .OrderBy(x => x.Diff)
+                        .Select(x => x.Index)
+                        .First();
+
+                    _zoomFactor = _zoomLevels[_selectedZoomIndex];
+                }
             }
             
             ImGui.Text("Grid Size:");
