@@ -19,6 +19,7 @@ namespace Parme.Editor.Ui.Elements.Editors
         private IntPtr _imguiTextureId;
         private TextureSection _currentSection;
         private float _zoomFactor = 1f;
+        private float _previousZoomFactor = 1f;
         private int _gridSize = 32;
         private bool _showGrid;
 
@@ -199,9 +200,22 @@ namespace Parme.Editor.Ui.Elements.Editors
             var scaleWidth = (sectionWindowSize.X - yBuffer) / _texture.Width;
             var scale = Math.Min(scaleHeight, scaleWidth) * _zoomFactor;
             var screenStartPosition = ImGui.GetCursorScreenPos();
+            
+            var change = _zoomFactor / _previousZoomFactor;
+            
+            var scrollPercentX = ImGui.GetScrollX() / ImGui.GetScrollMaxX();
+            var scrollPercentY = ImGui.GetScrollY() / ImGui.GetScrollMaxY();
 
             ImGui.Image(_imguiTextureId, new Vector2(_texture.Width * scale, _texture.Height * scale));
             
+            if (Math.Abs(_zoomFactor - _previousZoomFactor) > 0.0001f)
+            {
+                ImGui.SetScrollX(ImGui.GetScrollMaxX() * scrollPercentX * change);
+                ImGui.SetScrollY(ImGui.GetScrollMaxY() * scrollPercentY * change);
+            }
+
+            _previousZoomFactor = _zoomFactor;
+
             var mouseHoveringImage = ImGui.IsItemHovered();
             var imageSize = ImGui.GetItemRectSize();
 
