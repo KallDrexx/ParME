@@ -1,4 +1,6 @@
-#  ParME (Particle Manipulation Engine)
+!["ParME logo"](./branding/parme-logo-main-256.png)
+
+# ParME (Particle Manipulation Engine)
 
 **This project is still under heavy early development**
 
@@ -10,10 +12,20 @@ Currently ParME contains:
 * Desktop WYSIWYG editor for designing emitters and particle behaviors
 * Tools for converting a Parme emission logic file into efficient C# code
 * Monogame rendering support
-* Advanced integration for the [FlatRedBall Engine]()
+* Advanced integration for the [FlatRedBall Engine](https://flatredball.com)
 
 [![Demonstration Video](https://i.imgur.com/0D3TIQA.png)](https://www.youtube.com/watch?v=PQO8sO-6BWU "Youtube Video")
 
 ## Documentation
 
 In depth documentation [can be found here](https://kalldrexx.github.io/ParME)
+
+## Branding
+
+Branding can be found in the branding folder. Usage guidelines:
+
+* Use the regular versions on light backgrounds
+* Use the reverse versions on dark backgrounds
+* Use the mark for branding where the full name is unimportant
+* Do not stretch, squeeze or recolor the logo
+* Avoid using the logo on colorful backgrounds, black or white offers the best readability

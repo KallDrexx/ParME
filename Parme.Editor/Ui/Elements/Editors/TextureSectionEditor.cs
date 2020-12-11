@@ -12,12 +12,16 @@ namespace Parme.Editor.Ui.Elements.Editors
     public class TextureSectionEditor : SettingsEditorBase
     {
         private const string PopupLabel = "Texture Sections";
-        
+
         private readonly List<TextureSectionCoords> _textureSections = new List<TextureSectionCoords>();
         private bool _isOpen, _openRequested;
         private Texture2D _texture;
         private IntPtr _imguiTextureId;
         private TextureSection _currentSection;
+        private float _zoomFactor = 1f;
+        private float _previousZoomFactor = 1f;
+        private int _gridSize = 32;
+        private bool _showGrid;
 
         public void Open()
         {
@@ -185,16 +189,126 @@ namespace Parme.Editor.Ui.Elements.Editors
 
         private void RenderImageSection(Vector2 popupSize)
         {
-            var sectionWindowSize = new Vector2(popupSize.X - 20, popupSize.Y - 325);
-            ImGui.BeginChild("fullImage", sectionWindowSize, true);
+            const int xBuffer = 20;
+            const int yBuffer = 55;
+            const int listAndControlHeight = 300;
 
-            var scaleHeight = (sectionWindowSize.Y - 20) / _texture.Height;
-            var scaleWidth = (sectionWindowSize.X - 20) / _texture.Width;
-            var scale = Math.Min(scaleHeight, scaleWidth);
+            var sectionWindowSize = new Vector2(popupSize.X - xBuffer, popupSize.Y - listAndControlHeight - yBuffer);
+            ImGui.BeginChild("fullImage", sectionWindowSize, true, ImGuiWindowFlags.HorizontalScrollbar);
+
+            var scaleHeight = (sectionWindowSize.Y - xBuffer) / _texture.Height;
+            var scaleWidth = (sectionWindowSize.X - yBuffer) / _texture.Width;
+            var scale = Math.Min(scaleHeight, scaleWidth) * _zoomFactor;
+            var screenStartPosition = ImGui.GetCursorScreenPos();
+            
+            var change = _zoomFactor / _previousZoomFactor;
+            
+            var scrollPercentX = ImGui.GetScrollX() / ImGui.GetScrollMaxX();
+            var scrollPercentY = ImGui.GetScrollY() / ImGui.GetScrollMaxY();
 
             ImGui.Image(_imguiTextureId, new Vector2(_texture.Width * scale, _texture.Height * scale));
+            
+            if (Math.Abs(_zoomFactor - _previousZoomFactor) > 0.0001f)
+            {
+                ImGui.SetScrollX(ImGui.GetScrollMaxX() * scrollPercentX * change);
+                ImGui.SetScrollY(ImGui.GetScrollMaxY() * scrollPercentY * change);
+            }
+
+            _previousZoomFactor = _zoomFactor;
+
+            var mouseHoveringImage = ImGui.IsItemHovered();
+            var imageSize = ImGui.GetItemRectSize();
+
+            var drawList = ImGui.GetWindowDrawList();
+            var guideLineColor = ImGui.GetColorU32(new Vector4(1, 1, 1, 1));
+
+            if (_showGrid)
+            {
+                for (var i = 0; i <= _texture.Width; i+= _gridSize)
+                {
+                    var x = i * scale + screenStartPosition.X;
+                    drawList.AddLine(
+                        new Vector2(x, screenStartPosition.Y),
+                        new Vector2(x, screenStartPosition.Y + imageSize.Y),
+                        guideLineColor,
+                        0.5f);
+                }
+
+                for (var i = 0; i <= _texture.Height; i+= _gridSize)
+                {
+                    var y = i * scale + screenStartPosition.Y;
+                    drawList.AddLine(
+                        new Vector2(screenStartPosition.X, y),
+                        new Vector2(screenStartPosition.X + imageSize.X, y), 
+                        guideLineColor,
+                        0.5f);
+                }
+            }
+
+            if (_currentSection != null)
+            {
+                var top = screenStartPosition.Y + Math.Min(_currentSection.Coords.TopY, _currentSection.Coords.BottomY) * scale;
+                var bottom = screenStartPosition.Y + Math.Max(_currentSection.Coords.TopY, _currentSection.Coords.BottomY) * scale;
+                var left = screenStartPosition.X + Math.Min(_currentSection.Coords.LeftX, _currentSection.Coords.RightX) * scale;
+                var right = screenStartPosition.X + Math.Max(_currentSection.Coords.LeftX, _currentSection.Coords.RightX) * scale;
+
+                if (right <= imageSize.X || bottom <= imageSize.Y)
+                {
+                    var color = ImGui.GetColorU32(new Vector4(1f, 1f, 0.4f, 1f));
+                    drawList.AddRect(new Vector2(left, top), new Vector2(right, bottom), color);
+                }
+            }
 
             ImGui.EndChild();
+
+            ImGui.Text("Zoom:");
+            ImGui.SameLine();
+
+            ImGui.SetNextItemWidth(50);
+            var zoom = (int)(_zoomFactor * 100);
+            if (ImGui.InputInt("%##Zoom", ref zoom, 0) && zoom > 0)
+            {
+                _zoomFactor = (float) zoom / 100;
+            }
+
+            ImGui.SameLine();
+            if (ImGui.Button("-##ZoomOut"))
+            {
+                _zoomFactor /= 1.2f;
+            }
+            
+            ImGui.SameLine();
+            if (ImGui.Button("+##ZoomIn"))
+            {
+                _zoomFactor *= 1.2f;
+            }
+            
+            ImGui.Text("Grid Size:");
+            
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth(200);
+            var gridSize = _gridSize;
+            if (ImGui.InputInt("##GridSize", ref gridSize) && gridSize > 0)
+            {
+                _gridSize = gridSize;
+            }
+
+            ImGui.SameLine();
+            ImGui.Checkbox("Show", ref _showGrid);
+
+            if (mouseHoveringImage)
+            {
+                // Show the user what pixel coordinates they have hovered
+                var mousePosition = ImGui.GetMousePos();
+                var x = (int) Math.Round((mousePosition.X - screenStartPosition.X) / scale);
+                var y = (int) Math.Round((mousePosition.Y - screenStartPosition.Y) / scale);
+
+                var text = $"({x}, {y})";
+                var textWidth = ImGui.CalcTextSize(text) * 1.1f;
+
+                ImGui.SameLine(ImGui.GetWindowWidth() - textWidth.X);
+                ImGui.Text(text);
+            }
         }
 
         private void AddNewSection(TextureSectionCoords? coords = null)

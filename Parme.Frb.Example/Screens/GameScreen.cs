@@ -1,6 +1,7 @@
 using System;
 using FlatRedBall;
 using FlatRedBall.Input;
+using FlatRedBall.Screens;
 using Microsoft.Xna.Framework.Input;
 using Parme.Frb.Example.Entities;
 
@@ -45,6 +46,11 @@ namespace Parme.Frb.Example.Screens
                 {
                     PauseThisScreen();
                 }
+            }
+
+            if (InputManager.Keyboard.KeyReleased(Keys.F12))
+            {
+                RestartScreen(true);
             }
         }
 

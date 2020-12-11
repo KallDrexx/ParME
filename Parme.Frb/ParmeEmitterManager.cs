@@ -63,6 +63,7 @@ namespace Parme.Frb
             _emitterToGroupMap.Remove(emitter);
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public ParmeEmitterGroup GetEmitterGroup(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
@@ -75,6 +76,18 @@ namespace Parme.Frb
             }
 
             return group;
+        }
+
+        // ReSharper disable once UnusedMember.Global
+        public void DestroyActiveEmitterGroups()
+        {
+            foreach (var emitterGroup in _emitterGroups.Values)
+            {
+                SpriteManager.RemoveDrawableBatch(emitterGroup);
+            }
+            
+            _emitterGroups.Clear();
+            _emitterToGroupMap.Clear();
         }
     }
 }

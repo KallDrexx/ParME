@@ -49,13 +49,13 @@ namespace Parme.Editor.Ui.Elements
                 }
 
                 var versionString = $"v{_applicationState.Version}";
-                var versionWidth = ImGui.CalcTextSize(versionString) * ImGui.GetIO().FontGlobalScale;
-                var versionStartPoint = ImGui.GetWindowWidth() - versionWidth.X;
+                var versionWidth = ImGui.CalcTextSize(versionString);
+                var versionStartPoint = ImGui.GetWindowWidth() - versionWidth.X - 25;
                 ImGui.SameLine(versionStartPoint);
                 ImGui.Text(versionString);
 
                 var zoomString = $"{(int)(_applicationState.Zoom * 100)}%%";
-                var zoomWidth = ImGui.CalcTextSize(zoomString) * ImGui.GetIO().FontGlobalScale;
+                var zoomWidth = ImGui.CalcTextSize(zoomString);
                 var zoomStartPoint = versionStartPoint - zoomWidth.X - 25;
                 ImGui.SameLine(zoomStartPoint);
                 ImGui.Text(zoomString);
