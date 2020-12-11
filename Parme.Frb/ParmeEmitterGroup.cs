@@ -93,6 +93,7 @@ namespace Parme.Frb
             }
             
             _frbEmitters.Clear();
+            _frbEmittersWaitingToBeKilled.Clear();
         }
 
         public ParmeFrbEmitter CreateEmitter(IEmitterLogic logic, PositionedObject parent = null)

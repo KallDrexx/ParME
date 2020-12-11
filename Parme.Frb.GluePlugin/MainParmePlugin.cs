@@ -9,6 +9,7 @@ using System.Windows;
 using FlatRedBall.Glue;
 using FlatRedBall.Glue.Elements;
 using FlatRedBall.Glue.Errors;
+using FlatRedBall.Glue.Parsing;
 using FlatRedBall.Glue.Plugins;
 using FlatRedBall.Glue.Plugins.ExportedImplementations;
 using FlatRedBall.Glue.Plugins.Interfaces;
@@ -57,6 +58,7 @@ namespace Parme.Frb.GluePlugin
 
             AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.FileAssetTypeInfo);
             AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.LogicAssetTypeInfo);
+            CodeWriter.CodeGenerators.Add(new ParmeScreenCodeGenerator());
         }
 
         private static string GenerateEmitterLogic(EmitterSettings settings, string className)

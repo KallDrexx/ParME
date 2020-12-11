@@ -10,13 +10,11 @@ namespace Parme.MonoGame
         private readonly List<MonoGameEmitter> _emitters = new List<MonoGameEmitter>();
         private readonly SpriteBatch _spriteBatch;
         private readonly BasicEffect _basicEffect;
-        private readonly GraphicsDevice _graphicsDevice;
 
         public MonoGameEmitterRenderGroup(GraphicsDevice graphicsDevice)
         {
             _spriteBatch = new SpriteBatch(graphicsDevice);
             _basicEffect = new BasicEffect(graphicsDevice);
-            _graphicsDevice = graphicsDevice;
         }
 
         public void AddEmitter(MonoGameEmitter emitter)
