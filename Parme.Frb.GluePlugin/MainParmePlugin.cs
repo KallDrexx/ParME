@@ -25,7 +25,9 @@ namespace Parme.Frb.GluePlugin
     public class MainParmePlugin : PluginBase
     {
         public const string Extension = "emlogic";
-        public const string ExtensionWithPeriod = "." + Extension;
+        private const string ExtensionWithPeriod = "." + Extension;
+
+        private readonly ParmeScreenCodeGenerator _parmeScreenCodeGenerator = new ParmeScreenCodeGenerator();
         
         private readonly AssetTypeInfoManager _assetTypeInfoManager = new AssetTypeInfoManager();
         
@@ -58,7 +60,7 @@ namespace Parme.Frb.GluePlugin
 
             AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.FileAssetTypeInfo);
             AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.LogicAssetTypeInfo);
-            CodeWriter.CodeGenerators.Add(new ParmeScreenCodeGenerator());
+            CodeWriter.CodeGenerators.Add(_parmeScreenCodeGenerator);
         }
 
         private static string GenerateEmitterLogic(EmitterSettings settings, string className)
@@ -200,6 +202,7 @@ namespace Parme.Frb.GluePlugin
         private void GluxUnloaded()
         {
             _assetTypeInfoManager.ClearEmitterLogicTypes();
+            CodeWriter.CodeGenerators.Remove(_parmeScreenCodeGenerator);
         }
 
         private void GluxLoaded()
