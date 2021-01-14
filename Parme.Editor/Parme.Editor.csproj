@@ -13,7 +13,7 @@
 
     <ItemGroup>
       <PackageReference Include="ImGuiHandler.MonoGame" Version="1.1.1" />
-      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.7.0" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.8.0" />
       <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     </ItemGroup>
 
