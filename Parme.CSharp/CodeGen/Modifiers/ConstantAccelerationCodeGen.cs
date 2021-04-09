@@ -3,11 +3,11 @@ using Parme.Core.Modifiers;
 
 namespace Parme.CSharp.CodeGen.Modifiers
 {
-    internal class ConstantAccelerationCodeGen : IGenerateCode
+    internal class ConstantAccelerationCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(ConstantAccelerationModifier);
+        public override Type ParmeObjectType => typeof(ConstantAccelerationModifier);
 
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var modifier = (ConstantAccelerationModifier) obj;
             
@@ -17,20 +17,10 @@ namespace Parme.CSharp.CodeGen.Modifiers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"particle.Velocity += timeSinceLastFrame * new Vector2(ConstantAccelerationX, ConstantAccelerationY);
 ";
-        }
-
-        public FormattableString GenerateCapacityEstimationCode(object obj)
-        {
-            throw new NotImplementedException();
         }
     }
 }

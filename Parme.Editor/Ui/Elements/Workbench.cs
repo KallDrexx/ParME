@@ -8,6 +8,7 @@ using ImGuiNET;
 using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
+using Parme.Core.PositionModifier;
 using Parme.Core.Triggers;
 
 namespace Parme.Editor.Ui.Elements
@@ -167,6 +168,12 @@ namespace Parme.Editor.Ui.Elements
                 
                 Set(value);
             }
+        }
+
+        public IParticlePositionModifier PositionModifier
+        {
+            get => Get<IParticlePositionModifier>();
+            set => Set(value);
         }
 
         public ObservableCollection<IParticleModifier> Modifiers { get; }
@@ -386,7 +393,7 @@ namespace Parme.Editor.Ui.Elements
             ImGui.NextColumn();
             Selectable(EditorObjectNameAndValue(RotationalOrientationInitializer),
                 new EditorItem(EditorItemType.Initializer, InitializerType.RotationalOrientation));
-            
+
             ImGui.Columns(1);
             ImGui.EndChild();
         }
@@ -396,6 +403,8 @@ namespace Parme.Editor.Ui.Elements
             ImGui.BeginChild("Modifiers", new Vector2((Size.X / 2) - 30, Size.Y - ChildWindowHeightSubtractionFactor), true);
 
             Selectable("<Add Modifier>", new EditorItem(EditorItemType.NewModifier, null));
+            Selectable($"Position Modifier: {EditorObjectNameAndValue(PositionModifier)}", new EditorItem(PositionModifier));
+            
             foreach (var modifier in Modifiers.Where(x => x != null))
             {
                 ImGui.PushID($"remove-{modifier.GetType()}");

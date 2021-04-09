@@ -4,6 +4,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
+using Parme.Core.PositionModifier;
 using Parme.Core.Serialization;
 using Parme.Core.Triggers;
 
@@ -17,6 +18,7 @@ namespace Parme.Core
         public IParticleTrigger Trigger { get; set; }
         public IReadOnlyList<IParticleInitializer> Initializers { get; set; } = Array.Empty<IParticleInitializer>();
         public IReadOnlyList<IParticleModifier> Modifiers { get; set; } = Array.Empty<IParticleModifier>();
+        public IParticlePositionModifier PositionModifier { get; set; }
 
         public static EmitterSettings FromJson(string json)
         {
@@ -40,26 +42,18 @@ namespace Parme.Core
 
         private static ParticleJsonConverter GetParticleJsonConverter()
         {
-            var triggerTypes = typeof(IParticleTrigger).Assembly
-                .GetTypes()
-                .Where(x => !x.IsAbstract)
-                .Where(x => !x.IsInterface)
-                .Where(x => typeof(IParticleTrigger).IsAssignableFrom(x));
-
-            var initializerTypes = typeof(IParticleInitializer).Assembly
-                .GetTypes()
-                .Where(x => !x.IsAbstract)
-                .Where(x => !x.IsInterface)
-                .Where(x => typeof(IParticleInitializer).IsAssignableFrom(x));
-            
-            var modifierTypes = typeof(IParticleModifier).Assembly
-                .GetTypes()
-                .Where(x => !x.IsAbstract)
-                .Where(x => !x.IsInterface)
-                .Where(x => typeof(IParticleModifier).IsAssignableFrom(x));
+            var allParticleTypes =
+                typeof(IParticleTrigger).Assembly
+                    .GetTypes()
+                    .Where(x => !x.IsAbstract)
+                    .Where(x => !x.IsInterface)
+                    .Where(x => typeof(IParticleTrigger).IsAssignableFrom(x) ||
+                                typeof(IParticleInitializer).IsAssignableFrom(x) ||
+                                typeof(IParticleModifier).IsAssignableFrom(x) ||
+                                typeof(IParticlePositionModifier).IsAssignableFrom(x));
             
             var typeNameMap = new SerializedTypeNameMap();
-            foreach (var type in triggerTypes.Union(initializerTypes).Union(modifierTypes))
+            foreach (var type in allParticleTypes)
             {
                 typeNameMap.AddType(type);
             }

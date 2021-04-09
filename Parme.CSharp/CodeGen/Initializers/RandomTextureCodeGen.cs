@@ -3,30 +3,15 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class RandomTextureCodeGen : IGenerateCode
+    public class RandomTextureCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(RandomTextureInitializer);
-        
-        public FormattableString GenerateProperties(object obj)
-        {
-            return $"";
-        }
+        public override Type ParmeObjectType => typeof(RandomTextureInitializer);
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
                         particle.TextureSectionIndex = (byte) _random.Next(0, TextureSections.Length);
 ";
-        }
-
-        public FormattableString GenerateCapacityEstimationCode(object obj)
-        {
-            return $"";
         }
     }
 }

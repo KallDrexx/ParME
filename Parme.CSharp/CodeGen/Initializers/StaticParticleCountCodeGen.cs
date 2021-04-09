@@ -3,11 +3,11 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    internal class StaticParticleCountCodeGen : IGenerateCode
+    internal class StaticParticleCountCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(StaticParticleCountInitializer);
+        public override Type ParmeObjectType => typeof(StaticParticleCountInitializer);
 
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var initializer = (StaticParticleCountInitializer) obj;
             
@@ -16,18 +16,13 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"newParticleCount = StaticParticleSpawnCount;
 ";
         }
 
-        public FormattableString GenerateCapacityEstimationCode(object obj)
+        public override FormattableString GenerateCapacityEstimationCode(object obj)
         {
             return $"particlesPerTrigger = StaticParticleSpawnCount;";
         }

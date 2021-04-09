@@ -3,11 +3,11 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    internal class StaticPositionCodeGen : IGenerateCode
+    internal class StaticPositionCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(StaticPositionInitializer);
+        public override Type ParmeObjectType => typeof(StaticPositionInitializer);
 
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var initializer = (StaticPositionInitializer) obj;
             
@@ -17,19 +17,14 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
                         particle.Position = new Vector2(StaticPositionXOffset, StaticPositionYOffset);
 ";
         }
 
-        public FormattableString GenerateCapacityEstimationCode(object obj)
+        public override FormattableString GenerateCapacityEstimationCode(object obj)
         {
             return $"";
         }

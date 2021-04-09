@@ -44,6 +44,7 @@ namespace Parme.Editor
             _commands.Add(new UpdateTextureFileNameCommand(settings.TextureFileName));
             _commands.Add(new UpdateTextureSectionsCommand(settings.TextureSections));
             _commands.Add(new UpdateTriggerCommand(settings.Trigger));
+            _commands.Add(new UpdatePositionModifierCommand(settings.PositionModifier));
 
             foreach (var initializer in settings.Initializers ?? Array.Empty<IParticleInitializer>())
             {

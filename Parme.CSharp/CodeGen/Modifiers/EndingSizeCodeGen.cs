@@ -3,11 +3,11 @@ using Parme.Core.Modifiers;
 
 namespace Parme.CSharp.CodeGen.Modifiers
 {
-    public class EndingSizeCodeGen : IGenerateCode
+    public class EndingSizeCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(EndingSizeModifier);
+        public override Type ParmeObjectType => typeof(EndingSizeModifier);
         
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var modifier = (EndingSizeModifier) obj;
 
@@ -17,12 +17,7 @@ namespace Parme.CSharp.CodeGen.Modifiers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
                         var width = (((particle.InitialSize.X - EndingSizeWidth) / MaxParticleLifeTime) * timeSinceLastFrame);
@@ -30,11 +25,6 @@ namespace Parme.CSharp.CodeGen.Modifiers
                         particle.Size.X -= width;
                         particle.Size.Y -= height;
 ";
-        }
-
-        public FormattableString GenerateCapacityEstimationCode(object obj)
-        {
-            throw new NotImplementedException();
         }
     }
 }

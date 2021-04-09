@@ -3,23 +3,23 @@ using Parme.Core.Triggers;
 
 namespace Parme.CSharp.CodeGen.Triggers
 {
-    public class DistanceBasedTriggerCodeGen : IGenerateCode
+    public class DistanceBasedTriggerCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(DistanceBasedTrigger);
+        public override Type ParmeObjectType => typeof(DistanceBasedTrigger);
         
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var trigger = (DistanceBasedTrigger) obj;
 
             return $@"public float DistanceBasedTriggerUnitsPerEmission {{ get; set; }} = {trigger.UnitsPerEmission}f;";
         }
 
-        public FormattableString GenerateFields(object obj)
+        public override FormattableString GenerateFields(object obj)
         {
             return $@"private Vector2 _lastEmittedPosition;";
         }
 
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
             shouldCreateNewParticle = false;
@@ -32,7 +32,7 @@ namespace Parme.CSharp.CodeGen.Triggers
 ";
         }
 
-        public FormattableString GenerateCapacityEstimationCode(object obj)
+        public override FormattableString GenerateCapacityEstimationCode(object obj)
         {
             // Impossible to predict, so just assume it will max at 3
             return $"triggersPerSecond = 3;";

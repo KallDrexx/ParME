@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
+using Parme.Core.PositionModifier;
 using Parme.Core.Triggers;
 using Shouldly;
 using Xunit;
@@ -22,7 +23,14 @@ namespace Parme.Core.Tests
                 Trigger = trigger,
                 Initializers = new []{initializer},
                 Modifiers = new[]{modifier},
-                MaxParticleLifeTime = 5.5f
+                MaxParticleLifeTime = 5.5f,
+                PositionModifier = new AltitudeBouncePositionModifier
+                {
+                    MinBounceAcceleration = 190,
+                    MaxBounceAcceleration = 300,
+                    Elasticity = 0.9f,
+                    Gravity = -200,
+                }
             };
 
             var json = emitter.ToJson();
@@ -48,6 +56,13 @@ namespace Parme.Core.Tests
             deserializedEmitter.Modifiers[0].ShouldBeOfType<ConstantSizeModifier>();
             ((ConstantSizeModifier) deserializedEmitter.Modifiers[0]).WidthChangePerSecond.ShouldBe(10);
             ((ConstantSizeModifier) deserializedEmitter.Modifiers[0]).HeightChangePerSecond.ShouldBe(11);
+            
+            deserializedEmitter.PositionModifier.ShouldNotBeNull();
+            deserializedEmitter.PositionModifier.ShouldBeOfType<AltitudeBouncePositionModifier>();
+            ((AltitudeBouncePositionModifier) deserializedEmitter.PositionModifier).Gravity.ShouldBe(-200);
+            ((AltitudeBouncePositionModifier) deserializedEmitter.PositionModifier).MinBounceAcceleration.ShouldBe(190);
+            ((AltitudeBouncePositionModifier) deserializedEmitter.PositionModifier).MaxBounceAcceleration.ShouldBe(300);
+            ((AltitudeBouncePositionModifier) deserializedEmitter.PositionModifier).Elasticity.ShouldBe(0.9f);
         }
 
         [Fact]
@@ -72,16 +87,19 @@ namespace Parme.Core.Tests
                 .Where(x => !x.IsAbstract)
                 .Where(x => !x.IsInterface)
                 .Where(x => typeof(IParticleModifier).IsAssignableFrom(x)).ToHashSet();
+            
 
             var trigger = (IParticleTrigger) Activator.CreateInstance(triggerTypes.First());
             var initializers = initializerTypes.Select(x => (IParticleInitializer) Activator.CreateInstance(x)).ToArray();
             var modifiers = modifierTypes.Select(x => (IParticleModifier) Activator.CreateInstance(x)).ToArray();
+            var positionModifier = new AltitudeBouncePositionModifier();
             
             var emitter = new EmitterSettings{
                 Trigger = trigger, 
                 Initializers = initializers, 
-                Modifiers = modifiers, 
-                MaxParticleLifeTime = 5
+                Modifiers = modifiers,
+                MaxParticleLifeTime = 5,
+                PositionModifier = positionModifier,
             };
             
             var json = emitter.ToJson();
@@ -93,6 +111,8 @@ namespace Parme.Core.Tests
             deserializedEmitter.Initializers.Count.ShouldBe(initializers.Length);
             deserializedEmitter.Modifiers.ShouldNotBeNull();
             deserializedEmitter.Modifiers.Count.ShouldBe(modifiers.Length);
+            deserializedEmitter.PositionModifier.ShouldNotBeNull();
+            deserializedEmitter.PositionModifier.ShouldBeOfType<AltitudeBouncePositionModifier>();
 
             foreach (var deserializedInitializer in deserializedEmitter.Initializers)
             {

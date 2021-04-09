@@ -3,11 +3,11 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    internal class RadialVelocityInitializerCodeGen : IGenerateCode
+    internal class RadialVelocityInitializerCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(RadialVelocityInitializer);
+        public override Type ParmeObjectType => typeof(RadialVelocityInitializer);
 
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var initializer = (RadialVelocityInitializer) obj;
             
@@ -19,12 +19,7 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $@"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
                         var radians = RadialVelocityMaxRadians - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
@@ -35,11 +30,6 @@ namespace Parme.CSharp.CodeGen.Initializers
                         var y = magnitude * Math.Sin(radians);
                         particle.Velocity = new Vector2((float) x, (float) y);
 ";
-        }
-
-        public FormattableString GenerateCapacityEstimationCode(object obj)
-        {
-            return $"";
         }
     }
 }

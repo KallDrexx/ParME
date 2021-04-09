@@ -3,21 +3,11 @@ using Parme.Core.Triggers;
 
 namespace Parme.CSharp.CodeGen.Triggers
 {
-    internal class OneShotTriggerCodeGen : IGenerateCode
+    internal class OneShotTriggerCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(OneShotTrigger);
+        public override Type ParmeObjectType => typeof(OneShotTrigger);
 
-        public FormattableString GenerateProperties(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"if (parent.IsEmittingNewParticles)
                 {{
@@ -26,7 +16,7 @@ namespace Parme.CSharp.CodeGen.Triggers
                 }}";
         }
 
-        public FormattableString GenerateCapacityEstimationCode(object obj)
+        public override FormattableString GenerateCapacityEstimationCode(object obj)
         {
             return $"triggersPerSecond = 1 / MaxParticleLifeTime;";
         }

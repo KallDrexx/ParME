@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.Scripting;
 using Parme.Core;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
+using Parme.Core.PositionModifier;
 using Parme.Core.Triggers;
 using Parme.CSharp.CodeGen;
 using Shouldly;
@@ -50,7 +51,8 @@ namespace Parme.CSharp.Tests.CodeGen
                 Trigger = allTriggers.First(),
                 Initializers = allInitializers,
                 Modifiers = allModifiers,
-                MaxParticleLifeTime = 1f
+                MaxParticleLifeTime = 1f,
+                PositionModifier = new AltitudeBouncePositionModifier(),
             };
             
             var code = EmitterLogicClassGenerator.Generate(settings, "ParmeTest", "ParmeClass", true);
@@ -134,7 +136,14 @@ namespace Parme.CSharp.Tests.CodeGen
                         new DragModifier {DragFactor = 1.2f},
                         new ConstantAccelerationModifier {XAcceleration = 1.1f, YAcceleration = 1.2f},
                         new EndingColorModifier {Alpha = 0.76f, Blue = 200, Green = 199, Red = 198},
-                    }
+                    },
+                    PositionModifier = new AltitudeBouncePositionModifier
+                    {
+                        Gravity = 5000,
+                        MinBounceAcceleration = 1234,
+                        MaxBounceAcceleration = 35353,
+                        Elasticity = 0.9f,
+                    },
                 };
 
                 var code = EmitterLogicClassGenerator.Generate(emitter, "ParmeTest", "ParmeClass", true);

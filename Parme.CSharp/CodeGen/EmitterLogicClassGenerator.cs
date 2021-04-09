@@ -10,13 +10,13 @@ namespace Parme.CSharp.CodeGen
 {
     public static class EmitterLogicClassGenerator
     {
-        private static readonly IReadOnlyDictionary<Type, IGenerateCode> CodeGenerators =
+        private static readonly IReadOnlyDictionary<Type, ParticleCodeGenerator> CodeGenerators =
             typeof(EmitterLogicClassGenerator).Assembly
                 .GetTypes()
                 .Where(x => !x.IsAbstract)
                 .Where(x => !x.IsInterface)
-                .Where(x => typeof(IGenerateCode).IsAssignableFrom(x))
-                .Select(x => (IGenerateCode) Activator.CreateInstance(x))
+                .Where(x => typeof(ParticleCodeGenerator).IsAssignableFrom(x))
+                .Select(x => (ParticleCodeGenerator) Activator.CreateInstance(x))
                 .ToDictionary(x => x.ParmeObjectType, x => x);
         
         private const string Template = @"
@@ -62,7 +62,9 @@ using Parme.CSharp;
                 // modifiers
                 {5}
                 
-                particle.Position += particle.Velocity * timeSinceLastFrame;
+                // position modifier
+                {13}
+
                 particle.RotationInRadians += particle.RotationalVelocityInRadians * timeSinceLastFrame;
             }}
             
@@ -87,6 +89,7 @@ using Parme.CSharp;
                         TimeAlive = 0,
                         RotationInRadians = 0,
                         Position = Vector2.Zero,
+                        ReferencePosition = Vector2.Zero,
                         RotationalVelocityInRadians = 0f,
                         CurrentRed = 255,
                         CurrentGreen = 255,
@@ -114,6 +117,7 @@ using Parme.CSharp;
 
                     // Adjust the particle's position by the emitter's location
                     particle.Position += emitterCoordinates;
+                    particle.ReferencePosition = particle.Position;
                     
                     particleBuffer.Add(particle);            
                 }}
@@ -175,8 +179,8 @@ using Parme.CSharp;
             var particleCountCode = GetParticleCountCode(settings);
             var textureSectionCode = GetTextureCoordinateMapCode(settings);
             var estimationCode = GetEstimationCode(settings);
-
             var triggerGenerator = GetCodeGenerator(settings.Trigger?.GetType());
+            var positionModifier = GetPositionModifierCode(settings);
             
             return string.Format(Template,
                 generateScriptCode ? string.Empty : $"namespace {namespaceName}{Environment.NewLine}{{{Environment.NewLine}",
@@ -193,7 +197,8 @@ using Parme.CSharp;
                     : "}",
                 $"@\"{settings.TextureFileName}\"",
                 textureSectionCode,
-                estimationCode
+                estimationCode,
+                positionModifier
             );
         }
 
@@ -217,6 +222,12 @@ using Parme.CSharp;
             {
                 var codeGenerator = GetCodeGenerator(modifier.GetType());
                 fieldDefinitions.Append(ToInvariant(codeGenerator.GenerateFields(modifier)));
+            }
+
+            if (settings.PositionModifier != null)
+            {
+                var codeGenerator = GetCodeGenerator(settings.PositionModifier.GetType());
+                fieldDefinitions.Append(ToInvariant(codeGenerator.GenerateFields(settings.PositionModifier)));
             }
 
             return fieldDefinitions.ToString();
@@ -243,6 +254,12 @@ using Parme.CSharp;
                 var codeGenerator = GetCodeGenerator(modifier.GetType());
                 properties.Append(ToInvariant(codeGenerator.GenerateProperties(modifier)));
             }
+            
+            if (settings.PositionModifier != null)
+            {
+                var codeGenerator = GetCodeGenerator(settings.PositionModifier.GetType());
+                properties.Append(ToInvariant(codeGenerator.GenerateProperties(settings.PositionModifier)));
+            }
 
             return properties.ToString();
         }
@@ -259,6 +276,16 @@ using Parme.CSharp;
                 modifierCode.AppendLine("                {");
                 modifierCode.Append("                        ");
                 modifierCode.Append(ToInvariant(codeGenerator.GenerateExecutionCode(modifier)));
+                modifierCode.AppendLine("                }");
+            }
+            
+            if (settings.PositionModifier != null)
+            {
+                var codeGenerator = GetCodeGenerator(settings.PositionModifier.GetType());
+                
+                modifierCode.AppendLine("                {");
+                modifierCode.Append("                        ");
+                modifierCode.Append(ToInvariant(codeGenerator.GenerateExecutionCode(settings.PositionModifier)));
                 modifierCode.AppendLine("                }");
             }
 
@@ -356,7 +383,20 @@ using Parme.CSharp;
             return code.ToString();
         }
 
-        private static IGenerateCode GetCodeGenerator(Type type)
+        private static string GetPositionModifierCode(EmitterSettings settings)
+        {
+            if (settings.PositionModifier == null)
+            {
+                return "particle.Position += particle.Velocity * timeSinceLastFrame;";
+            }
+
+            var codeGenerator = GetCodeGenerator(settings.PositionModifier.GetType());
+            var code = codeGenerator.GeneratePositionExecutionCode(settings.PositionModifier);
+
+            return ToInvariant(code);
+        }
+
+        private static ParticleCodeGenerator GetCodeGenerator(Type type)
         {
             if (type == null)
             {

@@ -13,6 +13,7 @@ using Parme.Editor.Ui.Elements.Editors.Initializers.RotationalVelocity;
 using Parme.Editor.Ui.Elements.Editors.Initializers.Size;
 using Parme.Editor.Ui.Elements.Editors.Initializers.TextureSectionIndex;
 using Parme.Editor.Ui.Elements.Editors.Initializers.Velocity;
+using Parme.Editor.Ui.Elements.Editors.PositionModifiers;
 using Parme.Editor.Ui.Elements.Editors.Triggers;
 
 namespace Parme.Editor.Ui
@@ -32,6 +33,7 @@ namespace Parme.Editor.Ui
                 EditorItemType.NewModifier => new AddModifierEditor(),
                 EditorItemType.TextureFileName => new TextureFileEditor(),
                 EditorItemType.TextureSection => new TextureSectionDisplayEditor(),
+                EditorItemType.PositionModifier => new PositionModifierEditor(),
                 _ => null
             };
         }

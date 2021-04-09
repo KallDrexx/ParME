@@ -3,11 +3,11 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class StaticRotationalVelocityCodeGen : IGenerateCode
+    public class StaticRotationalVelocityCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(StaticRotationalVelocityInitializer);
+        public override Type ParmeObjectType => typeof(StaticRotationalVelocityInitializer);
         
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var initializer = (StaticRotationalVelocityInitializer) obj;
 
@@ -16,21 +16,11 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
                         particle.RotationalVelocityInRadians = (float) (RotationSpeedInDegreesPerSecond * Math.PI / 180f);
 ";
-        }
-
-        public FormattableString GenerateCapacityEstimationCode(object obj)
-        {
-            return $"";
         }
     }
 }

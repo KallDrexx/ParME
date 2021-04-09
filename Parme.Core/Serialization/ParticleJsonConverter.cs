@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Parme.Core.Initializers;
 using Parme.Core.Modifiers;
+using Parme.Core.PositionModifier;
 using Parme.Core.Triggers;
 
 namespace Parme.Core.Serialization
@@ -24,9 +25,11 @@ namespace Parme.Core.Serialization
             return objectType == typeof(IParticleTrigger) ||
                    objectType == typeof(IParticleInitializer) ||
                    objectType == typeof(IParticleModifier) ||
+                   objectType == typeof(IParticlePositionModifier) ||
                    typeof(IParticleTrigger).IsAssignableFrom(objectType) ||
                    typeof(IParticleInitializer).IsAssignableFrom(objectType) ||
-                   typeof(IParticleModifier).IsAssignableFrom(objectType);
+                   typeof(IParticleModifier).IsAssignableFrom(objectType) ||
+                   typeof(IParticlePositionModifier).IsAssignableFrom(objectType);
         }
         
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -45,6 +48,11 @@ namespace Parme.Core.Serialization
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
+            if (reader.TokenType == JsonToken.Null)
+            {
+                return null;
+            }
+            
             var jObject = JObject.Load(reader);
             if (jObject[TypeFieldName] == null)
             {

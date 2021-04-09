@@ -3,11 +3,11 @@ using Parme.Core.Modifiers;
 
 namespace Parme.CSharp.CodeGen.Modifiers
 {
-    public class EndingColorCodeGen : IGenerateCode
+    public class EndingColorCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(EndingColorModifier);
+        public override Type ParmeObjectType => typeof(EndingColorModifier);
         
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var modifier = (EndingColorModifier) obj;
             
@@ -19,23 +19,13 @@ namespace Parme.CSharp.CodeGen.Modifiers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"particle.CurrentRed -= (((particle.InitialRed - EndingColorRed) / MaxParticleLifeTime) * timeSinceLastFrame);
                         particle.CurrentGreen -= (((particle.InitialGreen - EndingColorGreen) / MaxParticleLifeTime) * timeSinceLastFrame);
                         particle.CurrentBlue -= (((particle.InitialBlue - EndingColorBlue) / MaxParticleLifeTime) * timeSinceLastFrame);
                         particle.CurrentAlpha -= (((particle.InitialAlpha - EndingColorAlpha) / MaxParticleLifeTime) * timeSinceLastFrame);
 ";
-        }
-
-        public FormattableString GenerateCapacityEstimationCode(object obj)
-        {
-            throw new NotImplementedException();
         }
     }
 }

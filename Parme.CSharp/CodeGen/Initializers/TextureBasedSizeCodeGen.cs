@@ -3,11 +3,11 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    public class TextureBasedSizeCodeGen : IGenerateCode
+    public class TextureBasedSizeCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(TextureBasedSizeInitializer);
+        public override Type ParmeObjectType => typeof(TextureBasedSizeInitializer);
         
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var initializer = (TextureBasedSizeInitializer) obj;
             
@@ -16,12 +16,7 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"if (TextureSections.Length > 0)
                         {{
@@ -34,11 +29,6 @@ namespace Parme.CSharp.CodeGen.Initializers
                             particle.Size = new Vector2(width, height);
                         }}
 ";
-        }
-
-        public FormattableString GenerateCapacityEstimationCode(object obj)
-        {
-            return $"";
         }
     }
 }

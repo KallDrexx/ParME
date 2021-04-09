@@ -3,11 +3,11 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    internal class RandomParticleCountCodeGen : IGenerateCode
+    internal class RandomParticleCountCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(RandomParticleCountInitializer);
+        public override Type ParmeObjectType => typeof(RandomParticleCountInitializer);
 
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var initializer = (RandomParticleCountInitializer) obj;
 
@@ -22,18 +22,13 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"newParticleCount = _random.Next(RandomParticleCountMinToSpawn, RandomParticleCountMaxToSpawn + 1);
 ";
         }
 
-        public FormattableString GenerateCapacityEstimationCode(object obj)
+        public override FormattableString GenerateCapacityEstimationCode(object obj)
         {
             return $@"var difference = RandomParticleCountMaxToSpawn - RandomParticleCountMinToSpawn;
                 var twoThirds = difference * 0.65f;

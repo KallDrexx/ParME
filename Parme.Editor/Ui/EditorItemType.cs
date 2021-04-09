@@ -10,5 +10,6 @@
         Initializer,
         ExistingModifier,
         NewModifier,
+        PositionModifier,
     }
 }

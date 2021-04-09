@@ -126,6 +126,7 @@ namespace Parme.Editor.Ui
             _workbench.ParticleLifeTime = settings.MaxParticleLifeTime;
             _workbench.TextureFilename = settings.TextureFileName;
             _workbench.Trigger = settings.Trigger;
+            _workbench.PositionModifier = settings.PositionModifier;
 
             _workbench.TextureSections.Clear();
             foreach (var textureSection in settings.TextureSections ?? Array.Empty<TextureSectionCoords>())

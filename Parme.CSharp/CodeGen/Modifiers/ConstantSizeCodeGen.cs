@@ -3,11 +3,11 @@ using Parme.Core.Modifiers;
 
 namespace Parme.CSharp.CodeGen.Modifiers
 {
-    internal class ConstantSizeCodeGen : IGenerateCode
+    internal class ConstantSizeCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(ConstantSizeModifier);
+        public override Type ParmeObjectType => typeof(ConstantSizeModifier);
 
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var modifier = (ConstantSizeModifier) obj;
             
@@ -17,20 +17,10 @@ namespace Parme.CSharp.CodeGen.Modifiers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"particle.Size += timeSinceLastFrame * new Vector2(ConstantSizeWidthChangePerSecond, ConstantSizeHeightChangePerSecond);
 ";
-        }
-
-        public FormattableString GenerateCapacityEstimationCode(object obj)
-        {
-            throw new NotImplementedException();
         }
     }
 }

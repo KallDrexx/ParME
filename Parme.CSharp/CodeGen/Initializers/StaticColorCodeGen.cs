@@ -3,11 +3,11 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    internal class StaticColorCodeGen : IGenerateCode
+    internal class StaticColorCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(StaticColorInitializer);
+        public override Type ParmeObjectType => typeof(StaticColorInitializer);
 
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var initializer = (StaticColorInitializer) obj;
             
@@ -19,12 +19,7 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
                         particle.CurrentRed = (float) StaticColorStartingRed;
@@ -32,11 +27,6 @@ namespace Parme.CSharp.CodeGen.Initializers
                         particle.CurrentBlue = (float) StaticColorStartingBlue;
                         particle.CurrentAlpha = (float) StaticColorStartingAlpha;
             ";
-        }
-
-        public FormattableString GenerateCapacityEstimationCode(object obj)
-        {
-            return $"";
         }
     }
 }

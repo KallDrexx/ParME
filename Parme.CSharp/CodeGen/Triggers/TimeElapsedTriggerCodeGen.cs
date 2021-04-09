@@ -3,11 +3,11 @@ using Parme.Core.Triggers;
 
 namespace Parme.CSharp.CodeGen.Triggers
 {
-    internal class TimeElapsedTriggerCodeGen : IGenerateCode
+    internal class TimeElapsedTriggerCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(TimeElapsedTrigger);
+        public override Type ParmeObjectType => typeof(TimeElapsedTrigger);
 
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var trigger = (TimeElapsedTrigger) obj;
             
@@ -15,12 +15,12 @@ namespace Parme.CSharp.CodeGen.Triggers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
+        public override FormattableString GenerateFields(object obj)
         {
             return $@"private float _timeSinceLastTrigger;";
         }
 
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
             shouldCreateNewParticle = false;
@@ -33,7 +33,7 @@ namespace Parme.CSharp.CodeGen.Triggers
 ";
         }
 
-        public FormattableString GenerateCapacityEstimationCode(object obj)
+        public override FormattableString GenerateCapacityEstimationCode(object obj)
         {
             return $"triggersPerSecond = 1 / TimeElapsedTriggerFrequency;";
         }

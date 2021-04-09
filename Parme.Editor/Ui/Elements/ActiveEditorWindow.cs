@@ -94,6 +94,10 @@ namespace Parme.Editor.Ui.Elements
                     case EditorItemType.TextureFileName:
                         ImGui.Text("Texture");
                         break;
+                    
+                    case EditorItemType.PositionModifier:
+                        ImGui.Text("Position Modifier");
+                        break;
 
                     default:
                         ImGui.Text(ItemBeingEdited.Value.ToString());

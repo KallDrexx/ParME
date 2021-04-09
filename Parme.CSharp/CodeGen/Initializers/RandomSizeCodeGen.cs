@@ -4,11 +4,11 @@ using Parme.Core.Initializers;
 
 namespace Parme.CSharp.CodeGen.Initializers
 {
-    internal class RandomSizeCodeGen : IGenerateCode
+    internal class RandomSizeCodeGeneratorGen : ParticleCodeGenerator
     {
-        public Type ParmeObjectType => typeof(RandomSizeInitializer);
+        public override Type ParmeObjectType => typeof(RandomSizeInitializer);
 
-        public FormattableString GenerateProperties(object obj)
+        public override FormattableString GenerateProperties(object obj)
         {
             var initializer = (RandomSizeInitializer) obj;
 
@@ -28,12 +28,7 @@ namespace Parme.CSharp.CodeGen.Initializers
 ";
         }
 
-        public FormattableString GenerateFields(object obj)
-        {
-            return $"";
-        }
-
-        public FormattableString GenerateExecutionCode(object obj)
+        public override FormattableString GenerateExecutionCode(object obj)
         {
             var initializer = (RandomSizeInitializer) obj;
 
@@ -77,11 +72,6 @@ namespace Parme.CSharp.CodeGen.Initializers
                         var y = RandomSizeMaxHeight - _random.NextDouble() * (RandomSizeMaxHeight - RandomSizeMinHeight);
                         particle.Size = new Vector2((float) x, (float) y);
 ";
-        }
-
-        public FormattableString GenerateCapacityEstimationCode(object obj)
-        {
-            return $"";
         }
     }
 }
