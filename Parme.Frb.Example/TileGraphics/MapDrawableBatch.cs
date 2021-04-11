@@ -118,6 +118,12 @@ namespace FlatRedBall.TileGraphics
             set;
         }
 
+        /// <summary>
+        /// Contains the list of tile indexes for each name, enabling quick lookup of tile
+        /// indexes by name. The indexes stored in the list indicate the ordered index of the tile
+        /// (not the vertex or index in the index buffer), so the values will always be less
+        /// than the total number of tiles in the MapDrawableBatch.
+        /// </summary>
         public Dictionary<string, List<int>> NamedTileOrderedIndexes
         {
             get
@@ -249,8 +255,9 @@ namespace FlatRedBall.TileGraphics
         public MapDrawableBatch(int numberOfTiles, int textureTileDimensionWidth, int textureTileDimensionHeight, Texture2D texture)
             : base()
         {
-            if (texture == null)
-                throw new ArgumentNullException("texture");
+            // Update - maybe this is okay, it's just an empty layer, and we want to support that...
+            //if (texture == null)
+            //    throw new ArgumentNullException("texture");
 
             Visible = true;
             InternalInitialize();
@@ -476,7 +483,11 @@ namespace FlatRedBall.TileGraphics
 
 #endif
 
-            Texture2D texture = FlatRedBallServices.Load<Texture2D>(textureName, contentManagerName);
+            Texture2D texture = null;
+            if (!string.IsNullOrEmpty(textureName))
+            {
+                texture = FlatRedBallServices.Load<Texture2D>(textureName, contentManagerName);
+            }
 
             MapDrawableBatch toReturn = new MapDrawableBatch(reducedLayerInfo.Quads.Count, tileDimensionWidth, tileDimensionHeight, texture);
 
@@ -1310,6 +1321,8 @@ namespace FlatRedBall.TileGraphics
 
         public void MergeOntoThis(IEnumerable<MapDrawableBatch> mapDrawableBatches)
         {
+
+
             int quadsToAdd = 0;
             int quadsOnThis = QuadCount;
             foreach (var mdb in mapDrawableBatches)
@@ -1324,6 +1337,262 @@ namespace FlatRedBall.TileGraphics
             var oldVerts = mVertices;
             var oldIndexes = mIndices;
 
+            if (this.SortAxis == SortAxis.X)
+            {
+                MergeSortedX(mapDrawableBatches, totalNumberOfVerts, totalNumberOfIndexes);
+            }
+            else if (this.SortAxis == SortAxis.Y)
+            {
+                MergeSortedY(mapDrawableBatches, totalNumberOfVerts, totalNumberOfIndexes);
+            }
+            else
+            {
+                MergeUnsorted(mapDrawableBatches, quadsOnThis, totalNumberOfVerts, totalNumberOfIndexes, oldVerts, oldIndexes);
+            }
+        }
+
+        private void MergeSortedX(IEnumerable<MapDrawableBatch> mapDrawableBatches, int totalNumberOfVerts, int totalNumberOfIndexes)
+        {
+            if (totalNumberOfVerts == this.mVertices.Length)
+            {
+                return;// nothing being added
+            }
+
+            List<Dictionary<int, string>> invertedDictionaries = new List<Dictionary<int, string>>();
+            var newNameIndexDictionary = new Dictionary<string, List<int>>();
+
+            List<MapDrawableBatch> layers = mapDrawableBatches.ToList();
+            layers.Insert(0, this);
+
+            int[] currentVertIndex = new int[layers.Count];
+
+            // they should be initialized to 0
+            int destinationVertIndex = 0;
+            int destinationIndexIndex = 0;
+
+
+
+            var newVerts = new VertexType[totalNumberOfVerts];
+            var newIndexes = new int[totalNumberOfIndexes];
+
+            mCurrentNumberOfTiles = totalNumberOfVerts / 4;
+
+            int newFlagFlipArraySize = 0;
+            foreach (var layer in layers)
+            {
+                newFlagFlipArraySize += layer.FlipFlagArray.Length;
+                var invertedLayerDictionary = new Dictionary<int, string>();
+
+                foreach (var kvp in layer.NamedTileOrderedIndexes)
+                {
+                    foreach (var index in kvp.Value)
+                    {
+                        invertedLayerDictionary[index] = kvp.Key;
+                    }
+                }
+
+                invertedDictionaries.Add(invertedLayerDictionary);
+            }
+
+            var newFlipFlagArray = new byte[newFlagFlipArraySize];
+
+            while (true)
+            {
+                float smallestX = float.PositiveInfinity;
+                //int smallestIndex = -1;
+                int layerIndexToCopyFrom = -1;
+
+                for (int layerIndex = 0; layerIndex < currentVertIndex.Length; layerIndex++)
+                {
+                    if (currentVertIndex[layerIndex] < layers[layerIndex].mVertices.Length)
+                    {
+                        var vertX = layers[layerIndex].mVertices[currentVertIndex[layerIndex]].Position.X;
+
+                        if (vertX < smallestX)
+                        {
+                            smallestX = vertX;
+                            layerIndexToCopyFrom = layerIndex;
+                            //smallestIndex = currentVertIndex[layerIndex];
+                        }
+                    }
+                }
+
+                if (layerIndexToCopyFrom == -1)
+                {
+                    break;
+                }
+                else
+                {
+                    var layerToCopyFrom = layers[layerIndexToCopyFrom];
+                    var sourceVertIndex = currentVertIndex[layerIndexToCopyFrom];
+                    var sourceIndexIndex = (sourceVertIndex / 4) * 6;
+                    var sourceFlipIndex = (sourceVertIndex / 4);
+
+                    var destinationFlipIndex = destinationVertIndex / 4;
+
+                    newFlipFlagArray[destinationFlipIndex] = layerToCopyFrom.FlipFlagArray[sourceFlipIndex];
+
+                    newVerts[destinationVertIndex] = layerToCopyFrom.mVertices[sourceVertIndex];
+                    newVerts[destinationVertIndex + 1] = layerToCopyFrom.mVertices[sourceVertIndex + 1];
+                    newVerts[destinationVertIndex + 2] = layerToCopyFrom.mVertices[sourceVertIndex + 2];
+                    newVerts[destinationVertIndex + 3] = layerToCopyFrom.mVertices[sourceVertIndex + 3];
+
+                    var firstVert = layerToCopyFrom.mIndices[sourceIndexIndex];
+
+                    newIndexes[destinationIndexIndex] =
+                        destinationVertIndex - firstVert + layerToCopyFrom.mIndices[sourceIndexIndex];
+                    newIndexes[destinationIndexIndex + 1] =
+                        destinationVertIndex - firstVert + layerToCopyFrom.mIndices[sourceIndexIndex + 1];
+                    newIndexes[destinationIndexIndex + 2] =
+                        destinationVertIndex - firstVert + layerToCopyFrom.mIndices[sourceIndexIndex + 2];
+                    newIndexes[destinationIndexIndex + 3] =
+                        destinationVertIndex - firstVert + layerToCopyFrom.mIndices[sourceIndexIndex + 3];
+                    newIndexes[destinationIndexIndex + 4] =
+                        destinationVertIndex - firstVert + layerToCopyFrom.mIndices[sourceIndexIndex + 4];
+                    newIndexes[destinationIndexIndex + 5] =
+                        destinationVertIndex - firstVert + layerToCopyFrom.mIndices[sourceIndexIndex + 5];
+
+                    if (invertedDictionaries[layerIndexToCopyFrom].ContainsKey(sourceVertIndex/4))
+                    {
+                        var newName = invertedDictionaries[layerIndexToCopyFrom][sourceVertIndex/4];
+
+                        if (newNameIndexDictionary.ContainsKey(newName) == false)
+                        {
+                            newNameIndexDictionary[newName] = new List<int>();
+                        }
+
+                        newNameIndexDictionary[newName].Add(destinationVertIndex / 4);
+                    }
+
+                    destinationVertIndex += 4;
+                    destinationIndexIndex += 6;
+                    currentVertIndex[layerIndexToCopyFrom] += 4;
+                }
+            }
+
+            this.mNamedTileOrderedIndexes = newNameIndexDictionary;
+            this.FlipFlagArray = newFlipFlagArray;
+
+            this.mVertices = newVerts;
+            this.mIndices = newIndexes;
+        }
+
+        private void MergeSortedY(IEnumerable<MapDrawableBatch> mapDrawableBatches, int totalNumberOfVerts, int totalNumberOfIndexes)
+        {
+            if (totalNumberOfVerts == this.mVertices.Length)
+            {
+                return;// nothing being added
+            }
+            List<Dictionary<int, string>> invertedDictionaries = new List<Dictionary<int, string>>();
+            var newNameIndexDictionary = new Dictionary<string, List<int>>();
+
+            List<MapDrawableBatch> layers = mapDrawableBatches.ToList();
+            layers.Insert(0, this);
+
+            int[] currentVertIndex = new int[layers.Count];
+
+            // they should be initialized to 0
+            int destinationVertIndex = 0;
+            int destinationIndexIndex = 0;
+
+            var newVerts = new VertexType[totalNumberOfVerts];
+            var newIndexes = new int[totalNumberOfIndexes];
+
+            mCurrentNumberOfTiles = totalNumberOfVerts / 4;
+
+            foreach (var layer in layers)
+            {
+                var invertedLayerDictionary = new Dictionary<int, string>();
+
+                foreach (var kvp in layer.NamedTileOrderedIndexes)
+                {
+                    foreach (var index in kvp.Value)
+                    {
+                        invertedLayerDictionary[index] = kvp.Key;
+                    }
+                }
+
+                invertedDictionaries.Add(invertedLayerDictionary);
+            }
+
+
+            while (true)
+            {
+                float smallestY = float.PositiveInfinity;
+                //int smallestIndex = -1;
+                int toCopyFrom = -1;
+
+                for (int layerIndex = 0; layerIndex < currentVertIndex.Length; layerIndex++)
+                {
+                    if (currentVertIndex[layerIndex] < layers[layerIndex].mVertices.Length)
+                    {
+                        var vertY = layers[layerIndex].mVertices[currentVertIndex[layerIndex]].Position.Y;
+
+                        if (vertY < smallestY)
+                        {
+                            smallestY = vertY;
+                            toCopyFrom = layerIndex;
+                            //smallestIndex = currentVertIndex[layerIndex];
+                        }
+                    }
+                }
+
+                if (toCopyFrom == -1)
+                {
+                    break;
+                }
+                else
+                {
+                    var sourceVertIndex = currentVertIndex[toCopyFrom];
+                    var sourceIndexIndex = (sourceVertIndex / 4) * 6;
+
+                    newVerts[destinationVertIndex] = layers[toCopyFrom].mVertices[sourceVertIndex];
+                    newVerts[destinationVertIndex + 1] = layers[toCopyFrom].mVertices[sourceVertIndex + 1];
+                    newVerts[destinationVertIndex + 2] = layers[toCopyFrom].mVertices[sourceVertIndex + 2];
+                    newVerts[destinationVertIndex + 3] = layers[toCopyFrom].mVertices[sourceVertIndex + 3];
+
+                    var firstVert = layers[toCopyFrom].mIndices[sourceIndexIndex];
+
+                    newIndexes[destinationIndexIndex] =
+                        destinationVertIndex - firstVert + layers[toCopyFrom].mIndices[sourceIndexIndex];
+                    newIndexes[destinationIndexIndex + 1] =
+                        destinationVertIndex - firstVert + layers[toCopyFrom].mIndices[sourceIndexIndex + 1];
+                    newIndexes[destinationIndexIndex + 2] =
+                        destinationVertIndex - firstVert + layers[toCopyFrom].mIndices[sourceIndexIndex + 2];
+                    newIndexes[destinationIndexIndex + 3] =
+                        destinationVertIndex - firstVert + layers[toCopyFrom].mIndices[sourceIndexIndex + 3];
+                    newIndexes[destinationIndexIndex + 4] =
+                        destinationVertIndex - firstVert + layers[toCopyFrom].mIndices[sourceIndexIndex + 4];
+                    newIndexes[destinationIndexIndex + 5] =
+                        destinationVertIndex - firstVert + layers[toCopyFrom].mIndices[sourceIndexIndex + 5];
+
+                    if (invertedDictionaries[toCopyFrom].ContainsKey(sourceVertIndex/4))
+                    {
+                        var newName = invertedDictionaries[toCopyFrom][sourceVertIndex/4];
+
+                        if (newNameIndexDictionary.ContainsKey(newName) == false)
+                        {
+                            newNameIndexDictionary[newName] = new List<int>();
+                        }
+
+                        newNameIndexDictionary[newName].Add(destinationVertIndex/4);
+                    }
+
+                    destinationVertIndex += 4;
+                    destinationIndexIndex += 6;
+                    currentVertIndex[toCopyFrom] += 4;
+                }
+            }
+
+            this.mNamedTileOrderedIndexes = newNameIndexDictionary;
+
+            this.mVertices = newVerts;
+            this.mIndices = newIndexes;
+
+        }
+
+        private void MergeUnsorted(IEnumerable<MapDrawableBatch> mapDrawableBatches, int quadsOnThis, int totalNumberOfVerts, int totalNumberOfIndexes, VertexType[] oldVerts, int[] oldIndexes)
+        {
             mVertices = new VertexType[totalNumberOfVerts];
             mIndices = new int[totalNumberOfIndexes];
 

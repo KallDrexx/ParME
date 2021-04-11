@@ -156,37 +156,35 @@ namespace TMXGlueLib.DataTypes
                             throw new NotImplementedException();
                         }
                     }
+                }
+
+                int tileWidth = FlatRedBall.Math.MathFunctions.RoundToInt(tiledMapSave.tilewidth);
+                int tileHeight = FlatRedBall.Math.MathFunctions.RoundToInt(tiledMapSave.tileheight);
+
+                reducedLayerInfo = new ReducedLayerInfo
+                {
+                    Z = i,
+                    Texture = texture,
+                    Name = tiledLayer.Name,
+                    TileWidth = tileWidth,
+                    TileHeight = tileHeight,
+                };
+
+                reducedTileMapInfo.Layers.Add(reducedLayerInfo);
+
+                var tilesetIndex = tiledMapSave.Tilesets.IndexOf(tileSet);
+                reducedLayerInfo.TextureId = tilesetIndex;
 
 
+                // create the quad here:
+                if (tiledLayer is MapLayer)
+                {
+                    AddTileLayerTiles(tiledMapSave, reducedLayerInfo, i, tiledLayer, tileSet, tileWidth, tileHeight);
+                }
 
-                    int tileWidth = FlatRedBall.Math.MathFunctions.RoundToInt(tiledMapSave.tilewidth);
-                    int tileHeight = FlatRedBall.Math.MathFunctions.RoundToInt(tiledMapSave.tileheight);
-
-                    reducedLayerInfo = new ReducedLayerInfo
-                    {
-                        Z = i,
-                        Texture = texture,
-                        Name = tiledLayer.Name,
-                        TileWidth = tileWidth,
-                        TileHeight = tileHeight,
-                    };
-
-                    reducedTileMapInfo.Layers.Add(reducedLayerInfo);
-
-                    var tilesetIndex = tiledMapSave.Tilesets.IndexOf(tileSet);
-                    reducedLayerInfo.TextureId = tilesetIndex;
-
-
-                    // create the quad here:
-                    if (tiledLayer is MapLayer)
-                    {
-                        AddTileLayerTiles(tiledMapSave, reducedLayerInfo, i, tiledLayer, tileSet, tileWidth, tileHeight);
-                    }
-
-                    else if (tiledLayer is mapObjectgroup)
-                    {
-                        AddObjectLayerTiles(reducedLayerInfo, tiledLayer, tileSet, firstGid, tileWidth, tileHeight);
-                    }
+                else if (tiledLayer is mapObjectgroup)
+                {
+                    AddObjectLayerTiles(reducedLayerInfo, tiledLayer, tileSet, firstGid, tileWidth, tileHeight);
                 }
             }
         }
@@ -270,6 +268,13 @@ namespace TMXGlueLib.DataTypes
         private static void AddObjectLayerTiles(ReducedLayerInfo reducedLayerInfo, AbstractMapLayer tiledLayer, Tileset tileSet, uint? gid, int tileWidth, int tileHeight)
         {
             var asMapLayer = tiledLayer as mapObjectgroup;
+
+            // early out
+            if(asMapLayer.@object == null)
+            {
+                return;
+            }
+
             foreach (var objectInstance in asMapLayer.@object)
             {
                 if (objectInstance.gid > 0)

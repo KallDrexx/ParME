@@ -16,6 +16,7 @@
             public ResizeBehavior ResizeBehavior { get; set; }
             public ResizeBehavior ResizeBehaviorGum { get; set; }
             public WidthOrHeight DominantInternalCoordinates { get; set; }
+            public Microsoft.Xna.Framework.Graphics.TextureFilter TextureFilter { get; set; }
         }
         public enum ResizeBehavior
         {
@@ -38,6 +39,7 @@
                 Is2D = true,
                 IsFullScreen = false,
                 AllowWidowResizing = false,
+                TextureFilter = Microsoft.Xna.Framework.Graphics.TextureFilter.Linear,
                 ResizeBehavior = ResizeBehavior.StretchVisibleArea,
                 DominantInternalCoordinates = WidthOrHeight.Height,
             }
@@ -69,6 +71,7 @@
             internal static void SetupCamera (Camera cameraToSetUp, Microsoft.Xna.Framework.GraphicsDeviceManager graphicsDeviceManager) 
             {
                 CameraSetup.graphicsDeviceManager = graphicsDeviceManager;
+                FlatRedBall.FlatRedBallServices.GraphicsOptions.TextureFilter = Data.TextureFilter;
                 ResetWindow();
                 ResetCamera(cameraToSetUp);
                 FlatRedBall.FlatRedBallServices.GraphicsOptions.SizeOrOrientationChanged += HandleResolutionChange;
