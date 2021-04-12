@@ -4,8 +4,9 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <RootNamespace>Parme.Frb</RootNamespace>
         <LangVersion>8</LangVersion>
-        <Version>0.8.2</Version>
+        <Version>0.8.4</Version>
         <Authors>KallDrexx</Authors>
+        <PackageId>Parme.Frb</PackageId>
         <PackageProjectUrl>https://github.com/KallDrexx/ParME</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
         <License>MIT</License>
@@ -31,6 +32,10 @@
         <Content Include="../Parme.Frb.Example/Plugins/**/*">
             <Pack>true</Pack>
             <PackagePath>content\Plugins</PackagePath>
+        </Content>
+        <Content Include="Parme.Frb.targets">
+            <Pack>true</Pack>
+            <PackagePath>build</PackagePath>
         </Content>
         <Content Remove="..\Parme.Frb.Example\Plugins\.running*\**" />
     </ItemGroup>

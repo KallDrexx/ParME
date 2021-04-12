@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <GluePluginFile Include="$(MSBuildThisFileDirectory)..\content\Plugins\**\*" />
+    </ItemGroup>
+
+    <Target Name="CopyGluePlugin" BeforeTargets="PreBuildEvent">
+        <Message Importance="normal" Text="Copying Glue plugin files" />
+        <Copy SourceFiles="@(GluePluginFile)"
+              DestinationFolder="$(ProjectDir)\Plugins\%(RecursiveDir)"
+              SkipUnchangedFiles="true"  />
+    </Target>
+</Project>
