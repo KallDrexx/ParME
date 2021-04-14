@@ -13,4 +13,8 @@ Parme has the following modifiers built in:
 * Drag - Adds drag to the particle
 * Ending Color Multiplier - This is the color multiplier that the particle should be at at the end of its lifetime.  This will cause a linear interpolation between the starting color multiplier to the end based on the particle's lifetime.
 
+In addition to normal modifiers, there is a special purpose modifier called a **Position Modifier**.  These modifiers override the default position logic of a particle for custom functionality.  The current position modifiers that are built in are:
+
+* Altitude bounce modifier - This causes the particle to bounce in the positive Y axis (even when rotated).  The particle will bounce when it hits the same Y coordinate that the particle would be at if there was no bounce effect in play.
+
  
