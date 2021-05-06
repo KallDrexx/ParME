@@ -28,6 +28,8 @@ namespace Parme.Frb
                 }
             } 
         }
+        
+        public IEmitterLogicMapper EmitterLogicMapper { get; set; }
 
         private ParmeEmitterManager()
         {
@@ -47,6 +49,25 @@ namespace Parme.Frb
             _emitterToGroupMap.Add(emitter, group);
 
             return emitter;
+        }
+
+        public ParmeFrbEmitter CreateEmitter(string emitterLogicName, PositionedObject parent, string groupName = null)
+        {
+            if (EmitterLogicMapper == null)
+            {
+                const string message = "Cannot resolve emitter logic type by name without an emitter logic mapper instance";
+                throw new InvalidOperationException(message);
+            }
+
+            var type = EmitterLogicMapper.GetEmitterLogicTypeByName(emitterLogicName);
+            if (type == null)
+            {
+                var message = $"No known emitter logic type can be found with the name '{emitterLogicName}'";
+                throw new InvalidOperationException(message);
+            }
+
+            var instance = (IEmitterLogic) Activator.CreateInstance(type);
+            return CreateEmitter(instance, parent, groupName);
         }
 
         public void DestroyEmitter(ParmeFrbEmitter emitter, bool waitForAllParticlesToDie = true)

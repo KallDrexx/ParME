@@ -11,6 +11,7 @@ namespace Parme.Frb.Example.Screens
     {
         void CustomInitialize()
         {
+            ParmeEmitterManager.Instance.CreateEmitter("Test", PlayerInstance);
         }
 
         void CustomActivity(bool firstTimeCalled)

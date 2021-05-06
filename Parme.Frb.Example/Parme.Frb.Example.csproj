@@ -13,7 +13,7 @@
     <AssemblyName>Parme.Frb.Example</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
@@ -71,6 +71,7 @@
     <Compile Include="Particles\ContrailsEmitterLogic.generated.cs" />
     <Compile Include="Particles\DirectiontestEmitterLogic.generated.cs" />
     <Compile Include="Particles\ExplosionEmitterLogic.generated.cs" />
+    <Compile Include="Particles\ParmeEmitterLogicGenerator.generated.cs" />
     <Compile Include="Particles\TestEmitterLogic.generated.cs" />
     <Compile Include="Performance\IEntityFactory.Generated.cs" />
     <Compile Include="Performance\PoolList.Generated.cs" />

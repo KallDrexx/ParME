@@ -78,7 +78,9 @@ namespace Parme.Frb.Example
                 }
 
                 
+                // position modifier
                 particle.Position += particle.Velocity * timeSinceLastFrame;
+
                 particle.RotationInRadians += particle.RotationalVelocityInRadians * timeSinceLastFrame;
             }
             
@@ -115,6 +117,7 @@ namespace Parme.Frb.Example
                         TimeAlive = 0,
                         RotationInRadians = 0,
                         Position = Vector2.Zero,
+                        ReferencePosition = Vector2.Zero,
                         RotationalVelocityInRadians = 0f,
                         CurrentRed = 255,
                         CurrentGreen = 255,
@@ -171,6 +174,7 @@ namespace Parme.Frb.Example
 
                     // Adjust the particle's position by the emitter's location
                     particle.Position += emitterCoordinates;
+                    particle.ReferencePosition = particle.Position;
                     
                     particleBuffer.Add(particle);            
                 }

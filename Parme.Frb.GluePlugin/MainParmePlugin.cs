@@ -25,12 +25,15 @@ namespace Parme.Frb.GluePlugin
     public class MainParmePlugin : PluginBase
     {
         public const string Extension = "emlogic";
+        public const string EmitterLogicSuffix = "EmitterLogic";
+        
         private const string ExtensionWithPeriod = "." + Extension;
 
-        private readonly ParmeScreenCodeGenerator _parmeScreenCodeGenerator = new ParmeScreenCodeGenerator();
-        
-        private readonly AssetTypeInfoManager _assetTypeInfoManager = new AssetTypeInfoManager();
-        
+        private readonly ParmeScreenCodeGenerator _parmeScreenCodeGenerator = new();
+        private readonly AssetTypeInfoManager _assetTypeInfoManager = new();
+        private readonly EmitterLogicMapperGenerator _emitterLogicMapperGenerator = new();
+        private readonly EmitterLogicMapperInitializer _emitterLogicMapperInitializer = new();
+
         public override string FriendlyName => "ParME GluePlugin";
 
         public override Version Version
@@ -61,6 +64,7 @@ namespace Parme.Frb.GluePlugin
             AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.FileAssetTypeInfo);
             AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.LogicAssetTypeInfo);
             CodeWriter.CodeGenerators.Add(_parmeScreenCodeGenerator);
+            RegisterCodeGenerator(_emitterLogicMapperInitializer);
         }
 
         private static string GenerateEmitterLogic(EmitterSettings settings, string className)
@@ -73,7 +77,7 @@ namespace Parme.Frb.GluePlugin
 
         private static string GetLogicClassName(string filename)
         {
-            var name = Path.GetFileNameWithoutExtension(filename) + "EmitterLogic";
+            var name = Path.GetFileNameWithoutExtension(filename) + EmitterLogicSuffix;
             if (char.IsLower(name[0]))
             {
                 name = char.ToUpper(name[0]) + name.Substring(1);
@@ -122,7 +126,8 @@ namespace Parme.Frb.GluePlugin
 
             try
             {
-                GenerateAndSave(emitter, className, filename);
+                GenerateAndSaveEmitterCode(emitter, className, filename);
+                GenerateAndSaveLogicMapperCode();
             }
             catch (Exception exception)
             {
@@ -133,10 +138,11 @@ namespace Parme.Frb.GluePlugin
             }
             
             _assetTypeInfoManager.AddEmitterLogicTypeName(className);
+            _emitterLogicMapperGenerator.AddEmitterLogicTypeName(className);
             GlueCommands.Self.PrintOutput($"Successfully generated code for the '{className}' emitter");
         }
 
-        private static void GenerateAndSave(EmitterSettings emitter, string logicClassName, string filename)
+        private static void GenerateAndSaveEmitterCode(EmitterSettings emitter, string logicClassName, string filename)
         {
             var prevTextureFileName = emitter.TextureFileName;
             if (!string.IsNullOrWhiteSpace(emitter.TextureFileName))
@@ -155,6 +161,18 @@ namespace Parme.Frb.GluePlugin
             File.WriteAllText(codeGenFilePath.FullPath, code);
             
             emitter.TextureFileName = prevTextureFileName;
+        }
+
+        private void GenerateAndSaveLogicMapperCode()
+        {
+            var code = _emitterLogicMapperGenerator.GenerateMapperImplementation(GlueState.Self.ProjectNamespace);
+            var codeGenPath = new FilePath(Path.Combine(
+                GlueState.Self.CurrentGlueProjectDirectory,
+                "Particles",
+                "ParmeEmitterLogicGenerator.generated.cs"));
+
+            GlueCommands.Self.ProjectCommands.CreateAndAddCodeFile(codeGenPath);
+            File.WriteAllText(codeGenPath.FullPath, code);
         }
 
         private void NewFileHandler(ReferencedFileSave newFile)
@@ -197,11 +215,13 @@ namespace Parme.Frb.GluePlugin
         {
             var name = GetLogicClassName(removedFile.Name);
             _assetTypeInfoManager.RemoveEmitterLogicTypeName(name);
+            _emitterLogicMapperGenerator.RemoveEmitterLogicTypeName(name);
         }
 
         private void GluxUnloaded()
         {
             _assetTypeInfoManager.ClearEmitterLogicTypes();
+            _emitterLogicMapperGenerator.ClearEmitterLogicTypes();
             CodeWriter.CodeGenerators.Remove(_parmeScreenCodeGenerator);
         }
 
@@ -216,6 +236,8 @@ namespace Parme.Frb.GluePlugin
             {
                 NewFileHandler(emitterFile);
             }
+
+            _emitterLogicMapperInitializer.ProjectNamespace = GlueState.Self.ProjectNamespace;
         }
     }
 }

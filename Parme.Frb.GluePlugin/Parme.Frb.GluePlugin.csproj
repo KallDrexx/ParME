@@ -8,6 +8,7 @@
     <PackageProjectUrl>https://github.com/KallDrexx/ParME</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <License>MIT</License>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
   
   <ItemGroup>

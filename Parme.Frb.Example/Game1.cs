@@ -82,13 +82,13 @@ namespace Parme.Frb.Example
                     }
                 }
             }
+            
+            GeneratedInitialize();
 
             if (startScreenType != null)
             {
                 ScreenManager.Start(startScreenType);
             }
-
-            GeneratedInitialize();
 
             base.Initialize();
         }

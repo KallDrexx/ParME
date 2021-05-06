@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="FlatRedBallDesktopGL, Version=2020.12.9.1213, Culture=neutral, PublicKeyToken=null">
+      <Reference Include="FlatRedBallDesktopGL, Version=2021.5.1.445, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\Parme.Frb.Example\Libraries\DesktopGl\Debug\FlatRedBallDesktopGL.dll</HintPath>
         <Private>false</Private>
       </Reference>
