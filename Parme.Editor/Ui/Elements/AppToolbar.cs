@@ -155,6 +155,16 @@ namespace Parme.Editor.Ui.Elements
                         UpdatedZoomLevel = _applicationState.Zoom + 0.1m,
                     });
                 }
+                
+                ImGui.SameLine();
+                if (ImGui.Button("Reset Camera"))
+                {
+                    _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
+                    {
+                        ResetCamera = true,
+                        UpdatedZoomLevel = 1.0m,
+                    });
+                }
 
                 _selectedSamplerStateIndex = _samplerStates.IndexOf(_applicationState.RenderSamplerState);
                 if (_selectedSamplerStateIndex < 0)

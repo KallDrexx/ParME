@@ -18,5 +18,6 @@ namespace Parme.Editor.AppOperations
         public Modal? ModalToClose { get; set; }
         public Modal? ModalToOpen { get; set; }
         public bool? UpdatedAutoSave { get; set; }
+        public bool? ResetCamera { get; set; }
     }
 }

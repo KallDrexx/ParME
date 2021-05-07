@@ -10,6 +10,7 @@ namespace Parme.Editor.AppOperations
         public SamplerState UpdatedSamplerState { get; set; }
         public int? UpdatedGridSize { get; set; }
         public bool? UpdatedAutoSave { get; set; }
+        public bool? ResetCamera { get; set; }
         
         public AppOperationResult Run()
         {
@@ -20,6 +21,7 @@ namespace Parme.Editor.AppOperations
                 UpdatedSamplerState = UpdatedSamplerState,
                 UpdatedGridSize = UpdatedGridSize,
                 UpdatedAutoSave = UpdatedAutoSave,
+                ResetCamera = ResetCamera,
             };
         }
     }

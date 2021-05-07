@@ -29,6 +29,7 @@ namespace Parme.Editor
         public int GridSize { get; private set; }
         public bool AutoSaveOnChange { get; private set; } = true;
         public IReadOnlyList<string> RecentlyOpenedFiles { get; private set; }
+        public bool ResetCameraRequested { get; set; }
 
         public ApplicationState()
         {
@@ -117,6 +118,11 @@ namespace Parme.Editor
             if (operationResult.UpdatedAutoSave != null)
             {
                 AutoSaveOnChange = operationResult.UpdatedAutoSave.Value;
+            }
+
+            if (operationResult.ResetCamera == true)
+            {
+                ResetCameraRequested = true;
             }
         }
 

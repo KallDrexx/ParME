@@ -128,6 +128,11 @@ namespace Parme.Editor
             
             _camera.HorizontalZoomFactor = (float) _applicationState.Zoom;
             _camera.VerticalZoomFactor = (float) _applicationState.Zoom;
+            if (_applicationState.ResetCameraRequested)
+            {
+                ResetCamera(true);
+                _applicationState.ResetCameraRequested = false;
+            }
 
             if (_emitter != null)
             {
