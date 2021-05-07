@@ -190,8 +190,12 @@ namespace Parme.Editor
 
         private void UpdateEmitter(EmitterSettings settings)
         {
+            Vector2? previousCameraOffset = null;
+            
             if (_emitter != null)
             {
+                previousCameraOffset = _camera.Origin - _emitter.WorldCoordinates;
+                
                 _emitterRenderGroup.RemoveEmitter(_emitter);
                 _emitter.Dispose();
                 _emitter = null;
@@ -214,7 +218,7 @@ namespace Parme.Editor
                 // just frustrate the user, as they've positioned the camera in that spot for a reason
                 if (_uiController.EmitterVelocity != Vector2.Zero)
                 {
-                    ResetCamera();
+                    ResetCamera(resetOriginTo: previousCameraOffset);
                 }
             }
 
@@ -231,9 +235,11 @@ namespace Parme.Editor
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
         }
 
-        private void ResetCamera(bool resetEmitterPosition = false)
+        private void ResetCamera(bool resetEmitterPosition = false, Vector2? resetOriginTo = null)
         {
-            _camera.Origin = new Vector2(-GraphicsDevice.Viewport.Width / 6f, GraphicsDevice.Viewport.Height / 4f);
+            _camera.Origin = resetOriginTo ??
+                             new Vector2(-GraphicsDevice.Viewport.Width / 6f, GraphicsDevice.Viewport.Height / 4f);
+            
             _camera.PositiveYAxisPointsUp = true;
             _camera.PixelWidth = GraphicsDevice.Viewport.Width;
             _camera.PixelHeight = GraphicsDevice.Viewport.Height;
