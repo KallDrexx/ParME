@@ -36,6 +36,7 @@ namespace Parme.Editor
         private float _lastProcessedEmitterChangeTime;
         private Texture2D _gridTexture;
         private SpriteBatch _spriteBatch;
+        private RenderTarget2D _particleRenderArea;
 
         public App()
         {
@@ -52,15 +53,16 @@ namespace Parme.Editor
         protected override void Initialize()
         {
             _graphicsDeviceManager.PreferredBackBufferWidth = 1024;
-            _graphicsDeviceManager.PreferredBackBufferHeight = 786;
+            _graphicsDeviceManager.PreferredBackBufferHeight = 768;
             _graphicsDeviceManager.ApplyChanges();
             
             _gridTexture = SetupGridTexture(GraphicsDevice,32);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             _textureFileLoader = new TextureFileLoader(GraphicsDevice, _applicationState);
             _emitterRenderGroup = new MonoGameEmitterRenderGroup(GraphicsDevice);
             
+            ResetRenderTarget();
             ResetCamera();
             _applicationState.Zoom = 1;
 
@@ -169,9 +171,28 @@ namespace Parme.Editor
                 backgroundColorVector.Z);
             
             GraphicsDevice.Clear(backgroundColor);
+            
+            _graphicsDeviceManager.GraphicsDevice.SetRenderTarget(_particleRenderArea);
             RenderGrid(backgroundColor);
 
             _emitterRenderGroup.Render(_camera, _applicationState.RenderSamplerState ?? SamplerState.PointClamp);
+            _graphicsDeviceManager.GraphicsDevice.SetRenderTarget(null);
+
+            var position = new Point();
+            if (_applicationState.ActiveEmitter != null)
+            {
+                position.X = EmitterSettingsController.ActiveEditorWidth;
+                position.Y = EmitterSettingsController.WorkbenchHeight - EmitterSettingsController.MenuBarSize;
+            }
+            
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(_particleRenderArea, 
+                new Rectangle(position, 
+                new Point(_particleRenderArea.Width, _particleRenderArea.Height)), 
+                Color.White);
+            
+            _spriteBatch.End();
+            
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
             base.Draw(gameTime);
@@ -227,6 +248,8 @@ namespace Parme.Editor
                 }
             }
 
+            ResetRenderTarget();
+            ResetCameraBounds();
             if (_applicationState.AutoSaveOnChange)
             {
                 _appOperationQueue.Enqueue(new SaveEmitterRequested(_applicationState.ActiveFileName, settings));
@@ -236,23 +259,48 @@ namespace Parme.Editor
         private void WindowOnClientSizeChanged(object sender, EventArgs e)
         {
             _uiController.WindowResized(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-            _camera.PixelWidth = GraphicsDevice.Viewport.Width;
-            _camera.PixelHeight = GraphicsDevice.Viewport.Height;
+            ResetRenderTarget();
+            ResetCameraBounds();
         }
 
-        private void ResetCamera(bool resetEmitterPosition = false, Vector2? resetOriginTo = null)
+        private void ResetCamera(bool resetEmitterPosition = false, Vector2? resetOriginTo = null, bool resetBoundsOnly = false)
         {
-            _camera.Origin = resetOriginTo ??
-                             new Vector2(-GraphicsDevice.Viewport.Width / 6f, GraphicsDevice.Viewport.Height / 4f);
-            
+            ResetCameraBounds();
+
+            _camera.Origin = resetOriginTo ?? new Vector2(0, 0);
             _camera.PositiveYAxisPointsUp = true;
-            _camera.PixelWidth = GraphicsDevice.Viewport.Width;
-            _camera.PixelHeight = GraphicsDevice.Viewport.Height;
 
             if (resetEmitterPosition && _emitter != null)
             {
                 _emitter.WorldCoordinates = Vector2.Zero;
             }
+        }
+
+        private void ResetCameraBounds()
+        {
+            var (width, height) = GetRenderDimensions();
+            _camera.PixelWidth = width;
+            _camera.PixelHeight = height;
+        }
+
+        private void ResetRenderTarget()
+        {
+            var (width, height) = GetRenderDimensions();
+            _particleRenderArea = new RenderTarget2D(_graphicsDeviceManager.GraphicsDevice, width, height);
+        }
+
+        private Point GetRenderDimensions()
+        {
+            var height = GraphicsDevice.Viewport.Height;
+            var width = GraphicsDevice.Viewport.Width;
+
+            if (_applicationState.ActiveEmitter != null)
+            {
+                height -= EmitterSettingsController.WorkbenchHeight - EmitterSettingsController.MenuBarSize;
+                width -= EmitterSettingsController.ActiveEditorWidth;
+            }
+
+            return new Point(width, height);
         }
 
         private static Texture2D SetupGridTexture(GraphicsDevice graphicsDevice, int squareSizeInPixels)

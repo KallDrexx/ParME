@@ -16,8 +16,9 @@ namespace Parme.Editor.Ui
 {
     public class EmitterSettingsController
     {
-        private const float WorkbenchHeight = 315f;
-        private const float MenuBarSize = 20f;
+        public const int WorkbenchHeight = 315;
+        public const int ActiveEditorWidth = 300;
+        public const int MenuBarSize = 20;
 
         private readonly SettingsCommandHandler _commandHandler;
         private readonly AppOperationQueue _appOperationQueue;
@@ -83,7 +84,7 @@ namespace Parme.Editor.Ui
             _workbench.Size = new Vector2(width, WorkbenchHeight);
             
             _activeEditorWindow.Position = new Vector2(0, WorkbenchHeight + MenuBarSize);
-            _activeEditorWindow.Size = new Vector2(300, height - WorkbenchHeight - MenuBarSize);
+            _activeEditorWindow.Size = new Vector2(ActiveEditorWidth, height - WorkbenchHeight - MenuBarSize);
         }
 
         private void WorkbenchOnPropertyChanged(object sender, PropertyChangedEventArgs e)
