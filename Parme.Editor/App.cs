@@ -193,6 +193,7 @@ namespace Parme.Editor
             
             _spriteBatch.End();
             
+            GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
             base.Draw(gameTime);
