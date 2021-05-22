@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace Parme.Editor
+namespace Parme.Editor.Settings
 {
     public class AppSettings
     {
@@ -14,6 +14,7 @@ namespace Parme.Editor
 
         // ReSharper disable once MemberCanBePrivate.Global
         public List<string> RecentlyOpenedFiles { get; set; } = new List<string>();
+        public AutoMoveTextureOption AutoMoveTextureOption { get; set; } = AutoMoveTextureOption.Ask;
 
         public static AppSettings Load()
         {

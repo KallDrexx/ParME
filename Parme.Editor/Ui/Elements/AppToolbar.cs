@@ -6,6 +6,7 @@ using ImGuiHandler;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
 using Parme.Editor.AppOperations;
+using Parme.Editor.Settings;
 
 namespace Parme.Editor.Ui.Elements
 {
@@ -15,9 +16,15 @@ namespace Parme.Editor.Ui.Elements
         private readonly ApplicationState _applicationState;
         private readonly List<SamplerState> _samplerStates = new List<SamplerState> 
             {null, SamplerState.PointClamp, SamplerState.LinearClamp, SamplerState.AnisotropicClamp,};
+
+        private readonly List<AutoMoveTextureOption> _autoMoveOptions = new List<AutoMoveTextureOption>()
+            {AutoMoveTextureOption.Ask, AutoMoveTextureOption.AlwaysCopy, AutoMoveTextureOption.AlwaysLeave};
         
         private readonly string[] _samplerStateNames = {"<Unknown>", "Point", "Linear", "Anisotropic"};
+        private readonly string[] _autoMoveTextureOptions = {"Ask", "Always Copy", "Do Not Copy"};
+
         private int _selectedSamplerStateIndex;
+        private int _selectedAutoMoveIndex;
 
         public event EventHandler NewMenuItemClicked;
         public event EventHandler OpenMenuItemClicked;
@@ -27,6 +34,8 @@ namespace Parme.Editor.Ui.Elements
         {
             _appOperationQueue = appOperationQueue;
             _applicationState = applicationState;
+
+            _selectedAutoMoveIndex = _autoMoveOptions.IndexOf(applicationState.AutoMoveTextureOption);
         }
 
         protected override void CustomRender()
@@ -108,17 +117,31 @@ namespace Parme.Editor.Ui.Elements
                 {
                     SaveMenuItemClicked?.Invoke(this, true);
                 }
-                
-                ImGui.Separator();
 
-                if (ImGui.MenuItem("Auto Save", null, _applicationState.AutoSaveOnChange))
+                ImGui.Separator();
+                if (ImGui.BeginMenu("Settings"))
                 {
-                    _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
+                    if (ImGui.MenuItem("Auto Save", null, _applicationState.AutoSaveOnChange))
                     {
-                        UpdatedAutoSave = !_applicationState.AutoSaveOnChange,
-                    });
+                        _appOperationQueue.Enqueue(new UpdateMiscOptionsRequested
+                        {
+                            UpdatedAutoSave = !_applicationState.AutoSaveOnChange,
+                        });
+                    }
+                    
+                    ImGui.Text("Copy Texture To Emitter's Location");
+                    ImGui.SameLine();
+                    if (ImGui.Combo("##automove", 
+                        ref _selectedAutoMoveIndex, 
+                        _autoMoveTextureOptions,
+                        _autoMoveOptions.Count))
+                    {
+                        _applicationState.AutoMoveTextureOption = _autoMoveOptions[_selectedAutoMoveIndex];
+                    }
+                    
+                    ImGui.EndMenu();
                 }
-                
+
                 ImGui.EndMenu();
             }
         }

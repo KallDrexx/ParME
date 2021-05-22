@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using ImGuiNET;
 using Parme.Editor.AppOperations;
 using Parme.Editor.Commands;
+using Parme.Editor.Settings;
 
 namespace Parme.Editor.Ui.Elements.Editors
 {
@@ -124,25 +125,33 @@ namespace Parme.Editor.Ui.Elements.Editors
                 var emitterDirectory = Path.GetDirectoryName(ApplicationState.ActiveFileName);
                 var textureDirectory = Path.GetDirectoryName(dialog.FileName);
 
-                _copyTextureToEmitterPath = false;
-                if (!emitterDirectory.Equals(textureDirectory, StringComparison.OrdinalIgnoreCase))
+                if (ApplicationState.AutoMoveTextureOption != AutoMoveTextureOption.Ask)
                 {
-                    const string message = "Do you want to copy the texture to the same directory as the emitter?  " +
-                                           "If no is selected then the emitter will contain a relative path to the selected texture.";
-                
-                    var confirm = MessageBox.Show(message, "Copy Texture File?", MessageBoxButtons.YesNoCancel);
-                    switch (confirm)
+                    _copyTextureToEmitterPath =
+                        ApplicationState.AutoMoveTextureOption == AutoMoveTextureOption.AlwaysCopy;
+                }
+                else
+                {
+                    _copyTextureToEmitterPath = false;
+                    if (!emitterDirectory.Equals(textureDirectory, StringComparison.OrdinalIgnoreCase))
                     {
-                        case DialogResult.Yes:
-                            _copyTextureToEmitterPath = true;
-                            break;
+                        const string message = "Do you want to copy the texture to the same directory as the emitter?  " +
+                                               "If no is selected then the emitter will contain a relative path to the selected texture.";
+                
+                        var confirm = MessageBox.Show(message, "Copy Texture File?", MessageBoxButtons.YesNoCancel);
+                        switch (confirm)
+                        {
+                            case DialogResult.Yes:
+                                _copyTextureToEmitterPath = true;
+                                break;
                     
-                        case DialogResult.No:
-                            _copyTextureToEmitterPath = false;
-                            break;
+                            case DialogResult.No:
+                                _copyTextureToEmitterPath = false;
+                                break;
                     
-                        default:
-                            return; // cancel pressed
+                            default:
+                                return; // cancel pressed
+                        }
                     }
                 }
 

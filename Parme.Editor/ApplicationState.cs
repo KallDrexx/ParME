@@ -6,6 +6,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 using Parme.Core;
 using Parme.Editor.AppOperations;
+using Parme.Editor.Settings;
 
 namespace Parme.Editor
 {
@@ -30,6 +31,16 @@ namespace Parme.Editor
         public bool AutoSaveOnChange { get; private set; } = true;
         public IReadOnlyList<string> RecentlyOpenedFiles { get; private set; }
         public bool ResetCameraRequested { get; set; }
+
+        public AutoMoveTextureOption AutoMoveTextureOption
+        {
+            get => _appSettings.AutoMoveTextureOption;
+            set
+            {
+                _appSettings.AutoMoveTextureOption = value;
+                _appSettings.Save();
+            }
+        }
 
         public ApplicationState()
         {
