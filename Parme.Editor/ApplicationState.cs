@@ -103,7 +103,7 @@ namespace Parme.Editor
                 ErrorMessage = null;
             }
 
-            if (operationResult.UpdatedZoomLevel != null)
+            if (operationResult.UpdatedZoomLevel != null && operationResult.UpdatedZoomLevel > 0)
             {
                 Zoom = operationResult.UpdatedZoomLevel.Value;
             }
