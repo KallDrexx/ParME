@@ -185,6 +185,18 @@ namespace Parme.Editor.Ui.Elements
             set => Set(value);
         }
 
+        public string ReferenceSpriteFileName
+        {
+            get => Get<string>();
+            set => Set(value);
+        }
+
+        public Vector2 ReferenceSpriteOffset
+        {
+            get => Get<Vector2>();
+            set => Set(value);
+        }
+
         public Workbench(SettingsCommandHandler commandHandler)
         {
             _commandHandler = commandHandler;
@@ -211,46 +223,7 @@ namespace Parme.Editor.Ui.Elements
                 ImGui.SameLine();
                 
                 RenderModifiersSection();
-                
-                ImGui.NewLine();
-                
-                ImGui.Text("Moving Emitter Preview:");
-                
-                ImGui.SameLine();
-                if (ImGui.Button("Stop"))
-                {
-                    EmitterVelocity = Vector2.Zero;
-                }
-                
-                var magnitude = (float) Math.Sqrt(Math.Pow(EmitterVelocity.X, 2) + Math.Pow(EmitterVelocity.Y, 2));
-                var angleRadians = Math.Atan2(EmitterVelocity.Y, EmitterVelocity.X);
-                var angleDegrees = (int) (angleRadians * (180 / Math.PI));
-                angleDegrees = ClampAngle(angleDegrees);
-
-                ImGui.SameLine();
-                ImGui.SetNextItemWidth(100);
-                var magnitudeChanged = ImGui.InputFloat("Speed", ref magnitude);
-                
-                ImGui.SameLine();
-                ImGui.SetNextItemWidth(100);
-                var angleChanged = ImGui.SliderInt("Angle", ref angleDegrees, 0, 360);
-
-                if (magnitudeChanged || angleChanged)
-                {
-                    if (magnitude < 0)
-                    {
-                        magnitude *= -1;
-                        angleDegrees += 180;
-                    }
-                    
-                    angleDegrees = ClampAngle(angleDegrees);
-                    
-                    var radians = angleDegrees * (Math.PI / 180);
-                    var x = magnitude * Math.Cos(radians);
-                    var y = magnitude * Math.Sin(radians);
-                    
-                    EmitterVelocity = new Vector2((float) x, (float) y);
-                }
+                RenderMovingEmitterPreviewSection();
 
                 if (_commandHandler.CanUndo)
                 {
@@ -294,6 +267,47 @@ namespace Parme.Editor.Ui.Elements
             }
 
             return angleInDegrees;
+        }
+        
+        private void RenderMovingEmitterPreviewSection()
+        {
+            ImGui.Text("Moving Emitter Preview:");
+
+            ImGui.SameLine();
+            if (ImGui.Button("Stop"))
+            {
+                EmitterVelocity = Vector2.Zero;
+            }
+
+            var magnitude = (float) Math.Sqrt(Math.Pow(EmitterVelocity.X, 2) + Math.Pow(EmitterVelocity.Y, 2));
+            var angleRadians = Math.Atan2(EmitterVelocity.Y, EmitterVelocity.X);
+            var angleDegrees = (int) (angleRadians * (180 / Math.PI));
+            angleDegrees = ClampAngle(angleDegrees);
+
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth(100);
+            var magnitudeChanged = ImGui.InputFloat("Speed", ref magnitude);
+
+            ImGui.SameLine();
+            ImGui.SetNextItemWidth(100);
+            var angleChanged = ImGui.SliderInt("Angle", ref angleDegrees, 0, 360);
+
+            if (magnitudeChanged || angleChanged)
+            {
+                if (magnitude < 0)
+                {
+                    magnitude *= -1;
+                    angleDegrees += 180;
+                }
+
+                angleDegrees = ClampAngle(angleDegrees);
+
+                var radians = angleDegrees * (Math.PI / 180);
+                var x = magnitude * Math.Cos(radians);
+                var y = magnitude * Math.Sin(radians);
+
+                EmitterVelocity = new Vector2((float) x, (float) y);
+            }
         }
 
         private void RenderInitializersSection()

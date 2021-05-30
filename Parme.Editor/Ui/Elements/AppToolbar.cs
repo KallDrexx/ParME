@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Windows.Forms;
 using ImGuiHandler;
 using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
@@ -214,12 +216,60 @@ namespace Parme.Editor.Ui.Elements
                         UpdatedGridSize = gridSize,
                     });
                 }
+                
+                ImGui.Separator();
+                
+                RenderReferenceSpriteSection();
 
                 ImGui.Separator();
                 
                 ImGui.Text($"Live Particle Count: {_applicationState.ParticleCount}");
                 
                 ImGui.EndMenu();
+            }
+        }
+
+        private void RenderReferenceSpriteSection()
+        {
+            if (ImGui.BeginMenu($"Reference Sprite: {_applicationState.ReferenceSpriteFilename ?? "<None>"}"))
+            {
+                if (ImGui.MenuItem("<None>"))
+                {
+                    _appOperationQueue.Enqueue(new NewReferenceSpriteRequested(null));
+                }
+
+                foreach (var file in _applicationState.RecentReferenceSprites)
+                {
+                    if (ImGui.MenuItem(file))
+                    {
+                        _appOperationQueue.Enqueue(new NewReferenceSpriteRequested(file));
+                    }
+                }
+
+                ImGui.Separator();
+                if (ImGui.MenuItem("Other File"))
+                {
+                    var dialog = new OpenFileDialog
+                    {
+                        InitialDirectory = Path.GetDirectoryName(_applicationState.ActiveFileName),
+                        DefaultExt = ".png",
+                        Filter = "Image File|*.png"
+                    };
+
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        _appOperationQueue.Enqueue(new NewReferenceSpriteRequested(dialog.FileName));
+                    }
+                }
+                
+                ImGui.EndMenu();
+            }
+
+            var xOffset = _applicationState.ReferenceSpriteOffset.X;
+            var yOffset = _applicationState.ReferenceSpriteOffset.Y;
+            if (ImGui.InputFloat("X Offset", ref xOffset) || ImGui.InputFloat("Y Offset", ref yOffset))
+            {
+                _applicationState.ReferenceSpriteOffset = new Vector2(xOffset, yOffset);
             }
         }
     }

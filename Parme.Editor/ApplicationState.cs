@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
@@ -14,6 +15,7 @@ namespace Parme.Editor
     {
         private readonly HashSet<Modal> _openModals = new HashSet<Modal>();
         private readonly AppSettings _appSettings;
+        private readonly GraphicsDevice _graphicsDevice;
         private float _currentTime;
         
         public string Version { get; }
@@ -31,6 +33,10 @@ namespace Parme.Editor
         public bool AutoSaveOnChange { get; private set; } = true;
         public IReadOnlyList<string> RecentlyOpenedFiles { get; private set; }
         public bool ResetCameraRequested { get; set; }
+        public string ReferenceSpriteFilename { get; private set; }
+        public Vector2 ReferenceSpriteOffset { get; set; }
+        public Texture2D ReferenceSprite { get; private set; }
+        public IReadOnlyList<string> RecentReferenceSprites => _appSettings.RecentReferenceImages;
 
         public AutoMoveTextureOption AutoMoveTextureOption
         {
@@ -42,8 +48,9 @@ namespace Parme.Editor
             }
         }
 
-        public ApplicationState()
+        public ApplicationState(GraphicsDevice graphicsDevice)
         {
+            _graphicsDevice = graphicsDevice;
             _appSettings = AppSettings.Load();
             
             var assembly = Assembly.GetExecutingAssembly();
@@ -134,6 +141,31 @@ namespace Parme.Editor
             if (operationResult.ResetCamera == true)
             {
                 ResetCameraRequested = true;
+            }
+
+            if (operationResult.SelectedReferenceSpriteChanged)
+            {
+                if (operationResult.SelectedReferenceSpriteFileName == null)
+                {
+                    ReferenceSprite = null;
+                    ReferenceSpriteFilename = null;
+                }
+                else
+                {
+                    try
+                    {
+                        ReferenceSprite = Texture2D.FromFile(_graphicsDevice, operationResult.SelectedReferenceSpriteFileName);
+                        ReferenceSpriteFilename = operationResult.SelectedReferenceSpriteFileName;
+                        
+                        _appSettings.AddReferenceImage(operationResult.SelectedReferenceSpriteFileName);
+                        _appSettings.Save();
+                    }
+                    catch (Exception exception)
+                    {
+                        ErrorMessage =
+                            $"Failed to load reference sprite '{operationResult.SelectedReferenceSpriteFileName}': {exception.Message}";
+                    }
+                }
             }
         }
 

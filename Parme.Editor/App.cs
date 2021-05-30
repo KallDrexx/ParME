@@ -22,11 +22,11 @@ namespace Parme.Editor
         public const string DefaultExtension = ".emlogic";
         
         private readonly ParticleCamera _camera = new ParticleCamera();
-        private readonly ApplicationState _applicationState = new ApplicationState();
         private readonly ParticlePool _particlePool = new ParticlePool();
         private readonly AppOperationQueue _appOperationQueue;
         private readonly SettingsCommandHandler _commandHandler;
         private readonly GraphicsDeviceManager _graphicsDeviceManager;
+        private ApplicationState _applicationState;
         private TextureFileLoader _textureFileLoader;
         private MonoGameEmitter _emitter;
         private MonoGameEmitterRenderGroup _emitterRenderGroup;
@@ -37,6 +37,7 @@ namespace Parme.Editor
         private Texture2D _gridTexture;
         private SpriteBatch _spriteBatch;
         private RenderTarget2D _particleRenderArea;
+        private EmitterSpriteBatchHandler _emitterSpriteBatchHandler;
 
         public App()
         {
@@ -52,6 +53,8 @@ namespace Parme.Editor
 
         protected override void Initialize()
         {
+            _applicationState = new ApplicationState(_graphicsDeviceManager.GraphicsDevice);
+            _emitterSpriteBatchHandler = new EmitterSpriteBatchHandler(_graphicsDeviceManager.GraphicsDevice);
             _graphicsDeviceManager.PreferredBackBufferWidth = 1024;
             _graphicsDeviceManager.PreferredBackBufferHeight = 768;
             _graphicsDeviceManager.ApplyChanges();
@@ -174,7 +177,7 @@ namespace Parme.Editor
             
             _graphicsDeviceManager.GraphicsDevice.SetRenderTarget(_particleRenderArea);
             RenderGrid(backgroundColor);
-
+            RenderReferenceSprite();
             _emitterRenderGroup.Render(_camera, _applicationState.RenderSamplerState ?? SamplerState.PointClamp);
             _graphicsDeviceManager.GraphicsDevice.SetRenderTarget(null);
 
@@ -197,6 +200,23 @@ namespace Parme.Editor
             _imGuiManager.RenderElements(gameTime.ElapsedGameTime);
             
             base.Draw(gameTime);
+        }
+
+        private void RenderReferenceSprite()
+        {
+            if (_applicationState.ReferenceSprite == null || _emitter == null)
+            {
+                return; 
+            }
+
+            var position = new Microsoft.Xna.Framework.Vector2(
+                _applicationState.ReferenceSpriteOffset.X + _emitter.WorldCoordinates.X - _applicationState.ReferenceSprite.Width / 2f,
+                -_applicationState.ReferenceSpriteOffset.Y - _emitter.WorldCoordinates.Y - _applicationState.ReferenceSprite.Height / 2f);
+
+            _emitterSpriteBatchHandler.SetupAndStartSpriteBatch(_spriteBatch, _camera, _applicationState.RenderSamplerState);
+            _spriteBatch.Draw(_applicationState.ReferenceSprite, position, Color.White);
+            
+            _spriteBatch.End();
         }
 
         private void RenderGrid(Color backgroundColor)

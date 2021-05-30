@@ -19,5 +19,7 @@ namespace Parme.Editor.AppOperations
         public Modal? ModalToOpen { get; set; }
         public bool? UpdatedAutoSave { get; set; }
         public bool? ResetCamera { get; set; }
+        public bool SelectedReferenceSpriteChanged { get; set; }
+        public string SelectedReferenceSpriteFileName { get; set; }
     }
 }

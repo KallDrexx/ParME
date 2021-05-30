@@ -15,6 +15,7 @@ namespace Parme.Editor.Settings
         // ReSharper disable once MemberCanBePrivate.Global
         public List<string> RecentlyOpenedFiles { get; set; } = new List<string>();
         public AutoMoveTextureOption AutoMoveTextureOption { get; set; } = AutoMoveTextureOption.Ask;
+        public List<string> RecentReferenceImages { get; set; } = new List<string>();
 
         public static AppSettings Load()
         {
@@ -39,6 +40,18 @@ namespace Parme.Editor.Settings
             for (var x = RecentlyOpenedFiles.Count - 1; x > RecentListSize; x--)
             {
                 RecentlyOpenedFiles.RemoveAt(x);
+            }
+        }
+
+        public void AddReferenceImage(string fileName)
+        {
+            RecentReferenceImages ??= new List<string>();
+            RecentReferenceImages.Remove(fileName);
+            
+            RecentReferenceImages.Insert(0, fileName);
+            for (var x = RecentReferenceImages.Count - 1; x > RecentListSize; x--)
+            {
+                RecentReferenceImages.RemoveAt(x);
             }
         }
 
