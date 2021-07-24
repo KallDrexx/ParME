@@ -76,8 +76,8 @@ namespace Parme.Frb
 
             if (!_emitterToGroupMap.TryGetValue(emitter, out var group))
             {
-                const string message = "Attempted to destroy an emitter that's not tracked by the parme manager";
-                throw new InvalidOperationException(message);
+                // Nothing to do since we don't know anything about the emitter
+                return;
             }
             
             group.RemoveEmitter(emitter, waitForAllParticlesToDie);
