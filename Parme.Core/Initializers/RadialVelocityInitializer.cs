@@ -22,5 +22,7 @@ namespace Parme.Core.Initializers
         public float MaxMagnitude { get; set; }
         public float MinDegrees { get; set; }
         public float MaxDegrees { get; set; }
+        public float XAxisScale { get; set; } = 1f;
+        public float YAxisScale { get; set; } = 1f;
     }
 }

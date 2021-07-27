@@ -36,11 +36,27 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
             set => Set(value);
         }
 
+        [SelfManagedProperty]
+        public float XAxisScale
+        {
+            get => Get<float>();
+            set => Set(value);
+        }
+
+        [SelfManagedProperty]
+        public float YAxisScale
+        {
+            get => Get<float>();
+            set => Set(value);
+        }
+
         protected override void CustomRender()
         {
             ImGui.Text("Magnitude");
             InputFloat(nameof(MinMagnitude), "Min##Magnitude");
             InputFloat(nameof(MaxMagnitude), "Max##Magnitude");
+            InputFloat(nameof(XAxisScale), "X Axis Scale");
+            InputFloat(nameof(YAxisScale), "Y Axis Scale");
             
             ImGui.NewLine();
             ImGui.Text("Angles (degrees)");
@@ -67,6 +83,8 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
             MaxMagnitude = initializer.MaxMagnitude;
             MinDegrees = (int) initializer.MinDegrees;
             MaxDegrees = (int) initializer.MaxDegrees;
+            XAxisScale = initializer.XAxisScale;
+            YAxisScale = initializer.YAxisScale;
         }
 
         protected override void OnSelfManagedPropertyChanged(string propertyName)
@@ -77,6 +95,8 @@ namespace Parme.Editor.Ui.Elements.Editors.Initializers.Velocity
                 MaxMagnitude = MaxMagnitude,
                 MinDegrees = MinDegrees,
                 MaxDegrees = MaxDegrees,
+                XAxisScale = XAxisScale,
+                YAxisScale = YAxisScale,
             };
             
             CommandHandler.Execute(new UpdateInitializerCommand(InitializerType.Velocity, initializer));
