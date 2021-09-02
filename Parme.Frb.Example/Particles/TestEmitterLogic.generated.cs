@@ -9,7 +9,6 @@ namespace Parme.Frb.Example
 
     public class TestEmitterLogic : IEmitterLogic
     {
-        private readonly Random _random = new Random();
         private float _timeSinceLastTrigger;
 
         public float MaxParticleLifeTime { get; set; } = 1f;
@@ -117,7 +116,7 @@ namespace Parme.Frb.Example
                 {
                     
                     {
-                        newParticleCount = _random.Next(RandomParticleCountMinToSpawn, RandomParticleCountMaxToSpawn + 1);
+                        newParticleCount = parent.Random.Next(RandomParticleCountMinToSpawn, RandomParticleCountMaxToSpawn + 1);
                     }
 
                 }
@@ -152,14 +151,14 @@ namespace Parme.Frb.Example
                                 }
                     {
                         
-                        var x = RandomRangeVelocityMaxX - _random.NextDouble() * (RandomRangeVelocityMaxX - RandomRangeVelocityMinX);
-                        var y = RandomRangeVelocityMaxY - _random.NextDouble() * (RandomRangeVelocityMaxY - RandomRangeVelocityMinY);
+                        var x = RandomRangeVelocityMaxX - parent.Random.NextDouble() * (RandomRangeVelocityMaxX - RandomRangeVelocityMinX);
+                        var y = RandomRangeVelocityMaxY - parent.Random.NextDouble() * (RandomRangeVelocityMaxY - RandomRangeVelocityMinY);
                         particle.Velocity = new Vector2((float) x, (float) y);
                     }
                     {
                         
-                        var x = RandomRegionPositionMaxXOffset - _random.NextDouble() * (RandomRegionPositionMaxXOffset - RandomRegionPositionMinXOffset);
-                        var y = RandomRegionPositionMaxYOffset - _random.NextDouble() * (RandomRegionPositionMaxYOffset - RandomRegionPositionMinYOffset);
+                        var x = RandomRegionPositionMaxXOffset - parent.Random.NextDouble() * (RandomRegionPositionMaxXOffset - RandomRegionPositionMinXOffset);
+                        var y = RandomRegionPositionMaxYOffset - parent.Random.NextDouble() * (RandomRegionPositionMaxYOffset - RandomRegionPositionMinYOffset);
                         particle.Position = new Vector2((float) x, (float) y);
                     }
                     {

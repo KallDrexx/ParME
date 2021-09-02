@@ -24,8 +24,8 @@ namespace Parme.CSharp.CodeGen.Initializers
         public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
-                        var radians = RadialVelocityMaxRadians - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
-                        var magnitude = RadialVelocityMaxMagnitude - _random.NextDouble() * (RadialVelocityMaxMagnitude - RadialVelocityMinMagnitude);
+                        var radians = RadialVelocityMaxRadians - parent.Random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
+                        var magnitude = RadialVelocityMaxMagnitude - parent.Random.NextDouble() * (RadialVelocityMaxMagnitude - RadialVelocityMinMagnitude);
                 
                         // convert from polar coordinates to cartesian coordinates
                         var x = magnitude * Math.Cos(radians) * RadialVelocityXAxisScale;

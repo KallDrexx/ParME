@@ -12,8 +12,9 @@ namespace Parme.MonoGame
         public MonoGameEmitter(IEmitterLogic emitterLogic,
             ParticlePool particlePool,
             GraphicsDevice graphicsDevice,
-            ITextureFileLoader textureFileLoader) 
-            : base(emitterLogic, particlePool)
+            ITextureFileLoader textureFileLoader,
+            Random random) 
+            : base(emitterLogic, particlePool, random)
         {
             if (textureFileLoader == null)
             {

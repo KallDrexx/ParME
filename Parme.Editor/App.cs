@@ -26,6 +26,7 @@ namespace Parme.Editor
         private readonly AppOperationQueue _appOperationQueue;
         private readonly SettingsCommandHandler _commandHandler;
         private readonly GraphicsDeviceManager _graphicsDeviceManager;
+        private readonly Random _random = new Random();
         private ApplicationState _applicationState;
         private TextureFileLoader _textureFileLoader;
         private MonoGameEmitter _emitter;
@@ -257,7 +258,7 @@ namespace Parme.Editor
                 
                 var logicClass = CSharpScript.EvaluateAsync<IEmitterLogic>(code, scriptOptions).GetAwaiter().GetResult();
 
-                _emitter = new MonoGameEmitter(logicClass, _particlePool, GraphicsDevice, _textureFileLoader);
+                _emitter = new MonoGameEmitter(logicClass, _particlePool, GraphicsDevice, _textureFileLoader, _random);
                 _emitterRenderGroup.AddEmitter(_emitter);
                 _emitter.IsEmittingNewParticles = true;
                 

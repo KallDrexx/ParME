@@ -11,6 +11,7 @@ namespace Parme.Frb
         
         private static readonly object Padlock = new object();
         private static ParmeEmitterManager _instance;
+        private readonly Random _random = new Random();
         
         private readonly Dictionary<string, ParmeEmitterGroup> _emitterGroups 
             = new Dictionary<string, ParmeEmitterGroup>();
@@ -91,7 +92,7 @@ namespace Parme.Frb
             
             if (!_emitterGroups.TryGetValue(name.Trim(), out var group))
             {
-                group = new ParmeEmitterGroup();
+                group = new ParmeEmitterGroup(_random);
                 _emitterGroups.Add(name, group);
                 SpriteManager.AddDrawableBatch(group);
             }

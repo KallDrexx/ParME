@@ -12,7 +12,7 @@ namespace Parme.CSharp.CodeGen.Initializers
             var initializer = (RandomParticleCountInitializer) obj;
 
             // Make sure min and max values are in the actual correct properties, otherwise an exception will
-            // occur with `_random.Next()` calls.
+            // occur with `parent.Random.Next()` calls.
             var min = Math.Min(initializer.MinimumToSpawn, initializer.MaximumToSpawn);
             var max = Math.Max(initializer.MinimumToSpawn, initializer.MaximumToSpawn);
 
@@ -24,7 +24,7 @@ namespace Parme.CSharp.CodeGen.Initializers
 
         public override FormattableString GenerateExecutionCode(object obj)
         {
-            return $@"newParticleCount = _random.Next(RandomParticleCountMinToSpawn, RandomParticleCountMaxToSpawn + 1);
+            return $@"newParticleCount = parent.Random.Next(RandomParticleCountMinToSpawn, RandomParticleCountMaxToSpawn + 1);
 ";
         }
 

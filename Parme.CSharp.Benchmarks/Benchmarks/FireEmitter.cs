@@ -1,4 +1,5 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using Parme.CSharp.Benchmarks.Templates;
 
@@ -19,7 +20,7 @@ namespace Parme.CSharp.Benchmarks.Benchmarks
         {
             _pool = new ParticlePool();
             _preInstantiatedLogic = Utilities.GetInstance(FireTemplate.Emitter);
-            _emitter = new BenchmarkEmitter(_preInstantiatedLogic, _pool)
+            _emitter = new BenchmarkEmitter(_preInstantiatedLogic, _pool, new Random())
             {
                 IsEmittingNewParticles = true
             };
@@ -40,7 +41,7 @@ namespace Parme.CSharp.Benchmarks.Benchmarks
         [Benchmark]
         public void CreateEmitterWithReUsedLogic()
         {
-            using var emitter = new BenchmarkEmitter(_preInstantiatedLogic, _pool);
+            using var emitter = new BenchmarkEmitter(_preInstantiatedLogic, _pool, new Random());
             emitter.Update(1f/60);
         }
     }

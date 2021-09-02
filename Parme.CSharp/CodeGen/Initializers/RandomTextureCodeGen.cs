@@ -10,7 +10,7 @@ namespace Parme.CSharp.CodeGen.Initializers
         public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
-                        particle.TextureSectionIndex = (byte) _random.Next(0, TextureSections.Length);
+                        particle.TextureSectionIndex = (byte) parent.Random.Next(0, TextureSections.Length);
 ";
         }
     }

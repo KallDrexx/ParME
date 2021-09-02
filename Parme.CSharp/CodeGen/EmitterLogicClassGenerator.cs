@@ -28,7 +28,6 @@ using Parme.CSharp;
 {0}
     public class {1} : IEmitterLogic
     {{
-        private readonly Random _random = new Random();
         {2}
 
         public float MaxParticleLifeTime {{ get; set; }} = {3}f;

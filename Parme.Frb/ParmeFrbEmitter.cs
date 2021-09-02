@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using FlatRedBall;
 using Parme.CSharp;
 using Parme.MonoGame;
@@ -50,12 +51,13 @@ namespace Parme.Frb
         /// </summary>
         public bool ImmediatelyKillParticlesOnDestroy { get; set; }
 
-        public ParmeFrbEmitter(ParticlePool particlePool, IEmitterLogic logic)
+        public ParmeFrbEmitter(ParticlePool particlePool, IEmitterLogic logic, Random random)
         {
             Emitter = new MonoGameEmitter(logic,
                 particlePool,
                 FlatRedBallServices.GraphicsDevice,
-                new FrbTextureFileLoader())
+                new FrbTextureFileLoader(),
+                random)
             {
                 IsEmittingNewParticles = true
             };

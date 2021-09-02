@@ -9,7 +9,6 @@ namespace Parme.Frb.Example
 
     public class ContrailsEmitterLogic : IEmitterLogic
     {
-        private readonly Random _random = new Random();
         private Vector2 _lastEmittedPosition;
 
         public float MaxParticleLifeTime { get; set; } = 0.5f;
@@ -134,7 +133,7 @@ namespace Parme.Frb.Example
                     
                     {
                         
-                        particle.TextureSectionIndex = (byte) _random.Next(0, TextureSections.Length);
+                        particle.TextureSectionIndex = (byte) parent.Random.Next(0, TextureSections.Length);
                     }
                     {
                         
@@ -152,8 +151,8 @@ namespace Parme.Frb.Example
                     }
                     {
                         
-                        var radians = RadialVelocityMaxRadians - _random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
-                        var magnitude = RadialVelocityMaxMagnitude - _random.NextDouble() * (RadialVelocityMaxMagnitude - RadialVelocityMinMagnitude);
+                        var radians = RadialVelocityMaxRadians - parent.Random.NextDouble() * (RadialVelocityMaxRadians - RadialVelocityMinRadians);
+                        var magnitude = RadialVelocityMaxMagnitude - parent.Random.NextDouble() * (RadialVelocityMaxMagnitude - RadialVelocityMinMagnitude);
                 
                         // convert from polar coordinates to cartesian coordinates
                         var x = magnitude * Math.Cos(radians) * RadialVelocityXAxisScale;

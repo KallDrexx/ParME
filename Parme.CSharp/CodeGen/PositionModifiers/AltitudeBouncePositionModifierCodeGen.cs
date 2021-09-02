@@ -27,7 +27,7 @@ namespace Parme.CSharp.CodeGen.PositionModifiers
                         {{
                             particle.Altitude = 0;
                             var accelerationModifier = (float) Math.Pow(AltitudeElasticity, particle.AltitudeBounceCount);
-                            var acceleration = AltitudeMinBounceAcceleration + (float) _random.NextDouble() * (AltitudeMaxBounceAcceleration - AltitudeMinBounceAcceleration);
+                            var acceleration = AltitudeMinBounceAcceleration + (float) parent.Random.NextDouble() * (AltitudeMaxBounceAcceleration - AltitudeMinBounceAcceleration);
                             particle.AltitudeVelocity = acceleration * accelerationModifier;
                             particle.AltitudeBounceCount++;
                         }}

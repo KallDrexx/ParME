@@ -19,7 +19,7 @@ namespace Parme.CSharp.CodeGen.Initializers
 
         public override FormattableString GenerateExecutionCode(object obj)
         {
-            return $@"var degrees = RandomRotationMaxDegrees - _random.NextDouble() * (RandomRotationMaxDegrees - RandomRotationMinDegrees);
+            return $@"var degrees = RandomRotationMaxDegrees - parent.Random.NextDouble() * (RandomRotationMaxDegrees - RandomRotationMinDegrees);
                         particle.RotationInRadians = (float) (degrees * (Math.PI / 180f)); 
 ";
         }

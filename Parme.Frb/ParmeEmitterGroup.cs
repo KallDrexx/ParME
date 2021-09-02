@@ -15,6 +15,7 @@ namespace Parme.Frb
         private readonly List<ParmeFrbEmitter> _frbEmitters = new List<ParmeFrbEmitter>();
         private readonly List<ParmeFrbEmitter> _frbEmittersWaitingToBeKilled = new List<ParmeFrbEmitter>();
         private readonly MonoGameEmitterRenderGroup _emitterRenderGroup;
+        private readonly Random _random;
 
         /// <summary>
         /// Position of the emitter group on the X axis.  This has no effect
@@ -33,9 +34,10 @@ namespace Parme.Frb
         public float Z { get; set; }
         public bool UpdateEveryFrame => true;
 
-        public ParmeEmitterGroup()
+        public ParmeEmitterGroup(Random random)
         {
             _emitterRenderGroup = new MonoGameEmitterRenderGroup(FlatRedBallServices.GraphicsDevice);
+            _random = random;
         }
         
         public void Draw(Camera camera)
@@ -98,7 +100,7 @@ namespace Parme.Frb
 
         public ParmeFrbEmitter CreateEmitter(IEmitterLogic logic, PositionedObject parent = null)
         {
-            var emitter = new ParmeFrbEmitter(_particlePool, logic)
+            var emitter = new ParmeFrbEmitter(_particlePool, logic, _random)
             {
                 Parent = parent
             };

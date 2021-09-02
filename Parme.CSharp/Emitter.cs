@@ -12,13 +12,15 @@ namespace Parme.CSharp
         public Vector2 WorldCoordinates { get; set; }
         public float RotationInRadians { get; set; }
         public bool IsEmittingNewParticles { get; set; }
+        public Random Random { get; }
         
         // ReSharper disable once MemberCanBeProtected.Global
         public Vector2 FullTextureSize { get; protected set; }
 
-        protected Emitter(IEmitterLogic emitterLogic, ParticlePool particlePool)
+        protected Emitter(IEmitterLogic emitterLogic, ParticlePool particlePool, Random random)
         {
             EmitterLogic = emitterLogic ?? throw new ArgumentNullException(nameof(emitterLogic));
+            Random = random;
 
             var initialCapacity = emitterLogic.GetEstimatedCapacity();
             initialCapacity = Math.Max(1, initialCapacity);

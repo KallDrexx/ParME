@@ -22,8 +22,8 @@ namespace Parme.CSharp.CodeGen.Initializers
         public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
-                        var x = RandomRegionPositionMaxXOffset - _random.NextDouble() * (RandomRegionPositionMaxXOffset - RandomRegionPositionMinXOffset);
-                        var y = RandomRegionPositionMaxYOffset - _random.NextDouble() * (RandomRegionPositionMaxYOffset - RandomRegionPositionMinYOffset);
+                        var x = RandomRegionPositionMaxXOffset - parent.Random.NextDouble() * (RandomRegionPositionMaxXOffset - RandomRegionPositionMinXOffset);
+                        var y = RandomRegionPositionMaxYOffset - parent.Random.NextDouble() * (RandomRegionPositionMaxYOffset - RandomRegionPositionMinYOffset);
                         particle.Position = new Vector2((float) x, (float) y);
 ";
         }

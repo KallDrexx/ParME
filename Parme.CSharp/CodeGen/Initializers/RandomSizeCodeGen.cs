@@ -52,13 +52,13 @@ namespace Parme.CSharp.CodeGen.Initializers
                 if (initializer.RandomizedAxis == RandomSizeInitializer.Axis.Y)
                 {
                     result.Append(@"
-                        var height = RandomSizeMax - _random.NextDouble() * (RandomSizeMax - RandomSizeMin);
+                        var height = RandomSizeMax - parent.Random.NextDouble() * (RandomSizeMax - RandomSizeMin);
                         var width = height * aspectRatio;");
                 }
                 else
                 {
                     result.Append(@"
-                        var width = RandomSizeMax - _random.NextDouble() * (RandomSizeMax - RandomSizeMin);
+                        var width = RandomSizeMax - parent.Random.NextDouble() * (RandomSizeMax - RandomSizeMin);
                         var height = width / aspectRatio;");
                 }
 
@@ -68,8 +68,8 @@ namespace Parme.CSharp.CodeGen.Initializers
             }
             
             return $@"
-                        var x = RandomSizeMaxWidth - _random.NextDouble() * (RandomSizeMaxWidth - RandomSizeMinWidth);
-                        var y = RandomSizeMaxHeight - _random.NextDouble() * (RandomSizeMaxHeight - RandomSizeMinHeight);
+                        var x = RandomSizeMaxWidth - parent.Random.NextDouble() * (RandomSizeMaxWidth - RandomSizeMinWidth);
+                        var y = RandomSizeMaxHeight - parent.Random.NextDouble() * (RandomSizeMaxHeight - RandomSizeMinHeight);
                         particle.Size = new Vector2((float) x, (float) y);
 ";
         }

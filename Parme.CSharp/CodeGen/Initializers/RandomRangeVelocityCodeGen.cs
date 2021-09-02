@@ -22,8 +22,8 @@ namespace Parme.CSharp.CodeGen.Initializers
         public override FormattableString GenerateExecutionCode(object obj)
         {
             return $@"
-                        var x = RandomRangeVelocityMaxX - _random.NextDouble() * (RandomRangeVelocityMaxX - RandomRangeVelocityMinX);
-                        var y = RandomRangeVelocityMaxY - _random.NextDouble() * (RandomRangeVelocityMaxY - RandomRangeVelocityMinY);
+                        var x = RandomRangeVelocityMaxX - parent.Random.NextDouble() * (RandomRangeVelocityMaxX - RandomRangeVelocityMinX);
+                        var y = RandomRangeVelocityMaxY - parent.Random.NextDouble() * (RandomRangeVelocityMaxY - RandomRangeVelocityMinY);
                         particle.Velocity = new Vector2((float) x, (float) y);
 ";
         }
