@@ -208,6 +208,8 @@ namespace Parme.Frb.GluePlugin
             AvailableAssetTypes.Self.RemoveAssetType(_assetTypeInfoManager.FileAssetTypeInfo);
             AvailableAssetTypes.Self.RemoveAssetType(_assetTypeInfoManager.LogicAssetTypeInfo);
             
+            UnregisterAllCodeGenerators();
+            
             return true;
         }
 
