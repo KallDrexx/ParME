@@ -21,12 +21,13 @@ namespace Parme.Frb.Example.Screens
         public GameScreen () 
         	: base ("GameScreen")
         {
+            BulletList = new FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet>();
+            BulletList.Name = "BulletList";
         }
         public override void Initialize (bool addToManagers) 
         {
             LoadStaticContent(ContentManagerName);
-            BulletList = new FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet>();
-            BulletList.Name = "BulletList";
+            BulletList.Clear();
             PlayerInstance = new Parme.Frb.Example.Entities.Player(ContentManagerName, false);
             PlayerInstance.Name = "PlayerInstance";
             

@@ -322,9 +322,6 @@ namespace TMXGlueLib
     {
         private MapImageLayerImage imageField;
 
-        private float _offsetX;
-        private float _offsetY;
-
         List<property> mProperties = new List<property>();
 
         public List<property> properties
@@ -375,20 +372,6 @@ namespace TMXGlueLib
             get;
             set;
         } = 1.0f;
-
-        [XmlAttribute("offsetx")]
-        public float OffsetX
-        {
-            get { return _offsetX; }
-            set { _offsetX = value; }
-        }
-
-        [XmlAttribute("offsety")]
-        public float OffsetY
-        {
-            get { return _offsetY; }
-            set { _offsetY = value; }
-        }
 
     }
 
@@ -550,14 +533,8 @@ namespace TMXGlueLib
         [XmlAttribute()]
         public string encoding
         {
-            get
-            {
-                return this.encodingField;
-            }
-            set
-            {
-                this.encodingField = value;
-            }
+            get => encodingField;
+            set => encodingField = value;
         }
 
         /// <remarks/>
@@ -581,14 +558,8 @@ namespace TMXGlueLib
         [XmlText()]
         public string Value
         {
-            get
-            {
-                return this.valueField;
-            }
-            set
-            {
-                this.valueField = value;
-            }
+            get => valueField;
+            set => valueField = value;
         }
 
 
@@ -690,6 +661,76 @@ namespace TMXGlueLib
         }
 
         public int length { get; set; }
+
+        public void SetTileData(List<uint> newData, string encoding, string compression)
+        {
+            this.encoding = encoding;
+            this.compression = compression;
+
+            if(encodingField != "csv")
+            {
+                if(compression == "gzip")
+                {
+                    {
+                        string convertedString = 
+                            CompressGzip(newData);
+
+                        this.Value = "\n   " + convertedString + "\n";
+
+                    }
+                    //// now do back out as a test:
+                    //{
+                    //    Stream data = new MemoryStream(Convert.FromBase64String(Value), false);
+                    //    data = new GZipStream(data, CompressionMode.Decompress, false);
+
+
+                    //    using (data)
+                    //    {
+                    //        using (BinaryReader reader = new BinaryReader(data))
+                    //        {
+                    //            var _ids = new List<uint>();
+                    //            for (int i = 0; i < length; i++)
+                    //            {
+                    //                _ids.Add(reader.ReadUInt32());
+                    //            }
+
+                    //            int m = 3;
+                    //        }
+                    //    }
+                    //}
+
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private static string CompressGzip(List<uint> newData)
+        {
+            var memoryStream = new MemoryStream();
+            var gzipStream = new GZipStream(memoryStream, CompressionLevel.Optimal);
+            var writer = new BinaryWriter(gzipStream);
+            for (int i = 0; i < newData.Count; i++)
+            {
+                writer.Write(newData[i]);
+            }
+
+            writer.Flush();
+            gzipStream.Flush();
+            gzipStream.Close();
+
+            var memoryBytes = memoryStream.ToArray();
+
+            return Convert.ToBase64String(memoryBytes);
+        }
+
+
     }
 
 #if !UWP
@@ -752,6 +793,9 @@ namespace TMXGlueLib
     /// <remarks/>
     public partial class mapObjectgroupObject
     {
+        [XmlAttribute("visible")]
+        public int Visible { get; set; } = 1;
+
         private mapObjectgroupObjectEllipse ellipseField = null;
 
         private mapObjectgroupObjectPolygon[] polygonField;
@@ -918,13 +962,16 @@ namespace TMXGlueLib
     [XmlType(AnonymousType = true)]
     public partial class mapObjectgroupObjectEllipse
     {
-        
+        [XmlAttribute("visible")]
+        public int Visible { get; set; } = 1;
     }
 
     /// <remarks/>
     [XmlType(AnonymousType = true)]
     public partial class mapObjectgroupObjectPolygon
     {
+        [XmlAttribute("visible")]
+        public int Visible { get; set; } = 1;
 
         private string pointsField;
 
@@ -943,12 +990,14 @@ namespace TMXGlueLib
         }
     }
 
-#region mapObjectgroupObjectPolyline
+    #region mapObjectgroupObjectPolyline
 
     /// <remarks/>
     [XmlType(AnonymousType = true)]
     public partial class mapObjectgroupObjectPolyline
     {
+        [XmlAttribute("visible")]
+        public int Visible { get; set; } = 1;
 
         private string pointsField;
 
@@ -967,7 +1016,7 @@ namespace TMXGlueLib
         }
     }
 
-#endregion
+    #endregion
 
 #region NewDataSet Class
     /// <remarks/>

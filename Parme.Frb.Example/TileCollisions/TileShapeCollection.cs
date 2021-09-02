@@ -1,6 +1,7 @@
 ﻿using FlatRedBall.Math;
 using FlatRedBall.Math.Geometry;
 using FlatRedBall.TileGraphics;
+using FlatRedBall.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +11,7 @@ using AARect = FlatRedBall.Math.Geometry.AxisAlignedRectangle;
 
 namespace FlatRedBall.TileCollisions
 {
-    public partial class TileShapeCollection
+    public partial class TileShapeCollection : INameable
     {
         #region Fields
 
@@ -86,6 +87,11 @@ namespace FlatRedBall.TileCollisions
 
 
         public List<Polygon> LastCollisionPolygons => mShapes.LastCollisionPolygons;
+
+        /// <summary>
+        /// Returns the rectangles which collided in the last successful collision. These can be checked in a collision event
+        /// to perform custom physics logic.
+        /// </summary>
         public List<AxisAlignedRectangle> LastCollisionAxisAlignedRectangles => mShapes.LastCollisionAxisAlignedRectangles;
 
         public bool Visible
@@ -145,7 +151,7 @@ namespace FlatRedBall.TileCollisions
 
         public void AddToLayer(FlatRedBall.Graphics.Layer layer)
         {
-            this.mShapes.AddToManagers(layer);
+            this.mShapes.AddToManagers(layer, makeAutomaticallyUpdated: false);
         }
 
         public void AttachTo(PositionedObject newParent, bool changeRelative = true)
@@ -1127,6 +1133,18 @@ namespace FlatRedBall.TileCollisions
             }
         }
 
+        public void UpdateShapesForCloudCollision()
+        {
+            var count = this.mShapes.AxisAlignedRectangles.Count;
+            for (int i = 0; i < count; i++)
+            {
+                var rectangle = this.mShapes.AxisAlignedRectangles[i];
+
+                rectangle.RepositionHalfSize = true;
+
+                rectangle.RepositionDirections = RepositionDirections.Up;
+            }
+        }
 
         public override string ToString()
         {

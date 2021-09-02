@@ -36,6 +36,7 @@ namespace Parme.Frb.Example.Entities
         }
         private Parme.Frb.ParmeFrbEmitter TestEmitter;
         public int RotationDegreesPerSecond = 360;
+        public string EditModeType { get; set; } = "Parme.Frb.Example.Entities.Player";
         protected FlatRedBall.Graphics.Layer LayerProvidedByContainer = null;
         public Player () 
         	: this(FlatRedBall.Screens.ScreenManager.CurrentScreen.ContentManagerName, true)
@@ -55,7 +56,7 @@ namespace Parme.Frb.Example.Entities
         {
             LoadStaticContent(ContentManagerName);
             mLineInstance = new FlatRedBall.Math.Geometry.Line();
-            mLineInstance.Name = "mLineInstance";
+            mLineInstance.Name = "LineInstance";
             TestEmitter = Parme.Frb.ParmeEmitterManager.Instance
                 .CreateEmitter(new DirectiontestEmitterLogic(), this, "");
 

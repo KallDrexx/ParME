@@ -29,7 +29,9 @@ namespace Parme.Frb.Example
         public float RadialVelocityMinMagnitude { get; set; } = 100f;
         public float RadialVelocityMaxMagnitude { get; set; } = 100f;
         public float RadialVelocityMinRadians { get; set; } = 3.141592653589793f;
-        public float RadialVelocityMaxRadians { get; set; } = 3.141592653589793f; 
+        public float RadialVelocityMaxRadians { get; set; } = 3.141592653589793f;
+        public float RadialVelocityXAxisScale { get; set; } = 1f;
+        public float RadialVelocityYAxisScale { get; set; } = 1f; 
 
         public byte StaticColorStartingRed { get; set; } = 255;
         public byte StaticColorStartingGreen { get; set; } = 255;
@@ -134,8 +136,8 @@ namespace Parme.Frb.Example
                         var magnitude = RadialVelocityMaxMagnitude - _random.NextDouble() * (RadialVelocityMaxMagnitude - RadialVelocityMinMagnitude);
                 
                         // convert from polar coordinates to cartesian coordinates
-                        var x = magnitude * Math.Cos(radians);
-                        var y = magnitude * Math.Sin(radians);
+                        var x = magnitude * Math.Cos(radians) * RadialVelocityXAxisScale;
+                        var y = magnitude * Math.Sin(radians) * RadialVelocityYAxisScale;
                         particle.Velocity = new Vector2((float) x, (float) y);
                     }
                     {

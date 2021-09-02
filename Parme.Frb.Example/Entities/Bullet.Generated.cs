@@ -46,6 +46,7 @@ namespace Parme.Frb.Example.Entities
                 return mGeneratedCollision;
             }
         }
+        public string EditModeType { get; set; } = "Parme.Frb.Example.Entities.Bullet";
         protected FlatRedBall.Graphics.Layer LayerProvidedByContainer = null;
         public Bullet () 
         	: this(FlatRedBall.Screens.ScreenManager.CurrentScreen.ContentManagerName, true)
@@ -65,7 +66,7 @@ namespace Parme.Frb.Example.Entities
         {
             LoadStaticContent(ContentManagerName);
             mCircleInstance = new FlatRedBall.Math.Geometry.Circle();
-            mCircleInstance.Name = "mCircleInstance";
+            mCircleInstance.Name = "CircleInstance";
             ContrailsEmitter = Parme.Frb.ParmeEmitterManager.Instance
                 .CreateEmitter(new ContrailsEmitterLogic(), this, "");
 
