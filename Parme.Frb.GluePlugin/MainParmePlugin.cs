@@ -127,7 +127,6 @@ namespace Parme.Frb.GluePlugin
             try
             {
                 GenerateAndSaveEmitterCode(emitter, className, filename);
-                GenerateAndSaveLogicMapperCode();
             }
             catch (Exception exception)
             {
@@ -139,6 +138,7 @@ namespace Parme.Frb.GluePlugin
             
             _assetTypeInfoManager.AddEmitterLogicTypeName(className);
             _emitterLogicMapperGenerator.AddEmitterLogicTypeName(className);
+            GenerateAndSaveLogicMapperCode();
             GlueCommands.Self.PrintOutput($"Successfully generated code for the '{className}' emitter");
         }
 
