@@ -71,6 +71,24 @@ namespace Parme.Frb
             return CreateEmitter(instance, parent, groupName);
         }
 
+        public (bool, ParmeFrbEmitter) TryCreateEmitter(string emitterLogicName, PositionedObject parent, string groupName = null)
+        {
+            if (EmitterLogicMapper == null)
+            {
+                const string message = "Cannot resolve emitter logic type by name without an emitter logic mapper instance";
+                throw new InvalidOperationException(message);
+            }
+
+            var type = EmitterLogicMapper.GetEmitterLogicTypeByName(emitterLogicName);
+            if (type == null)
+            {
+                return (false, null);
+            }
+
+            var instance = (IEmitterLogic) Activator.CreateInstance(type);
+            return (true, CreateEmitter(instance, parent, groupName));
+        }
+        
         public void DestroyEmitter(ParmeFrbEmitter emitter, bool waitForAllParticlesToDie = true)
         {
             if (emitter == null) throw new ArgumentNullException(nameof(emitter));
