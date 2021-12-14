@@ -12,6 +12,14 @@ namespace Parme.Frb.Example.Screens
         void CustomInitialize()
         {
             ParmeEmitterManager.Instance.CreateEmitter("Test", PlayerInstance);
+
+            var (success, emitter) = ParmeEmitterManager.Instance.TryCreateEmitter("Test", PlayerInstance);
+            if (!success)
+            {
+                throw new InvalidOperationException("Expected emitter but none was created");
+            }
+            
+            ParmeEmitterManager.Instance.DestroyEmitter(emitter);
         }
 
         void CustomActivity(bool firstTimeCalled)

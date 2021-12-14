@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +8,7 @@ namespace Parme.Frb.Example.Performance
     public interface IEntityFactory
     {
         object CreateNew(float x = 0, float y = 0);
+        object CreateNew(Microsoft.Xna.Framework.Vector3 position);
         object CreateNew(FlatRedBall.Graphics.Layer layer);
 
         void Initialize(string contentManager);
@@ -77,7 +78,7 @@ namespace Parme.Frb.Example.Performance
             var factory = factories.FirstOrDefault(item =>
             {
                 var type = item.GetType();
-                var methodInfo = type.GetMethod("CreateNew", new[] { typeof(FlatRedBall.Graphics.Layer), typeof(float), typeof(float) });
+                var methodInfo = type.GetMethod("CreateNew", new[] { typeof(FlatRedBall.Graphics.Layer), typeof(float), typeof(float), typeof(float) });
                 var returntypeString = methodInfo.ReturnType.Name;
 
                 return entityType == returntypeString ||

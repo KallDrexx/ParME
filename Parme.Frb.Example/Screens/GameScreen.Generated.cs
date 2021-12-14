@@ -1,6 +1,8 @@
 #if ANDROID || IOS || DESKTOP_GL
 #define REQUIRES_PRIMARY_THREAD_LOADING
 #endif
+// The project is not new enough to support GlueView 2. It is on version 3
+//#define SUPPORTS_GLUEVIEW_2
 using Color = Microsoft.Xna.Framework.Color;
 using System.Linq;
 using FlatRedBall;
@@ -144,12 +146,10 @@ namespace Parme.Frb.Example.Screens
         }
         public override void PauseThisScreen () 
         {
-            StateInterpolationPlugin.TweenerManager.Self.Pause();
             base.PauseThisScreen();
         }
         public override void UnpauseThisScreen () 
         {
-            StateInterpolationPlugin.TweenerManager.Self.Unpause();
             base.UnpauseThisScreen();
         }
         [System.Obsolete("Use GetFile instead")]
@@ -165,5 +165,9 @@ namespace Parme.Frb.Example.Screens
         {
             return null;
         }
+        public static void Reload (object whatToReload) 
+        {
+        }
+        partial void CustomActivityEditMode();
     }
 }

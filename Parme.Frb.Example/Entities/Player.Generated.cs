@@ -1,6 +1,8 @@
 #if ANDROID || IOS || DESKTOP_GL
 #define REQUIRES_PRIMARY_THREAD_LOADING
 #endif
+// The project is not new enough to support GlueView 2. It is on version 3
+//#define SUPPORTS_GLUEVIEW_2
 using Color = Microsoft.Xna.Framework.Color;
 using System.Linq;
 using FlatRedBall.Graphics;
@@ -208,6 +210,9 @@ namespace Parme.Frb.Example.Entities
         {
             return null;
         }
+        public static void Reload (object whatToReload) 
+        {
+        }
         protected bool mIsPaused;
         public override void Pause (FlatRedBall.Instructions.InstructionList instructions) 
         {
@@ -229,5 +234,6 @@ namespace Parme.Frb.Example.Entities
             FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(LineInstance, layerToMoveTo);
             LayerProvidedByContainer = layerToMoveTo;
         }
+        partial void CustomActivityEditMode();
     }
 }

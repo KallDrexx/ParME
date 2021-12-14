@@ -10,6 +10,7 @@ namespace Parme.Frb.Example.Particles
         private readonly Dictionary<string, Type> _nameTypeMap = new Dictionary<string, Type>()
         {
             {"Contrails", typeof(ContrailsEmitterLogic)},
+            {"Directiontest", typeof(DirectiontestEmitterLogic)},
             {"Explosion", typeof(ExplosionEmitterLogic)},
             {"Test", typeof(TestEmitterLogic)},
 
