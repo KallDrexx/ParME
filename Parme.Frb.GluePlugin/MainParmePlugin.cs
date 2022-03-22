@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
@@ -8,7 +7,6 @@ using System.Reflection;
 using System.Windows;
 using FlatRedBall.Glue;
 using FlatRedBall.Glue.Elements;
-using FlatRedBall.Glue.Errors;
 using FlatRedBall.Glue.Parsing;
 using FlatRedBall.Glue.Plugins;
 using FlatRedBall.Glue.Plugins.ExportedImplementations;
@@ -153,14 +151,21 @@ namespace Parme.Frb.GluePlugin
                 var directory = Path.GetDirectoryName(relativePath);
                 emitter.TextureFileName = Path.Combine(directory, emitter.TextureFileName);
             }
-            
+
             var code = GenerateEmitterLogic(emitter, logicClassName);
-            var codeGenFilePath =
-                new FilePath(Path.Combine(GlueState.Self.CurrentGlueProjectDirectory, "Particles", $"{logicClassName}.generated.cs"));
+            var codeGenFilePath = new FilePath(GetGeneratedFilePath(logicClassName));
             GlueCommands.Self.ProjectCommands.CreateAndAddCodeFile(codeGenFilePath);
             File.WriteAllText(codeGenFilePath.FullPath, code);
             
             emitter.TextureFileName = prevTextureFileName;
+        }
+
+        private static string GetGeneratedFilePath(string logicClassName)
+        {
+            return Path.Combine(
+                GlueState.Self.CurrentGlueProjectDirectory, 
+                "Particles",
+                $"{logicClassName}.generated.cs");
         }
 
         private void GenerateAndSaveLogicMapperCode()
@@ -215,9 +220,21 @@ namespace Parme.Frb.GluePlugin
 
         private void FileRemoved(IElement element, ReferencedFileSave removedFile)
         {
+            if (Path.GetExtension(removedFile.Name) != $".{Extension}")
+            {
+                return;
+            }
+            
             var name = GetLogicClassName(removedFile.Name);
             _assetTypeInfoManager.RemoveEmitterLogicTypeName(name);
             _emitterLogicMapperGenerator.RemoveEmitterLogicTypeName(name);
+
+            var generatedFilePath = new FilePath(GetGeneratedFilePath(name));
+            if (generatedFilePath.Exists())
+            {
+                GlueCommands.Self.ProjectCommands.RemoveFromProjects(generatedFilePath);
+                File.Delete(generatedFilePath.FullPath);
+            }
         }
 
         private void GluxUnloaded()
