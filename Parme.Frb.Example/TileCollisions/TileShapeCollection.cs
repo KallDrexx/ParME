@@ -151,6 +151,16 @@ namespace FlatRedBall.TileCollisions
 
         public void AddToLayer(FlatRedBall.Graphics.Layer layer)
         {
+            // Note - the makeAutomaticallyUpdated method has been added in July 2021
+            // This is a necessary addition to make addition of TileshapeCollections much
+            // faster than before. Unfortunately this is not a generated file but a copied
+            // file so it cannot use the Glue project version to optionally make this call
+            // Therefore, older projects may experience compile errors here. To solve this you 
+            // can do one of the following:
+            // 1. Update the FRB libraries that your project references to get this latest method (recommended)
+            // 2. Downgrade to a version of Glue prior to July 2021 which will not include this method
+            // 3. Re-compile your own version of the plugin for Glue and modify this code
+            // 4. Remove this parameter by hand whenever this file is re-generated. This is painful!
             this.mShapes.AddToManagers(layer, makeAutomaticallyUpdated: false);
         }
 
@@ -498,6 +508,12 @@ namespace FlatRedBall.TileCollisions
             return GetRectangleAtPosition(x, y);
         }
 
+        /// <summary>
+        /// Returns the AxisAlignedRectangle at the argument worldX and worldY position. If no rectangle is located at this position, null is returned.
+        /// </summary>
+        /// <param name="worldX">The world X coordinate</param>
+        /// <param name="worldY">The world Y coordinate</param>
+        /// <returns>The AxisAlignedRectangle at the location, or null if none is found.</returns>
         public AxisAlignedRectangle GetRectangleAtPosition(float worldX, float worldY)
         {
             float middleOfTileX = MathFunctions.RoundFloat(worldX, GridSize, LeftSeedX + GridSize / 2.0f);
@@ -514,7 +530,7 @@ namespace FlatRedBall.TileCollisions
             int endExclusive = mShapes.AxisAlignedRectangles.GetFirstAfter(keyValueAfter, mSortAxis,
                 0, mShapes.AxisAlignedRectangles.Count);
 
-            AxisAlignedRectangle toReturn = GetRectangleAtPosition(worldX, worldY, startInclusive, endExclusive);
+            AxisAlignedRectangle toReturn = GetRectangleAtPosition(middleOfTileX, middleOfTileY, startInclusive, endExclusive);
 
             return toReturn;
         }
@@ -531,11 +547,11 @@ namespace FlatRedBall.TileCollisions
             float keyValueAfter = keyValue + halfGridSize;
 
             int startInclusive = mShapes.Polygons.GetFirstAfter(keyValueBefore, mSortAxis,
-                0, mShapes.AxisAlignedRectangles.Count);
+                0, mShapes.Polygons.Count);
 
 
             int endExclusive = mShapes.Polygons.GetFirstAfter(keyValueAfter, mSortAxis,
-                0, mShapes.AxisAlignedRectangles.Count);
+                0, mShapes.Polygons.Count);
 
             var left = middleOfTileX - halfGridSize;
             var right = middleOfTileX + halfGridSize;
@@ -979,7 +995,10 @@ namespace FlatRedBall.TileCollisions
                 }
             }
 
-            UpdateLShapedPassNeighbors(positionedObject as AARect, rectangleLeftOf, rectangleUpLeft, rectangleAbove, rectangleUpRight, rectangleRightOf, rectangleDownRight, rectangleBelow, rectangleDownLeft);
+            if (positionedObject is AARect asAaRect)
+            {
+                UpdateLShapedPassNeighbors(asAaRect, rectangleLeftOf, rectangleUpLeft, rectangleAbove, rectangleUpRight, rectangleRightOf, rectangleDownRight, rectangleBelow, rectangleDownLeft);
+            }
 
             if (updateNeighbors)
             {

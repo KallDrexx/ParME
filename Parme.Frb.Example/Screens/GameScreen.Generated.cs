@@ -21,7 +21,11 @@ namespace Parme.Frb.Example.Screens
         private FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet> BulletList;
         private Parme.Frb.Example.Entities.Player PlayerInstance;
         public GameScreen () 
-        	: base ("GameScreen")
+        	: this ("GameScreen")
+        {
+        }
+        public GameScreen (string contentManagerName) 
+        	: base (contentManagerName)
         {
             BulletList = new FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet>();
             BulletList.Name = "BulletList";
@@ -146,10 +150,12 @@ namespace Parme.Frb.Example.Screens
         }
         public override void PauseThisScreen () 
         {
+            StateInterpolationPlugin.TweenerManager.Self.Pause();
             base.PauseThisScreen();
         }
         public override void UnpauseThisScreen () 
         {
+            StateInterpolationPlugin.TweenerManager.Self.Unpause();
             base.UnpauseThisScreen();
         }
         [System.Obsolete("Use GetFile instead")]

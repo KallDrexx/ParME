@@ -1,3 +1,4 @@
+using System.Linq;
 namespace Parme.Frb.Example
 {
     public partial class Game1
