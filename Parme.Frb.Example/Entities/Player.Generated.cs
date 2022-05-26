@@ -60,7 +60,7 @@ namespace Parme.Frb.Example.Entities
             mLineInstance = new FlatRedBall.Math.Geometry.Line();
             mLineInstance.Name = "LineInstance";
             TestEmitter = Parme.Frb.ParmeEmitterManager.Instance
-                .CreateEmitter(new DirectiontestEmitterLogic(), this, "");
+                .CreateEmitter(new TestEmitterLogic(), this, "");
 
             
             PostInitialize();
@@ -112,6 +112,8 @@ namespace Parme.Frb.Example.Entities
                 mLineInstance.AttachTo(this, false);
             }
             TestEmitter.StopsOnScreenPause = false;
+            TestEmitter.XOffset = 200f;
+            TestEmitter.YOffset = 100f;
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
         }
         public virtual void AddToManagersBottomUp (FlatRedBall.Graphics.Layer layerToAddTo) 
@@ -136,6 +138,8 @@ namespace Parme.Frb.Example.Entities
             {
             }
             TestEmitter.StopsOnScreenPause = false;
+            TestEmitter.XOffset = 200f;
+            TestEmitter.YOffset = 100f;
             RotationDegreesPerSecond = 360;
         }
         public virtual void ConvertToManuallyUpdated () 

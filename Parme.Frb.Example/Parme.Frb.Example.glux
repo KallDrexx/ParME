@@ -14,9 +14,12 @@
         <string>GLUE</string>
       </Tags>
       <Source>GLUE</Source>
-      <Name>Screens\GameScreen</Name>
+      <UseGlobalContent>false</UseGlobalContent>
+      <IsHiddenInTreeView>false</IsHiddenInTreeView>
       <NamedObjects>
         <NamedObjectSave>
+          <InstanceName>BulletList</InstanceName>
+          <SourceClassType>PositionedObjectList&lt;T&gt;</SourceClassType>
           <Properties>
             <PropertySave>
               <Name>AssociateWithFactory</Name>
@@ -29,14 +32,14 @@
           </Properties>
           <SourceType>FlatRedBallType</SourceType>
           <SourceFile>PositionedObjectList (Generic)</SourceFile>
-          <SourceClassType>PositionedObjectList&lt;T&gt;</SourceClassType>
           <SourceClassGenericType>Entities\Bullet</SourceClassGenericType>
-          <InstanceName>BulletList</InstanceName>
           <AttachToContainer>true</AttachToContainer>
           <GenerateTimedEmit>true</GenerateTimedEmit>
           <IndependentOfCamera>false</IndependentOfCamera>
         </NamedObjectSave>
         <NamedObjectSave>
+          <InstanceName>PlayerInstance</InstanceName>
+          <SourceClassType>Entities\Player</SourceClassType>
           <Properties>
             <PropertySave>
               <Name>AssociateWithFactory</Name>
@@ -49,13 +52,13 @@
           </Properties>
           <SourceType>Entity</SourceType>
           <SourceFile>Entities/Player</SourceFile>
-          <SourceClassType>Entities\Player</SourceClassType>
-          <InstanceName>PlayerInstance</InstanceName>
           <AttachToContainer>true</AttachToContainer>
           <GenerateTimedEmit>true</GenerateTimedEmit>
           <IndependentOfCamera>false</IndependentOfCamera>
         </NamedObjectSave>
       </NamedObjects>
+      <Name>Screens\GameScreen</Name>
+      <CustomClassesForExport />
     </ScreenSave>
   </Screens>
   <Entities>
@@ -64,12 +67,8 @@
         <string>GLUE</string>
       </Tags>
       <Source>GLUE</Source>
-      <Properties>
-        <PropertySave>
-          <Name>ImplementsICollidable</Name>
-          <ValueAsBool>true</ValueAsBool>
-        </PropertySave>
-      </Properties>
+      <UseGlobalContent>false</UseGlobalContent>
+      <IsHiddenInTreeView>false</IsHiddenInTreeView>
       <CustomVariables>
         <CustomVariable>
           <Properties>
@@ -79,7 +78,6 @@
             </PropertySave>
           </Properties>
           <Name>X</Name>
-          <Type>float</Type>
         </CustomVariable>
         <CustomVariable>
           <Properties>
@@ -89,7 +87,6 @@
             </PropertySave>
           </Properties>
           <Name>Y</Name>
-          <Type>float</Type>
         </CustomVariable>
         <CustomVariable>
           <Properties>
@@ -99,7 +96,6 @@
             </PropertySave>
           </Properties>
           <Name>Z</Name>
-          <Type>float</Type>
         </CustomVariable>
         <CustomVariable>
           <Properties>
@@ -109,7 +105,6 @@
             </PropertySave>
           </Properties>
           <Name>LifetimeInSeconds</Name>
-          <Type>float</Type>
           <DefaultValue xsi:type="xsd:float">1</DefaultValue>
         </CustomVariable>
         <CustomVariable>
@@ -120,19 +115,19 @@
             </PropertySave>
           </Properties>
           <Name>Speed</Name>
-          <Type>float</Type>
           <DefaultValue xsi:type="xsd:float">300</DefaultValue>
         </CustomVariable>
       </CustomVariables>
-      <ImplementsIDrawableBatch>false</ImplementsIDrawableBatch>
-      <Name>Entities\Bullet</Name>
+      <Properties>
+        <PropertySave>
+          <Name>ImplementsICollidable</Name>
+          <ValueAsBool>true</ValueAsBool>
+        </PropertySave>
+      </Properties>
       <NamedObjects>
         <NamedObjectSave>
-          <CustomProperty>
-            <Type>float</Type>
-            <Member>Radius</Member>
-            <ValueAsFloat>10</ValueAsFloat>
-          </CustomProperty>
+          <InstanceName>CircleInstance</InstanceName>
+          <SourceClassType>FlatRedBall.Math.Geometry.Circle</SourceClassType>
           <Properties>
             <PropertySave>
               <Name>AssociateWithFactory</Name>
@@ -143,16 +138,31 @@
               <ValueAsObject xsi:type="SourceType">FlatRedBallType</ValueAsObject>
             </PropertySave>
           </Properties>
+          <CustomProperty>
+            <Type>float</Type>
+            <Member>Radius</Member>
+            <ValueAsFloat>10</ValueAsFloat>
+          </CustomProperty>
           <SourceType>FlatRedBallType</SourceType>
           <SourceFile>Circle</SourceFile>
-          <SourceClassType>FlatRedBall.Math.Geometry.Circle</SourceClassType>
-          <InstanceName>CircleInstance</InstanceName>
           <HasPublicProperty>true</HasPublicProperty>
           <AttachToContainer>true</AttachToContainer>
           <GenerateTimedEmit>true</GenerateTimedEmit>
           <IndependentOfCamera>false</IndependentOfCamera>
         </NamedObjectSave>
         <NamedObjectSave>
+          <InstanceName>ContrailsEmitter</InstanceName>
+          <SourceClassType>Parme.Frb.ParmeFrbEmitter</SourceClassType>
+          <Properties>
+            <PropertySave>
+              <Name>AssociateWithFactory</Name>
+              <ValueAsBool>true</ValueAsBool>
+            </PropertySave>
+            <PropertySave>
+              <Name>SourceType</Name>
+              <ValueAsObject xsi:type="SourceType">FlatRedBallType</ValueAsObject>
+            </PropertySave>
+          </Properties>
           <CustomProperty>
             <Type>string</Type>
             <Member>Emitter Logic</Member>
@@ -168,6 +178,15 @@
             <Member>YOffset</Member>
             <ValueAsFloat>0</ValueAsFloat>
           </CustomProperty>
+          <SourceType>FlatRedBallType</SourceType>
+          <SourceFile>Parme Particle Emitter</SourceFile>
+          <AttachToContainer>true</AttachToContainer>
+          <GenerateTimedEmit>true</GenerateTimedEmit>
+          <IndependentOfCamera>false</IndependentOfCamera>
+        </NamedObjectSave>
+        <NamedObjectSave>
+          <InstanceName>DeathEmitter</InstanceName>
+          <SourceClassType>Parme.Frb.ParmeFrbEmitter</SourceClassType>
           <Properties>
             <PropertySave>
               <Name>AssociateWithFactory</Name>
@@ -178,15 +197,6 @@
               <ValueAsObject xsi:type="SourceType">FlatRedBallType</ValueAsObject>
             </PropertySave>
           </Properties>
-          <SourceType>FlatRedBallType</SourceType>
-          <SourceFile>Parme Particle Emitter</SourceFile>
-          <SourceClassType>Parme.Frb.ParmeFrbEmitter</SourceClassType>
-          <InstanceName>ContrailsEmitter</InstanceName>
-          <AttachToContainer>true</AttachToContainer>
-          <GenerateTimedEmit>true</GenerateTimedEmit>
-          <IndependentOfCamera>false</IndependentOfCamera>
-        </NamedObjectSave>
-        <NamedObjectSave>
           <CustomProperty>
             <Type>string</Type>
             <Member>Emitter Logic</Member>
@@ -197,25 +207,16 @@
             <Member>IsEmitting</Member>
             <ValueAsBool>false</ValueAsBool>
           </CustomProperty>
-          <Properties>
-            <PropertySave>
-              <Name>AssociateWithFactory</Name>
-              <ValueAsBool>true</ValueAsBool>
-            </PropertySave>
-            <PropertySave>
-              <Name>SourceType</Name>
-              <ValueAsObject xsi:type="SourceType">FlatRedBallType</ValueAsObject>
-            </PropertySave>
-          </Properties>
           <SourceType>FlatRedBallType</SourceType>
           <SourceFile>Parme Particle Emitter</SourceFile>
-          <SourceClassType>Parme.Frb.ParmeFrbEmitter</SourceClassType>
-          <InstanceName>DeathEmitter</InstanceName>
           <AttachToContainer>true</AttachToContainer>
           <GenerateTimedEmit>true</GenerateTimedEmit>
           <IndependentOfCamera>false</IndependentOfCamera>
         </NamedObjectSave>
       </NamedObjects>
+      <Name>Entities\Bullet</Name>
+      <CustomClassesForExport />
+      <ImplementsIDrawableBatch>false</ImplementsIDrawableBatch>
       <Is2D>true</Is2D>
     </EntitySave>
     <EntitySave>
@@ -223,6 +224,8 @@
         <string>GLUE</string>
       </Tags>
       <Source>GLUE</Source>
+      <UseGlobalContent>false</UseGlobalContent>
+      <IsHiddenInTreeView>false</IsHiddenInTreeView>
       <CustomVariables>
         <CustomVariable>
           <Properties>
@@ -232,7 +235,6 @@
             </PropertySave>
           </Properties>
           <Name>X</Name>
-          <Type>float</Type>
         </CustomVariable>
         <CustomVariable>
           <Properties>
@@ -242,7 +244,6 @@
             </PropertySave>
           </Properties>
           <Name>Y</Name>
-          <Type>float</Type>
         </CustomVariable>
         <CustomVariable>
           <Properties>
@@ -252,7 +253,6 @@
             </PropertySave>
           </Properties>
           <Name>Z</Name>
-          <Type>float</Type>
         </CustomVariable>
         <CustomVariable>
           <Properties>
@@ -262,14 +262,19 @@
             </PropertySave>
           </Properties>
           <Name>RotationDegreesPerSecond</Name>
-          <Type>int</Type>
           <DefaultValue xsi:type="xsd:int">360</DefaultValue>
         </CustomVariable>
       </CustomVariables>
-      <ImplementsIDrawableBatch>false</ImplementsIDrawableBatch>
-      <Name>Entities\Player</Name>
+      <Properties>
+        <PropertySave>
+          <Name>InputDevice</Name>
+          <ValueAsInt>0</ValueAsInt>
+        </PropertySave>
+      </Properties>
       <NamedObjects>
         <NamedObjectSave>
+          <InstanceName>LineInstance</InstanceName>
+          <SourceClassType>FlatRedBall.Math.Geometry.Line</SourceClassType>
           <Properties>
             <PropertySave>
               <Name>AssociateWithFactory</Name>
@@ -281,24 +286,14 @@
             </PropertySave>
           </Properties>
           <SourceType>FlatRedBallType</SourceType>
-          <SourceClassType>FlatRedBall.Math.Geometry.Line</SourceClassType>
-          <InstanceName>LineInstance</InstanceName>
           <HasPublicProperty>true</HasPublicProperty>
           <AttachToContainer>true</AttachToContainer>
           <GenerateTimedEmit>true</GenerateTimedEmit>
           <IndependentOfCamera>false</IndependentOfCamera>
         </NamedObjectSave>
         <NamedObjectSave>
-          <CustomProperty>
-            <Type>string</Type>
-            <Member>Emitter Logic</Member>
-            <ValueAsString>DirectiontestEmitterLogic</ValueAsString>
-          </CustomProperty>
-          <CustomProperty>
-            <Type>bool</Type>
-            <Member>StopsOnScreenPause</Member>
-            <ValueAsBool>false</ValueAsBool>
-          </CustomProperty>
+          <InstanceName>TestEmitter</InstanceName>
+          <SourceClassType>Parme.Frb.ParmeFrbEmitter</SourceClassType>
           <Properties>
             <PropertySave>
               <Name>AssociateWithFactory</Name>
@@ -309,15 +304,36 @@
               <ValueAsObject xsi:type="SourceType">FlatRedBallType</ValueAsObject>
             </PropertySave>
           </Properties>
+          <CustomProperty>
+            <Type>string</Type>
+            <Member>Emitter Logic</Member>
+            <ValueAsString>TestEmitterLogic</ValueAsString>
+          </CustomProperty>
+          <CustomProperty>
+            <Type>bool</Type>
+            <Member>StopsOnScreenPause</Member>
+            <ValueAsBool>false</ValueAsBool>
+          </CustomProperty>
+          <CustomProperty>
+            <Type>float</Type>
+            <Member>XOffset</Member>
+            <ValueAsFloat>200</ValueAsFloat>
+          </CustomProperty>
+          <CustomProperty>
+            <Type>float</Type>
+            <Member>YOffset</Member>
+            <ValueAsFloat>100</ValueAsFloat>
+          </CustomProperty>
           <SourceType>FlatRedBallType</SourceType>
           <SourceFile>Parme Particle Emitter</SourceFile>
-          <SourceClassType>Parme.Frb.ParmeFrbEmitter</SourceClassType>
-          <InstanceName>TestEmitter</InstanceName>
           <AttachToContainer>true</AttachToContainer>
           <GenerateTimedEmit>true</GenerateTimedEmit>
           <IndependentOfCamera>false</IndependentOfCamera>
         </NamedObjectSave>
       </NamedObjects>
+      <Name>Entities\Player</Name>
+      <CustomClassesForExport />
+      <ImplementsIDrawableBatch>false</ImplementsIDrawableBatch>
       <Is2D>true</Is2D>
     </EntitySave>
   </Entities>
@@ -372,6 +388,7 @@
   <IgnoredDirectories />
   <CustomClasses>
     <CustomClassSave>
+      <Name>TileMapInfo</Name>
       <CsvFilesUsingThis />
       <RequiredProperties>
         <InstructionSave>
@@ -383,20 +400,20 @@
           <Member>EmbeddedAnimation</Member>
         </InstructionSave>
       </RequiredProperties>
-      <Name>TileMapInfo</Name>
       <GenerateCode>true</GenerateCode>
     </CustomClassSave>
   </CustomClasses>
-  <TranslatedFiles />
   <ApplyToFixedResolutionPlatforms>true</ApplyToFixedResolutionPlatforms>
   <ExternallyBuiltFileDirectory>../../</ExternallyBuiltFileDirectory>
   <FileVersion>3</FileVersion>
+  <ScreenReferences />
+  <EntityReferences />
   <PluginData>
     <RequiredPlugins />
   </PluginData>
   <DisplaySettings>
-    <Is2D>true</Is2D>
     <GenerateDisplayCode>true</GenerateDisplayCode>
+    <Is2D>true</Is2D>
     <ResolutionWidth>800</ResolutionWidth>
     <ResolutionHeight>600</ResolutionHeight>
     <FixedAspectRatio>false</FixedAspectRatio>
@@ -411,5 +428,8 @@
     <ResizeBehavior>StretchVisibleArea</ResizeBehavior>
     <ResizeBehaviorGum>StretchVisibleArea</ResizeBehaviorGum>
     <DominantInternalCoordinates>Height</DominantInternalCoordinates>
+    <TextureFilter>0</TextureFilter>
   </DisplaySettings>
+  <AllDisplaySettings />
+  <UsesTranslation>false</UsesTranslation>
 </GlueProjectSave>

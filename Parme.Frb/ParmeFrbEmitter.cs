@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Numerics;
 using FlatRedBall;
+using FlatRedBall.Math;
+using Microsoft.Xna.Framework;
 using Parme.CSharp;
 using Parme.MonoGame;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Parme.Frb
 {
-    public class ParmeFrbEmitter
+    public class ParmeFrbEmitter : IStaticPositionable
     {
         public MonoGameEmitter Emitter { get; }
         public PositionedObject Parent { get; set; }
@@ -67,10 +69,16 @@ namespace Parme.Frb
         {
             if (Parent != null)
             {
-                Emitter.WorldCoordinates = new Vector2(
-                    Parent.X + XOffset,
-                    Parent.Y + YOffset);
+                var parentPosition = Parent.Position;
+                var parentRotationMatrix = Parent.RotationMatrix;
 
+                var offset = parentRotationMatrix.Right * XOffset + parentRotationMatrix.Up * YOffset;
+                var absoluteParticlePosition = parentPosition + offset;
+
+                Emitter.WorldCoordinates = new Vector2(
+                    absoluteParticlePosition.X,
+                    absoluteParticlePosition.Y);
+                
                 Emitter.RotationInRadians = Parent.RotationZ + RotationOffsetInRadians;
             }
             else
@@ -83,6 +91,47 @@ namespace Parme.Frb
         public void Destroy()
         {
             ParmeEmitterManager.Instance.DestroyEmitter(this, !ImmediatelyKillParticlesOnDestroy);
+        }
+
+        private void SetRotatedOffset(float x, float y)
+        {
+            if (Parent == null)
+            {
+                XOffset = x;
+                YOffset = y;
+            }
+            else
+            {
+                var absoluteCoordinates = new Vector3(x, y, 0);
+                var tempVector = absoluteCoordinates - Parent.Position;
+                var invertedMatrix = Matrix.Invert(Parent.RotationMatrix);
+
+                XOffset =
+                    invertedMatrix.M11 * tempVector.X +
+                    invertedMatrix.M21 * tempVector.Y;
+
+                YOffset =
+                    invertedMatrix.M12 * tempVector.X +
+                    invertedMatrix.M22 * tempVector.Y;
+            }
+        }
+        
+        float IStaticPositionable.X
+        {
+            get => Emitter.WorldCoordinates.X;
+            set => SetRotatedOffset(value, Emitter.WorldCoordinates.Y);
+        }
+
+        float IStaticPositionable.Y
+        {
+            get => Emitter.WorldCoordinates.Y;
+            set => SetRotatedOffset(Emitter.WorldCoordinates.X, value);
+        }
+
+        float IStaticPositionable.Z
+        {
+            get => Parent?.Z ?? 0;
+            set { }
         }
     }
 }
