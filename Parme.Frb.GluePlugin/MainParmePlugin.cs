@@ -27,7 +27,6 @@ namespace Parme.Frb.GluePlugin
         
         private const string ExtensionWithPeriod = "." + Extension;
 
-        private readonly ParmeScreenCodeGenerator _parmeScreenCodeGenerator = new();
         private readonly AssetTypeInfoManager _assetTypeInfoManager = new();
         private readonly EmitterLogicMapperGenerator _emitterLogicMapperGenerator = new();
         private readonly EmitterLogicMapperInitializer _emitterLogicMapperInitializer = new();
@@ -61,7 +60,6 @@ namespace Parme.Frb.GluePlugin
 
             AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.FileAssetTypeInfo);
             AvailableAssetTypes.Self.AddAssetType(_assetTypeInfoManager.LogicAssetTypeInfo);
-            CodeWriter.CodeGenerators.Add(_parmeScreenCodeGenerator);
             RegisterCodeGenerator(_emitterLogicMapperInitializer);
         }
 
@@ -241,7 +239,6 @@ namespace Parme.Frb.GluePlugin
         {
             _assetTypeInfoManager.ClearEmitterLogicTypes();
             _emitterLogicMapperGenerator.ClearEmitterLogicTypes();
-            CodeWriter.CodeGenerators.Remove(_parmeScreenCodeGenerator);
         }
 
         private void GluxLoaded()

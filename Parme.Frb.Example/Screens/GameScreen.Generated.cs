@@ -92,7 +92,6 @@ namespace Parme.Frb.Example.Screens
             }
             BulletList.MakeTwoWay();
             FlatRedBall.Math.Collision.CollisionManager.Self.Relationships.Clear();
-            Parme.Frb.ParmeEmitterManager.Instance.DestroyActiveEmitterGroups();
             CustomDestroy();
         }
         public virtual void PostInitialize () 
