@@ -93,7 +93,7 @@ namespace Parme.Frb
             ParmeEmitterManager.Instance.DestroyEmitter(this, !ImmediatelyKillParticlesOnDestroy);
         }
 
-        private void SetRotatedOffset(float x, float y)
+        private void SetRotatedOffsetFromAbsoluteValues(float x, float y)
         {
             if (Parent == null)
             {
@@ -113,19 +113,24 @@ namespace Parme.Frb
                 YOffset =
                     invertedMatrix.M12 * tempVector.X +
                     invertedMatrix.M22 * tempVector.Y;
+
+                // The x and y that were passed in were absolute values, so set the world coordinates to the passed
+                // in values.  We have to do this immediately, otherwise a call to `X`'s setter then `Y`'s setter will
+                // reset the X value, as the setters use world coordinates for values to this method.
+                Emitter.WorldCoordinates = new Vector2(x, y);
             }
         }
         
         float IStaticPositionable.X
         {
             get => Emitter.WorldCoordinates.X;
-            set => SetRotatedOffset(value, Emitter.WorldCoordinates.Y);
+            set => SetRotatedOffsetFromAbsoluteValues(value, Emitter.WorldCoordinates.Y);
         }
 
         float IStaticPositionable.Y
         {
             get => Emitter.WorldCoordinates.Y;
-            set => SetRotatedOffset(Emitter.WorldCoordinates.X, value);
+            set => SetRotatedOffsetFromAbsoluteValues(Emitter.WorldCoordinates.X, value);
         }
 
         float IStaticPositionable.Z
