@@ -32,6 +32,8 @@ namespace Parme.Frb.GluePlugin
         private readonly EmitterLogicMapperInitializer _emitterLogicMapperInitializer = new();
 
         public override string FriendlyName => "ParME GluePlugin";
+        public override string GithubRepoOwner => "KallDrexx";
+        public override string GithubRepoName => "ParME";
 
         public override Version Version
         {

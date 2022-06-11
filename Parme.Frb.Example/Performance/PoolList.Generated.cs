@@ -45,7 +45,7 @@ namespace Parme.Frb.Example.Performance
 
         public T GetNextAvailable()
         {
-            if (mNextAvailable == -1)
+            if (mNextAvailable == -1 || mPoolables.Count == 0)
             {
                 return default(T);
             }
