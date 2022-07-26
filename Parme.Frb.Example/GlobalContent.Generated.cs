@@ -25,14 +25,6 @@ namespace Parme.Frb.Example
         {
             switch(memberName)
             {
-                case  "test":
-                    return test;
-                case  "contrails":
-                    return contrails;
-                case  "explosion":
-                    return explosion;
-                case  "directiontest":
-                    return directiontest;
                 case  "direction":
                     return direction;
             }
@@ -42,14 +34,6 @@ namespace Parme.Frb.Example
         {
             switch(memberName)
             {
-                case  "test":
-                    return test;
-                case  "contrails":
-                    return contrails;
-                case  "explosion":
-                    return explosion;
-                case  "directiontest":
-                    return directiontest;
                 case  "direction":
                     return direction;
             }
@@ -63,6 +47,9 @@ namespace Parme.Frb.Example
             
             direction = FlatRedBall.FlatRedBallServices.Load<Microsoft.Xna.Framework.Graphics.Texture2D>(@"content/globalcontent/direction.png", ContentManagerName);
             			IsInitialized = true;
+            #if DEBUG && WINDOWS
+            InitializeFileWatch();
+            #endif
         }
         public static void Reload (object whatToReload) 
         {
@@ -77,6 +64,36 @@ namespace Parme.Frb.Example
                 FlatRedBall.SpriteManager.ReplaceTexture(oldTexture, direction);
             }
         }
+        #if DEBUG && WINDOWS
+        static System.IO.FileSystemWatcher watcher;
+        private static void InitializeFileWatch () 
+        {
+            string globalContent = FlatRedBall.IO.FileManager.RelativeDirectory + "content/globalcontent/";
+            if (System.IO.Directory.Exists(globalContent))
+            {
+                watcher = new System.IO.FileSystemWatcher();
+                watcher.Path = globalContent;
+                watcher.NotifyFilter = System.IO.NotifyFilters.LastWrite;
+                watcher.Filter = "*.*";
+                watcher.Changed += HandleFileChanged;
+                watcher.EnableRaisingEvents = true;
+            }
+        }
+        private static void HandleFileChanged (object sender, System.IO.FileSystemEventArgs e) 
+        {
+            try
+            {
+                System.Threading.Thread.Sleep(500);
+                var fullFileName = e.FullPath;
+                var relativeFileName = FlatRedBall.IO.FileManager.MakeRelative(FlatRedBall.IO.FileManager.Standardize(fullFileName));
+                if (relativeFileName == "content/globalcontent/direction.png")
+                {
+                    Reload(direction);
+                }
+            }
+            catch{}
+        }
+        #endif
         
         
     }

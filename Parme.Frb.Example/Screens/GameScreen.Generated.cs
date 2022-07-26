@@ -1,7 +1,7 @@
 #if ANDROID || IOS || DESKTOP_GL
 #define REQUIRES_PRIMARY_THREAD_LOADING
 #endif
-// The project is not new enough to support GlueView 2. It is on version 3
+// The project is not new enough to support GlueView 2. It is on version 6
 //#define SUPPORTS_GLUEVIEW_2
 using Color = Microsoft.Xna.Framework.Color;
 using System.Linq;
@@ -90,6 +90,7 @@ namespace Parme.Frb.Example.Screens
                 PlayerInstance.Detach();
             }
             BulletList.MakeTwoWay();
+            FlatRedBall.Math.Collision.CollisionManager.Self.Relationships.Clear();
             CustomDestroy();
         }
         public virtual void PostInitialize () 
@@ -147,10 +148,12 @@ namespace Parme.Frb.Example.Screens
         }
         public override void PauseThisScreen () 
         {
+            StateInterpolationPlugin.TweenerManager.Self.Pause();
             base.PauseThisScreen();
         }
         public override void UnpauseThisScreen () 
         {
+            StateInterpolationPlugin.TweenerManager.Self.Unpause();
             base.UnpauseThisScreen();
         }
         [System.Obsolete("Use GetFile instead")]

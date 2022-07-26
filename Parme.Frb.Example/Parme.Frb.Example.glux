@@ -405,7 +405,7 @@
   </CustomClasses>
   <ApplyToFixedResolutionPlatforms>true</ApplyToFixedResolutionPlatforms>
   <ExternallyBuiltFileDirectory>../../</ExternallyBuiltFileDirectory>
-  <FileVersion>3</FileVersion>
+  <FileVersion>6</FileVersion>
   <ScreenReferences />
   <EntityReferences />
   <PluginData>
