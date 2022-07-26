@@ -39,16 +39,15 @@ namespace Parme.Frb.GluePlugin
         {
             get
             {
-                var assembly = Assembly.GetExecutingAssembly();
-                var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+                var version = PluginVersion.GetRawVersion();
                 
                 // If this has a pre-release tag, remove it.  Otherwise it can't be parsed to a Version type
-                var dashIndex = fileVersionInfo.ProductVersion.IndexOf('-');
-                var versionString = dashIndex >= 0
-                    ? fileVersionInfo.ProductVersion.Substring(0, dashIndex)
-                    : fileVersionInfo.ProductVersion;
+                var dashIndex = version.IndexOf('-');
+                version = dashIndex >= 0
+                    ? version.Substring(0, dashIndex)
+                    : version;
                 
-                return new Version(versionString);
+                return new Version(version);
             }
         }
         
@@ -245,6 +244,8 @@ namespace Parme.Frb.GluePlugin
 
         private void GluxLoaded()
         {
+            NugetManager.SetNugetVersion();
+            
             var emitterFiles = ObjectFinder.Self
                 .GetAllReferencedFiles()
                 .Where(x => Path.GetExtension(x.Name).Equals(ExtensionWithPeriod, StringComparison.OrdinalIgnoreCase))

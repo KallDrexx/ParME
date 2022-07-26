@@ -48,7 +48,6 @@ namespace Parme.Frb.Example.Entities
                 return mGeneratedCollision;
             }
         }
-        public string EditModeType { get; set; } = "Parme.Frb.Example.Entities.Bullet";
         protected FlatRedBall.Graphics.Layer LayerProvidedByContainer = null;
         public Bullet () 
         	: this(FlatRedBall.Screens.ScreenManager.CurrentScreen.ContentManagerName, true)
@@ -69,12 +68,10 @@ namespace Parme.Frb.Example.Entities
             LoadStaticContent(ContentManagerName);
             mCircleInstance = new FlatRedBall.Math.Geometry.Circle();
             mCircleInstance.Name = "CircleInstance";
-            ContrailsEmitter = Parme.Frb.ParmeEmitterManager.Instance
-                .CreateEmitter(new ContrailsEmitterLogic(), this, "");
-
-            DeathEmitter = Parme.Frb.ParmeEmitterManager.Instance
-                .CreateEmitter(new ExplosionEmitterLogic(), this, "");
-
+            ContrailsEmitter = new Parme.Frb.ParmeFrbEmitter();
+            ContrailsEmitter.Name = "ContrailsEmitter";
+            DeathEmitter = new Parme.Frb.ParmeFrbEmitter();
+            DeathEmitter.Name = "DeathEmitter";
             
             PostInitialize();
             if (addToManagers)
@@ -109,14 +106,6 @@ namespace Parme.Frb.Example.Entities
             {
                 FlatRedBall.Math.Geometry.ShapeManager.Remove(CircleInstance);
             }
-            if (ContrailsEmitter != null)
-            {
-                ContrailsEmitter.Destroy();
-            }
-            if (DeathEmitter != null)
-            {
-                DeathEmitter.Destroy();
-            }
             mGeneratedCollision.RemoveFromManagers(clearThis: true);
             CustomDestroy();
         }
@@ -130,9 +119,6 @@ namespace Parme.Frb.Example.Entities
                 mCircleInstance.AttachTo(this, false);
             }
             CircleInstance.Radius = 10f;
-            ContrailsEmitter.XOffset = 0f;
-            ContrailsEmitter.YOffset = 0f;
-            DeathEmitter.IsEmitting = false;
             mGeneratedCollision = new FlatRedBall.Math.Geometry.ShapeCollection();
             Collision.Circles.AddOneWay(mCircleInstance);
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
@@ -148,14 +134,6 @@ namespace Parme.Frb.Example.Entities
             {
                 FlatRedBall.Math.Geometry.ShapeManager.RemoveOneWay(CircleInstance);
             }
-            if (ContrailsEmitter != null)
-            {
-                ContrailsEmitter.Destroy();
-            }
-            if (DeathEmitter != null)
-            {
-                DeathEmitter.Destroy();
-            }
             mGeneratedCollision.RemoveFromManagers(clearThis: false);
         }
         public virtual void AssignCustomVariables (bool callOnContainedElements) 
@@ -164,9 +142,6 @@ namespace Parme.Frb.Example.Entities
             {
             }
             CircleInstance.Radius = 10f;
-            ContrailsEmitter.XOffset = 0f;
-            ContrailsEmitter.YOffset = 0f;
-            DeathEmitter.IsEmitting = false;
             LifetimeInSeconds = 1f;
             Speed = 300f;
         }
@@ -255,16 +230,6 @@ namespace Parme.Frb.Example.Entities
         {
             FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(this);
             FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(CircleInstance);
-        }
-        public virtual void MoveToLayer (FlatRedBall.Graphics.Layer layerToMoveTo) 
-        {
-            var layerToRemoveFrom = LayerProvidedByContainer;
-            if (layerToRemoveFrom != null)
-            {
-                layerToRemoveFrom.Remove(CircleInstance);
-            }
-            FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(CircleInstance, layerToMoveTo);
-            LayerProvidedByContainer = layerToMoveTo;
         }
         partial void CustomActivityEditMode();
     }

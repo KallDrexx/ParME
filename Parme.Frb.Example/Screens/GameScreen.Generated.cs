@@ -18,7 +18,7 @@ namespace Parme.Frb.Example.Screens
         static bool HasBeenLoadedWithGlobalContentManager = false;
         #endif
         
-        private FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet> BulletList;
+        private FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet> BulletList = new FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet>();
         private Parme.Frb.Example.Entities.Player PlayerInstance;
         public GameScreen () 
         	: this ("GameScreen")
@@ -27,13 +27,12 @@ namespace Parme.Frb.Example.Screens
         public GameScreen (string contentManagerName) 
         	: base (contentManagerName)
         {
-            BulletList = new FlatRedBall.Math.PositionedObjectList<Parme.Frb.Example.Entities.Bullet>();
             BulletList.Name = "BulletList";
         }
         public override void Initialize (bool addToManagers) 
         {
             LoadStaticContent(ContentManagerName);
-            BulletList.Clear();
+            BulletList?.Clear();
             PlayerInstance = new Parme.Frb.Example.Entities.Player(ContentManagerName, false);
             PlayerInstance.Name = "PlayerInstance";
             
@@ -91,7 +90,6 @@ namespace Parme.Frb.Example.Screens
                 PlayerInstance.Detach();
             }
             BulletList.MakeTwoWay();
-            FlatRedBall.Math.Collision.CollisionManager.Self.Relationships.Clear();
             CustomDestroy();
         }
         public virtual void PostInitialize () 
@@ -149,12 +147,10 @@ namespace Parme.Frb.Example.Screens
         }
         public override void PauseThisScreen () 
         {
-            StateInterpolationPlugin.TweenerManager.Self.Pause();
             base.PauseThisScreen();
         }
         public override void UnpauseThisScreen () 
         {
-            StateInterpolationPlugin.TweenerManager.Self.Unpause();
             base.UnpauseThisScreen();
         }
         [System.Obsolete("Use GetFile instead")]

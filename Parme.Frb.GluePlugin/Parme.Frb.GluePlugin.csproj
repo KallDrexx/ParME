@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <Version>10.9.1</Version>
@@ -27,7 +27,7 @@
     <Reference Include="GlueCommon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\Libraries\GlueCommon.dll</HintPath>
     </Reference>
-    <Reference Include="GlueFormsCore, Version=2020.6.1.1095, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="GlueFormsCore, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\Libraries\GlueFormsCore.dll</HintPath>
     </Reference>
   </ItemGroup>

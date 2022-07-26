@@ -28,17 +28,5 @@
       <ProjectReference Include="..\Parme.CSharp\Parme.CSharp.csproj" />
       <ProjectReference Include="..\Parme.MonoGame\Parme.MonoGame.csproj" />
     </ItemGroup>
-    
-    <ItemGroup>
-        <Content Include="../Parme.Frb.Example/Plugins/**/*">
-            <Pack>true</Pack>
-            <PackagePath>content\Plugins</PackagePath>
-        </Content>
-        <Content Include="Parme.Frb.targets">
-            <Pack>true</Pack>
-            <PackagePath>build</PackagePath>
-        </Content>
-        <Content Remove="..\Parme.Frb.Example\Plugins\.running*\**" />
-    </ItemGroup>
 
 </Project>

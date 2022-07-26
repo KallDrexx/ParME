@@ -38,7 +38,6 @@ namespace Parme.Frb.Example.Entities
         }
         private Parme.Frb.ParmeFrbEmitter TestEmitter;
         public int RotationDegreesPerSecond = 360;
-        public string EditModeType { get; set; } = "Parme.Frb.Example.Entities.Player";
         protected FlatRedBall.Graphics.Layer LayerProvidedByContainer = null;
         public Player () 
         	: this(FlatRedBall.Screens.ScreenManager.CurrentScreen.ContentManagerName, true)
@@ -59,9 +58,8 @@ namespace Parme.Frb.Example.Entities
             LoadStaticContent(ContentManagerName);
             mLineInstance = new FlatRedBall.Math.Geometry.Line();
             mLineInstance.Name = "LineInstance";
-            TestEmitter = Parme.Frb.ParmeEmitterManager.Instance
-                .CreateEmitter(new TestEmitterLogic(), this, "");
-
+            TestEmitter = new Parme.Frb.ParmeFrbEmitter();
+            TestEmitter.Name = "TestEmitter";
             
             PostInitialize();
             if (addToManagers)
@@ -96,10 +94,6 @@ namespace Parme.Frb.Example.Entities
             {
                 FlatRedBall.Math.Geometry.ShapeManager.Remove(LineInstance);
             }
-            if (TestEmitter != null)
-            {
-                TestEmitter.Destroy();
-            }
             CustomDestroy();
         }
         public virtual void PostInitialize () 
@@ -111,9 +105,6 @@ namespace Parme.Frb.Example.Entities
                 mLineInstance.CopyAbsoluteToRelative();
                 mLineInstance.AttachTo(this, false);
             }
-            TestEmitter.StopsOnScreenPause = false;
-            TestEmitter.XOffset = 200f;
-            TestEmitter.YOffset = 100f;
             FlatRedBall.Math.Geometry.ShapeManager.SuppressAddingOnVisibilityTrue = oldShapeManagerSuppressAdd;
         }
         public virtual void AddToManagersBottomUp (FlatRedBall.Graphics.Layer layerToAddTo) 
@@ -127,19 +118,12 @@ namespace Parme.Frb.Example.Entities
             {
                 FlatRedBall.Math.Geometry.ShapeManager.RemoveOneWay(LineInstance);
             }
-            if (TestEmitter != null)
-            {
-                TestEmitter.Destroy();
-            }
         }
         public virtual void AssignCustomVariables (bool callOnContainedElements) 
         {
             if (callOnContainedElements)
             {
             }
-            TestEmitter.StopsOnScreenPause = false;
-            TestEmitter.XOffset = 200f;
-            TestEmitter.YOffset = 100f;
             RotationDegreesPerSecond = 360;
         }
         public virtual void ConvertToManuallyUpdated () 
@@ -227,16 +211,6 @@ namespace Parme.Frb.Example.Entities
         {
             FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(this);
             FlatRedBall.Instructions.InstructionManager.IgnorePausingFor(LineInstance);
-        }
-        public virtual void MoveToLayer (FlatRedBall.Graphics.Layer layerToMoveTo) 
-        {
-            var layerToRemoveFrom = LayerProvidedByContainer;
-            if (layerToRemoveFrom != null)
-            {
-                layerToRemoveFrom.Remove(LineInstance);
-            }
-            FlatRedBall.Math.Geometry.ShapeManager.AddToLayer(LineInstance, layerToMoveTo);
-            LayerProvidedByContainer = layerToMoveTo;
         }
         partial void CustomActivityEditMode();
     }
