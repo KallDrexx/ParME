@@ -69,6 +69,40 @@ static void CreateZipArchive(string project, string version) {
     ZipFile.CreateFromDirectory(folderToZip, resultingZip, CompressionLevel.Optimal, false);
 }
 
+static void CreateGluePluginArchive(string project, string version) {
+    if (!Directory.Exists(ArtifactsFolder)) {
+        Directory.CreateDirectory(ArtifactsFolder);
+    }
+    
+    var projectName = Path.GetFileNameWithoutExtension(project);
+    var projectPath = Path.GetDirectoryName(project);
+    var binaryFolder = Path.Combine(projectPath, "bin", "Release", "netcoreapp3.1");
+    var pluginFolder = Path.Combine(binaryFolder, projectName);
+    var innerFolder = Path.Combine(pluginFolder, projectName);
+    var resultingZip = Path.Combine(ArtifactsFolder, $"{projectName}.{version}.zip");
+    
+    if (File.Exists(resultingZip)) {
+        File.Delete(resultingZip);
+    }
+   
+    if (Directory.Exists(pluginFolder))
+    {
+        Directory.Delete(pluginFolder, true);
+    } 
+    
+    Directory.CreateDirectory(innerFolder);
+    
+    foreach (var file in Directory.GetFiles(binaryFolder, "Parme.*"))
+    {
+        if (!Directory.Exists(file))
+        {
+            File.Copy(file, Path.Combine(innerFolder, Path.GetFileName(file)));
+        }
+    }
+    
+    ZipFile.CreateFromDirectory(pluginFolder, resultingZip, CompressionLevel.Optimal, false);
+}
+
 static void RemoveCurrentArtifacts() {
     if (!Directory.Exists(ArtifactsFolder)) {
         return;
@@ -105,6 +139,7 @@ Console.WriteLine("Building Glue Plugin");
 ReplaceVersion(gluePluginProject, version);
 Directory.SetCurrentDirectory(Path.GetDirectoryName(gluePluginProject));
 BuildProject(gluePluginProject);
+CreateGluePluginArchive(gluePluginProject, version);
 
 Console.WriteLine("Building Editor");
 ReplaceVersion(editorProject, version);
