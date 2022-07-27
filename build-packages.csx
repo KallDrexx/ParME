@@ -91,13 +91,21 @@ static void CreateGluePluginArchive(string project, string version) {
     } 
     
     Directory.CreateDirectory(innerFolder);
+   
+    var includeList = new string[] {
+        "Parme.Core.dll", "Parme.Core.pdb", "Parme.CSharp.dll", "Parme.CSharp.pdb", "Parme.Frb.GluePlugin.dll",
+        "Parme.Frb.GluePlugin.pdb"
+    };
     
-    foreach (var file in Directory.GetFiles(binaryFolder))
+    foreach (var file in includeList)
     {
-        if (!Directory.Exists(file))
+        var path = Path.Combine(binaryFolder, file);
+        if (!File.Exists(path))
         {
-            File.Copy(file, Path.Combine(innerFolder, Path.GetFileName(file)));
+            throw new InvalidOperationException($"File '{path}' does not exist but is expected to");
         }
+        
+        File.Copy(path, Path.Combine(innerFolder, file));
     }
     
     ZipFile.CreateFromDirectory(pluginFolder, resultingZip, CompressionLevel.Optimal, false);
