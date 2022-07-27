@@ -92,7 +92,7 @@ static void CreateGluePluginArchive(string project, string version) {
     
     Directory.CreateDirectory(innerFolder);
     
-    foreach (var file in Directory.GetFiles(binaryFolder, "Parme.*"))
+    foreach (var file in Directory.GetFiles(binaryFolder))
     {
         if (!Directory.Exists(file))
         {
